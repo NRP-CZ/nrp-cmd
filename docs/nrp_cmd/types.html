@@ -1,0 +1,1737 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="pdoc 15.0.1"/>
+    <title>nrp_cmd.types API documentation</title>
+
+    <style>/*! * Bootstrap Reboot v5.0.0 (https://getbootstrap.com/) * Copyright 2011-2021 The Bootstrap Authors * Copyright 2011-2021 Twitter, Inc. * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE) * Forked from Normalize.css, licensed MIT (https://github.com/necolas/normalize.css/blob/master/LICENSE.md) */*,::after,::before{box-sizing:border-box}@media (prefers-reduced-motion:no-preference){:root{scroll-behavior:smooth}}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}hr{margin:1rem 0;color:inherit;background-color:currentColor;border:0;opacity:.25}hr:not([size]){height:1px}h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2}h1{font-size:calc(1.375rem + 1.5vw)}@media (min-width:1200px){h1{font-size:2.5rem}}h2{font-size:calc(1.325rem + .9vw)}@media (min-width:1200px){h2{font-size:2rem}}h3{font-size:calc(1.3rem + .6vw)}@media (min-width:1200px){h3{font-size:1.75rem}}h4{font-size:calc(1.275rem + .3vw)}@media (min-width:1200px){h4{font-size:1.5rem}}h5{font-size:1.25rem}h6{font-size:1rem}p{margin-top:0;margin-bottom:1rem}abbr[data-bs-original-title],abbr[title]{-webkit-text-decoration:underline dotted;text-decoration:underline dotted;cursor:help;-webkit-text-decoration-skip-ink:none;text-decoration-skip-ink:none}address{margin-bottom:1rem;font-style:normal;line-height:inherit}ol,ul{padding-left:2rem}dl,ol,ul{margin-top:0;margin-bottom:1rem}ol ol,ol ul,ul ol,ul ul{margin-bottom:0}dt{font-weight:700}dd{margin-bottom:.5rem;margin-left:0}blockquote{margin:0 0 1rem}b,strong{font-weight:bolder}small{font-size:.875em}mark{padding:.2em;background-color:#fcf8e3}sub,sup{position:relative;font-size:.75em;line-height:0;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}a{color:#0d6efd;text-decoration:underline}a:hover{color:#0a58ca}a:not([href]):not([class]),a:not([href]):not([class]):hover{color:inherit;text-decoration:none}code,kbd,pre,samp{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:1em;direction:ltr;unicode-bidi:bidi-override}pre{display:block;margin-top:0;margin-bottom:1rem;overflow:auto;font-size:.875em}pre code{font-size:inherit;color:inherit;word-break:normal}code{font-size:.875em;color:#d63384;word-wrap:break-word}a>code{color:inherit}kbd{padding:.2rem .4rem;font-size:.875em;color:#fff;background-color:#212529;border-radius:.2rem}kbd kbd{padding:0;font-size:1em;font-weight:700}figure{margin:0 0 1rem}img,svg{vertical-align:middle}table{caption-side:bottom;border-collapse:collapse}caption{padding-top:.5rem;padding-bottom:.5rem;color:#6c757d;text-align:left}th{text-align:inherit;text-align:-webkit-match-parent}tbody,td,tfoot,th,thead,tr{border-color:inherit;border-style:solid;border-width:0}label{display:inline-block}button{border-radius:0}button:focus:not(:focus-visible){outline:0}button,input,optgroup,select,textarea{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}button,select{text-transform:none}[role=button]{cursor:pointer}select{word-wrap:normal}select:disabled{opacity:1}[list]::-webkit-calendar-picker-indicator{display:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]:not(:disabled),[type=reset]:not(:disabled),[type=submit]:not(:disabled),button:not(:disabled){cursor:pointer}::-moz-focus-inner{padding:0;border-style:none}textarea{resize:vertical}fieldset{min-width:0;padding:0;margin:0;border:0}legend{float:left;width:100%;padding:0;margin-bottom:.5rem;font-size:calc(1.275rem + .3vw);line-height:inherit}@media (min-width:1200px){legend{font-size:1.5rem}}legend+*{clear:left}::-webkit-datetime-edit-day-field,::-webkit-datetime-edit-fields-wrapper,::-webkit-datetime-edit-hour-field,::-webkit-datetime-edit-minute,::-webkit-datetime-edit-month-field,::-webkit-datetime-edit-text,::-webkit-datetime-edit-year-field{padding:0}::-webkit-inner-spin-button{height:auto}[type=search]{outline-offset:-2px;-webkit-appearance:textfield}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-color-swatch-wrapper{padding:0}::file-selector-button{font:inherit}::-webkit-file-upload-button{font:inherit;-webkit-appearance:button}output{display:inline-block}iframe{border:0}summary{display:list-item;cursor:pointer}progress{vertical-align:baseline}[hidden]{display:none!important}</style>
+    <style>/*! syntax-highlighting.css */pre{line-height:125%;}span.linenos{color:inherit; background-color:transparent; padding-left:5px; padding-right:20px;}.pdoc-code .hll{background-color:#ffffcc}.pdoc-code{background:#f8f8f8;}.pdoc-code .c{color:#3D7B7B; font-style:italic}.pdoc-code .err{border:1px solid #FF0000}.pdoc-code .k{color:#008000; font-weight:bold}.pdoc-code .o{color:#666666}.pdoc-code .ch{color:#3D7B7B; font-style:italic}.pdoc-code .cm{color:#3D7B7B; font-style:italic}.pdoc-code .cp{color:#9C6500}.pdoc-code .cpf{color:#3D7B7B; font-style:italic}.pdoc-code .c1{color:#3D7B7B; font-style:italic}.pdoc-code .cs{color:#3D7B7B; font-style:italic}.pdoc-code .gd{color:#A00000}.pdoc-code .ge{font-style:italic}.pdoc-code .gr{color:#E40000}.pdoc-code .gh{color:#000080; font-weight:bold}.pdoc-code .gi{color:#008400}.pdoc-code .go{color:#717171}.pdoc-code .gp{color:#000080; font-weight:bold}.pdoc-code .gs{font-weight:bold}.pdoc-code .gu{color:#800080; font-weight:bold}.pdoc-code .gt{color:#0044DD}.pdoc-code .kc{color:#008000; font-weight:bold}.pdoc-code .kd{color:#008000; font-weight:bold}.pdoc-code .kn{color:#008000; font-weight:bold}.pdoc-code .kp{color:#008000}.pdoc-code .kr{color:#008000; font-weight:bold}.pdoc-code .kt{color:#B00040}.pdoc-code .m{color:#666666}.pdoc-code .s{color:#BA2121}.pdoc-code .na{color:#687822}.pdoc-code .nb{color:#008000}.pdoc-code .nc{color:#0000FF; font-weight:bold}.pdoc-code .no{color:#880000}.pdoc-code .nd{color:#AA22FF}.pdoc-code .ni{color:#717171; font-weight:bold}.pdoc-code .ne{color:#CB3F38; font-weight:bold}.pdoc-code .nf{color:#0000FF}.pdoc-code .nl{color:#767600}.pdoc-code .nn{color:#0000FF; font-weight:bold}.pdoc-code .nt{color:#008000; font-weight:bold}.pdoc-code .nv{color:#19177C}.pdoc-code .ow{color:#AA22FF; font-weight:bold}.pdoc-code .w{color:#bbbbbb}.pdoc-code .mb{color:#666666}.pdoc-code .mf{color:#666666}.pdoc-code .mh{color:#666666}.pdoc-code .mi{color:#666666}.pdoc-code .mo{color:#666666}.pdoc-code .sa{color:#BA2121}.pdoc-code .sb{color:#BA2121}.pdoc-code .sc{color:#BA2121}.pdoc-code .dl{color:#BA2121}.pdoc-code .sd{color:#BA2121; font-style:italic}.pdoc-code .s2{color:#BA2121}.pdoc-code .se{color:#AA5D1F; font-weight:bold}.pdoc-code .sh{color:#BA2121}.pdoc-code .si{color:#A45A77; font-weight:bold}.pdoc-code .sx{color:#008000}.pdoc-code .sr{color:#A45A77}.pdoc-code .s1{color:#BA2121}.pdoc-code .ss{color:#19177C}.pdoc-code .bp{color:#008000}.pdoc-code .fm{color:#0000FF}.pdoc-code .vc{color:#19177C}.pdoc-code .vg{color:#19177C}.pdoc-code .vi{color:#19177C}.pdoc-code .vm{color:#19177C}.pdoc-code .il{color:#666666}</style>
+    <style>/*! theme.css */:root{--pdoc-background:#fff;}.pdoc{--text:#212529;--muted:#6c757d;--link:#3660a5;--link-hover:#1659c5;--code:#f8f8f8;--active:#fff598;--accent:#eee;--accent2:#c1c1c1;--nav-hover:rgba(255, 255, 255, 0.5);--name:#0066BB;--def:#008800;--annotation:#007020;}</style>
+    <style>/*! layout.css */html, body{width:100%;height:100%;}html, main{scroll-behavior:smooth;}body{background-color:var(--pdoc-background);}@media (max-width:769px){#navtoggle{cursor:pointer;position:absolute;width:50px;height:40px;top:1rem;right:1rem;border-color:var(--text);color:var(--text);display:flex;opacity:0.8;z-index:999;}#navtoggle:hover{opacity:1;}#togglestate + div{display:none;}#togglestate:checked + div{display:inherit;}main, header{padding:2rem 3vw;}header + main{margin-top:-3rem;}.git-button{display:none !important;}nav input[type="search"]{max-width:77%;}nav input[type="search"]:first-child{margin-top:-6px;}nav input[type="search"]:valid ~ *{display:none !important;}}@media (min-width:770px){:root{--sidebar-width:clamp(12.5rem, 28vw, 22rem);}nav{position:fixed;overflow:auto;height:100vh;width:var(--sidebar-width);}main, header{padding:3rem 2rem 3rem calc(var(--sidebar-width) + 3rem);width:calc(54rem + var(--sidebar-width));max-width:100%;}header + main{margin-top:-4rem;}#navtoggle{display:none;}}#togglestate{position:absolute;height:0;opacity:0;}nav.pdoc{--pad:clamp(0.5rem, 2vw, 1.75rem);--indent:1.5rem;background-color:var(--accent);border-right:1px solid var(--accent2);box-shadow:0 0 20px rgba(50, 50, 50, .2) inset;padding:0 0 0 var(--pad);overflow-wrap:anywhere;scrollbar-width:thin; scrollbar-color:var(--accent2) transparent; z-index:1}nav.pdoc::-webkit-scrollbar{width:.4rem; }nav.pdoc::-webkit-scrollbar-thumb{background-color:var(--accent2); }nav.pdoc > div{padding:var(--pad) 0;}nav.pdoc .module-list-button{display:inline-flex;align-items:center;color:var(--text);border-color:var(--muted);margin-bottom:1rem;}nav.pdoc .module-list-button:hover{border-color:var(--text);}nav.pdoc input[type=search]{display:block;outline-offset:0;width:calc(100% - var(--pad));}nav.pdoc .logo{max-width:calc(100% - var(--pad));max-height:35vh;display:block;margin:0 auto 1rem;transform:translate(calc(-.5 * var(--pad)), 0);}nav.pdoc ul{list-style:none;padding-left:0;}nav.pdoc > div > ul{margin-left:calc(0px - var(--pad));}nav.pdoc li a{padding:.2rem 0 .2rem calc(var(--pad) + var(--indent));}nav.pdoc > div > ul > li > a{padding-left:var(--pad);}nav.pdoc li{transition:all 100ms;}nav.pdoc li:hover{background-color:var(--nav-hover);}nav.pdoc a, nav.pdoc a:hover{color:var(--text);}nav.pdoc a{display:block;}nav.pdoc > h2:first-of-type{margin-top:1.5rem;}nav.pdoc .class:before{content:"class ";color:var(--muted);}nav.pdoc .function:after{content:"()";color:var(--muted);}nav.pdoc footer:before{content:"";display:block;width:calc(100% - var(--pad));border-top:solid var(--accent2) 1px;margin-top:1.5rem;padding-top:.5rem;}nav.pdoc footer{font-size:small;}</style>
+    <style>/*! content.css */.pdoc{color:var(--text);box-sizing:border-box;line-height:1.5;background:none;}.pdoc .pdoc-button{cursor:pointer;display:inline-block;border:solid black 1px;border-radius:2px;font-size:.75rem;padding:calc(0.5em - 1px) 1em;transition:100ms all;}.pdoc .alert{padding:1rem 1rem 1rem calc(1.5rem + 24px);border:1px solid transparent;border-radius:.25rem;background-repeat:no-repeat;background-position:.75rem center;margin-bottom:1rem;}.pdoc .alert > em{display:none;}.pdoc .alert > *:last-child{margin-bottom:0;}.pdoc .alert.note {color:#084298;background-color:#cfe2ff;border-color:#b6d4fe;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22%23084298%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M8%2016A8%208%200%201%200%208%200a8%208%200%200%200%200%2016zm.93-9.412-1%204.705c-.07.34.029.533.304.533.194%200%20.487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703%200-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381%202.29-.287zM8%205.5a1%201%200%201%201%200-2%201%201%200%200%201%200%202z%22/%3E%3C/svg%3E");}.pdoc .alert.warning{color:#664d03;background-color:#fff3cd;border-color:#ffecb5;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22%23664d03%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M8.982%201.566a1.13%201.13%200%200%200-1.96%200L.165%2013.233c-.457.778.091%201.767.98%201.767h13.713c.889%200%201.438-.99.98-1.767L8.982%201.566zM8%205c.535%200%20.954.462.9.995l-.35%203.507a.552.552%200%200%201-1.1%200L7.1%205.995A.905.905%200%200%201%208%205zm.002%206a1%201%200%201%201%200%202%201%201%200%200%201%200-2z%22/%3E%3C/svg%3E");}.pdoc .alert.danger{color:#842029;background-color:#f8d7da;border-color:#f5c2c7;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22%23842029%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5.52.359A.5.5%200%200%201%206%200h4a.5.5%200%200%201%20.474.658L8.694%206H12.5a.5.5%200%200%201%20.395.807l-7%209a.5.5%200%200%201-.873-.454L6.823%209.5H3.5a.5.5%200%200%201-.48-.641l2.5-8.5z%22/%3E%3C/svg%3E");}.pdoc .visually-hidden{position:absolute !important;width:1px !important;height:1px !important;padding:0 !important;margin:-1px !important;overflow:hidden !important;clip:rect(0, 0, 0, 0) !important;white-space:nowrap !important;border:0 !important;}.pdoc h1, .pdoc h2, .pdoc h3{font-weight:300;margin:.3em 0;padding:.2em 0;}.pdoc > section:not(.module-info) h1{font-size:1.5rem;font-weight:500;}.pdoc > section:not(.module-info) h2{font-size:1.4rem;font-weight:500;}.pdoc > section:not(.module-info) h3{font-size:1.3rem;font-weight:500;}.pdoc > section:not(.module-info) h4{font-size:1.2rem;}.pdoc > section:not(.module-info) h5{font-size:1.1rem;}.pdoc a{text-decoration:none;color:var(--link);}.pdoc a:hover{color:var(--link-hover);}.pdoc blockquote{margin-left:2rem;}.pdoc pre{border-top:1px solid var(--accent2);border-bottom:1px solid var(--accent2);margin-top:0;margin-bottom:1em;padding:.5rem 0 .5rem .5rem;overflow-x:auto;background-color:var(--code);}.pdoc code{color:var(--text);padding:.2em .4em;margin:0;font-size:85%;background-color:var(--accent);border-radius:6px;}.pdoc a > code{color:inherit;}.pdoc pre > code{display:inline-block;font-size:inherit;background:none;border:none;padding:0;}.pdoc > section:not(.module-info){margin-bottom:1.5rem;}.pdoc .modulename{margin-top:0;font-weight:bold;}.pdoc .modulename a{color:var(--link);transition:100ms all;}.pdoc .git-button{float:right;border:solid var(--link) 1px;}.pdoc .git-button:hover{background-color:var(--link);color:var(--pdoc-background);}.view-source-toggle-state,.view-source-toggle-state ~ .pdoc-code{display:none;}.view-source-toggle-state:checked ~ .pdoc-code{display:block;}.view-source-button{display:inline-block;float:right;font-size:.75rem;line-height:1.5rem;color:var(--muted);padding:0 .4rem 0 1.3rem;cursor:pointer;text-indent:-2px;}.view-source-button > span{visibility:hidden;}.module-info .view-source-button{float:none;display:flex;justify-content:flex-end;margin:-1.2rem .4rem -.2rem 0;}.view-source-button::before{position:absolute;content:"View Source";display:list-item;list-style-type:disclosure-closed;}.view-source-toggle-state:checked ~ .attr .view-source-button::before,.view-source-toggle-state:checked ~ .view-source-button::before{list-style-type:disclosure-open;}.pdoc .docstring{margin-bottom:1.5rem;}.pdoc section:not(.module-info) .docstring{margin-left:clamp(0rem, 5vw - 2rem, 1rem);}.pdoc .docstring .pdoc-code{margin-left:1em;margin-right:1em;}.pdoc h1:target,.pdoc h2:target,.pdoc h3:target,.pdoc h4:target,.pdoc h5:target,.pdoc h6:target,.pdoc .pdoc-code > pre > span:target{background-color:var(--active);box-shadow:-1rem 0 0 0 var(--active);}.pdoc .pdoc-code > pre > span:target{display:block;}.pdoc div:target > .attr,.pdoc section:target > .attr,.pdoc dd:target > a{background-color:var(--active);}.pdoc *{scroll-margin:2rem;}.pdoc .pdoc-code .linenos{user-select:none;}.pdoc .attr:hover{filter:contrast(0.95);}.pdoc section, .pdoc .classattr{position:relative;}.pdoc .headerlink{--width:clamp(1rem, 3vw, 2rem);position:absolute;top:0;left:calc(0rem - var(--width));transition:all 100ms ease-in-out;opacity:0;}.pdoc .headerlink::before{content:"#";display:block;text-align:center;width:var(--width);height:2.3rem;line-height:2.3rem;font-size:1.5rem;}.pdoc .attr:hover ~ .headerlink,.pdoc *:target > .headerlink,.pdoc .headerlink:hover{opacity:1;}.pdoc .attr{display:block;margin:.5rem 0 .5rem;padding:.4rem .4rem .4rem 1rem;background-color:var(--accent);overflow-x:auto;}.pdoc .classattr{margin-left:2rem;}.pdoc .decorator-deprecated{color:#842029;}.pdoc .decorator-deprecated ~ span{filter:grayscale(1) opacity(0.8);}.pdoc .name{color:var(--name);font-weight:bold;}.pdoc .def{color:var(--def);font-weight:bold;}.pdoc .signature{background-color:transparent;}.pdoc .param, .pdoc .return-annotation{white-space:pre;}.pdoc .signature.multiline .param{display:block;}.pdoc .signature.condensed .param{display:inline-block;}.pdoc .annotation{color:var(--annotation);}.pdoc .view-value-toggle-state,.pdoc .view-value-toggle-state ~ .default_value{display:none;}.pdoc .view-value-toggle-state:checked ~ .default_value{display:inherit;}.pdoc .view-value-button{font-size:.5rem;vertical-align:middle;border-style:dashed;margin-top:-0.1rem;}.pdoc .view-value-button:hover{background:white;}.pdoc .view-value-button::before{content:"show";text-align:center;width:2.2em;display:inline-block;}.pdoc .view-value-toggle-state:checked ~ .view-value-button::before{content:"hide";}.pdoc .inherited{margin-left:2rem;}.pdoc .inherited dt{font-weight:700;}.pdoc .inherited dt, .pdoc .inherited dd{display:inline;margin-left:0;margin-bottom:.5rem;}.pdoc .inherited dd:not(:last-child):after{content:", ";}.pdoc .inherited .class:before{content:"class ";}.pdoc .inherited .function a:after{content:"()";}.pdoc .search-result .docstring{overflow:auto;max-height:25vh;}.pdoc .search-result.focused > .attr{background-color:var(--active);}.pdoc .attribution{margin-top:2rem;display:block;opacity:0.5;transition:all 200ms;filter:grayscale(100%);}.pdoc .attribution:hover{opacity:1;filter:grayscale(0%);}.pdoc .attribution img{margin-left:5px;height:35px;vertical-align:middle;width:70px;transition:all 200ms;}.pdoc table{display:block;width:max-content;max-width:100%;overflow:auto;margin-bottom:1rem;}.pdoc table th{font-weight:600;}.pdoc table th, .pdoc table td{padding:6px 13px;border:1px solid var(--accent2);}</style>
+    <style>/*! custom.css */</style></head>
+<body>
+    <nav class="pdoc">
+        <label id="navtoggle" for="togglestate" class="pdoc-button"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke-linecap='round' stroke="currentColor" stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg></label>
+        <input id="togglestate" type="checkbox" aria-hidden="true" tabindex="-1">
+        <div>            <a class="pdoc-button module-list-button" href="../nrp_cmd.html">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+  <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+</svg>                &nbsp;nrp_cmd</a>
+
+
+            <input type="search" placeholder="Search..." role="searchbox" aria-label="search"
+                   pattern=".+" required>
+
+
+
+            <h2>API Documentation</h2>
+                <ul class="memberlist">
+            <li>
+                    <a class="class" href="#Model">Model</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#RepositoryInfo">RepositoryInfo</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#RepositoryInfo.__init__">RepositoryInfo</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.schema">schema</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.name">name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.description">description</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.version">version</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.invenio_version">invenio_version</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.links">links</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.transfers">transfers</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.models">models</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfo.default_model">default_model</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#RepositoryInfoLinks">RepositoryInfoLinks</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#RepositoryInfoLinks.__init__">RepositoryInfoLinks</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfoLinks.self_">self_</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfoLinks.records">records</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfoLinks.drafts">drafts</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfoLinks.models">models</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RepositoryInfoLinks.requests">requests</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ModelInfo">ModelInfo</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#ModelInfo.__init__">ModelInfo</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.type">type</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.schema">schema</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.name">name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.description">description</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.version">version</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.features">features</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.links">links</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.content_types">content_types</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfo.metadata">metadata</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ModelInfoContentType">ModelInfoContentType</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#ModelInfoContentType.__init__">ModelInfoContentType</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoContentType.content_type">content_type</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoContentType.name">name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoContentType.description">description</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoContentType.schema">schema</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoContentType.can_export">can_export</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoContentType.can_deposit">can_deposit</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ModelInfoLinks">ModelInfoLinks</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#ModelInfoLinks.__init__">ModelInfoLinks</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoLinks.records">records</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoLinks.html">html</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoLinks.drafts">drafts</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoLinks.deposit">deposit</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelInfoLinks.model">model</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#Record">Record</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#Record.__init__">Record</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Record.links">links</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Record.files_">files_</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Record.parent">parent</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Record.metadata">metadata</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#RecordLinks">RecordLinks</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#RecordLinks.__init__">RecordLinks</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#FilesEnabled">FilesEnabled</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#FilesEnabled.__init__">FilesEnabled</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#FilesEnabled.enabled">enabled</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ParentRecord">ParentRecord</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#ParentRecord.__init__">ParentRecord</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ParentRecord.communities">communities</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ParentRecord.workflow">workflow</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#RecordList">RecordList</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#RecordList.__init__">RecordList</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RecordList.sortBy">sortBy</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RecordList.aggregations">aggregations</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="variable" href="#RecordId">RecordId</a>
+            </li>
+    </ul>
+
+
+
+        <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
+            built with <span class="visually-hidden">pdoc</span><img
+                alt="pdoc logo"
+                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20role%3D%22img%22%20aria-label%3D%22pdoc%20logo%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%22-1%200%2060%2030%22%3E%3Ctitle%3Epdoc%3C/title%3E%3Cpath%20d%3D%22M29.621%2021.293c-.011-.273-.214-.475-.511-.481a.5.5%200%200%200-.489.503l-.044%201.393c-.097.551-.695%201.215-1.566%201.704-.577.428-1.306.486-2.193.182-1.426-.617-2.467-1.654-3.304-2.487l-.173-.172a3.43%203.43%200%200%200-.365-.306.49.49%200%200%200-.286-.196c-1.718-1.06-4.931-1.47-7.353.191l-.219.15c-1.707%201.187-3.413%202.131-4.328%201.03-.02-.027-.49-.685-.141-1.763.233-.721.546-2.408.772-4.076.042-.09.067-.187.046-.288.166-1.347.277-2.625.241-3.351%201.378-1.008%202.271-2.586%202.271-4.362%200-.976-.272-1.935-.788-2.774-.057-.094-.122-.18-.184-.268.033-.167.052-.339.052-.516%200-1.477-1.202-2.679-2.679-2.679-.791%200-1.496.352-1.987.9a6.3%206.3%200%200%200-1.001.029c-.492-.564-1.207-.929-2.012-.929-1.477%200-2.679%201.202-2.679%202.679A2.65%202.65%200%200%200%20.97%206.554c-.383.747-.595%201.572-.595%202.41%200%202.311%201.507%204.29%203.635%205.107-.037.699-.147%202.27-.423%203.294l-.137.461c-.622%202.042-2.515%208.257%201.727%2010.643%201.614.908%203.06%201.248%204.317%201.248%202.665%200%204.492-1.524%205.322-2.401%201.476-1.559%202.886-1.854%206.491.82%201.877%201.393%203.514%201.753%204.861%201.068%202.223-1.713%202.811-3.867%203.399-6.374.077-.846.056-1.469.054-1.537zm-4.835%204.313c-.054.305-.156.586-.242.629-.034-.007-.131-.022-.307-.157-.145-.111-.314-.478-.456-.908.221.121.432.25.675.355.115.039.219.051.33.081zm-2.251-1.238c-.05.33-.158.648-.252.694-.022.001-.125-.018-.307-.157-.217-.166-.488-.906-.639-1.573.358.344.754.693%201.198%201.036zm-3.887-2.337c-.006-.116-.018-.231-.041-.342.635.145%201.189.368%201.599.625.097.231.166.481.174.642-.03.049-.055.101-.067.158-.046.013-.128.026-.298.004-.278-.037-.901-.57-1.367-1.087zm-1.127-.497c.116.306.176.625.12.71-.019.014-.117.045-.345.016-.206-.027-.604-.332-.986-.695.41-.051.816-.056%201.211-.031zm-4.535%201.535c.209.22.379.47.358.598-.006.041-.088.138-.351.234-.144.055-.539-.063-.979-.259a11.66%2011.66%200%200%200%20.972-.573zm.983-.664c.359-.237.738-.418%201.126-.554.25.237.479.548.457.694-.006.042-.087.138-.351.235-.174.064-.694-.105-1.232-.375zm-3.381%201.794c-.022.145-.061.29-.149.401-.133.166-.358.248-.69.251h-.002c-.133%200-.306-.26-.45-.621.417.091.854.07%201.291-.031zm-2.066-8.077a4.78%204.78%200%200%201-.775-.584c.172-.115.505-.254.88-.378l-.105.962zm-.331%202.302a10.32%2010.32%200%200%201-.828-.502c.202-.143.576-.328.984-.49l-.156.992zm-.45%202.157l-.701-.403c.214-.115.536-.249.891-.376a11.57%2011.57%200%200%201-.19.779zm-.181%201.716c.064.398.194.702.298.893-.194-.051-.435-.162-.736-.398.061-.119.224-.3.438-.495zM8.87%204.141c0%20.152-.123.276-.276.276s-.275-.124-.275-.276.123-.276.276-.276.275.124.275.276zm-.735-.389a1.15%201.15%200%200%200-.314.783%201.16%201.16%200%200%200%201.162%201.162c.457%200%20.842-.27%201.032-.653.026.117.042.238.042.362a1.68%201.68%200%200%201-1.679%201.679%201.68%201.68%200%200%201-1.679-1.679c0-.843.626-1.535%201.436-1.654zM5.059%205.406A1.68%201.68%200%200%201%203.38%207.085a1.68%201.68%200%200%201-1.679-1.679c0-.037.009-.072.011-.109.21.3.541.508.935.508a1.16%201.16%200%200%200%201.162-1.162%201.14%201.14%200%200%200-.474-.912c.015%200%20.03-.005.045-.005.926.001%201.679.754%201.679%201.68zM3.198%204.141c0%20.152-.123.276-.276.276s-.275-.124-.275-.276.123-.276.276-.276.275.124.275.276zM1.375%208.964c0-.52.103-1.035.288-1.52.466.394%201.06.64%201.717.64%201.144%200%202.116-.725%202.499-1.738.383%201.012%201.355%201.738%202.499%201.738.867%200%201.631-.421%202.121-1.062.307.605.478%201.267.478%201.942%200%202.486-2.153%204.51-4.801%204.51s-4.801-2.023-4.801-4.51zm24.342%2019.349c-.985.498-2.267.168-3.813-.979-3.073-2.281-5.453-3.199-7.813-.705-1.315%201.391-4.163%203.365-8.423.97-3.174-1.786-2.239-6.266-1.261-9.479l.146-.492c.276-1.02.395-2.457.444-3.268a6.11%206.11%200%200%200%201.18.115%206.01%206.01%200%200%200%202.536-.562l-.006.175c-.802.215-1.848.612-2.021%201.25-.079.295.021.601.274.837.219.203.415.364.598.501-.667.304-1.243.698-1.311%201.179-.02.144-.022.507.393.787.213.144.395.26.564.365-1.285.521-1.361.96-1.381%201.126-.018.142-.011.496.427.746l.854.489c-.473.389-.971.914-.999%201.429-.018.278.095.532.316.713.675.556%201.231.721%201.653.721.059%200%20.104-.014.158-.02.207.707.641%201.64%201.513%201.64h.013c.8-.008%201.236-.345%201.462-.626.173-.216.268-.457.325-.692.424.195.93.374%201.372.374.151%200%20.294-.021.423-.068.732-.27.944-.704.993-1.021.009-.061.003-.119.002-.179.266.086.538.147.789.147.15%200%20.294-.021.423-.069.542-.2.797-.489.914-.754.237.147.478.258.704.288.106.014.205.021.296.021.356%200%20.595-.101.767-.229.438.435%201.094.992%201.656%201.067.106.014.205.021.296.021a1.56%201.56%200%200%200%20.323-.035c.17.575.453%201.289.866%201.605.358.273.665.362.914.362a.99.99%200%200%200%20.421-.093%201.03%201.03%200%200%200%20.245-.164c.168.428.39.846.68%201.068.358.273.665.362.913.362a.99.99%200%200%200%20.421-.093c.317-.148.512-.448.639-.762.251.157.495.257.726.257.127%200%20.25-.024.37-.071.427-.17.706-.617.841-1.314.022-.015.047-.022.068-.038.067-.051.133-.104.196-.159-.443%201.486-1.107%202.761-2.086%203.257zM8.66%209.925a.5.5%200%201%200-1%200c0%20.653-.818%201.205-1.787%201.205s-1.787-.552-1.787-1.205a.5.5%200%201%200-1%200c0%201.216%201.25%202.205%202.787%202.205s2.787-.989%202.787-2.205zm4.4%2015.965l-.208.097c-2.661%201.258-4.708%201.436-6.086.527-1.542-1.017-1.88-3.19-1.844-4.198a.4.4%200%200%200-.385-.414c-.242-.029-.406.164-.414.385-.046%201.249.367%203.686%202.202%204.896.708.467%201.547.7%202.51.7%201.248%200%202.706-.392%204.362-1.174l.185-.086a.4.4%200%200%200%20.205-.527c-.089-.204-.326-.291-.527-.206zM9.547%202.292c.093.077.205.114.317.114a.5.5%200%200%200%20.318-.886L8.817.397a.5.5%200%200%200-.703.068.5.5%200%200%200%20.069.703l1.364%201.124zm-7.661-.065c.086%200%20.173-.022.253-.068l1.523-.893a.5.5%200%200%200-.506-.863l-1.523.892a.5.5%200%200%200-.179.685c.094.158.261.247.432.247z%22%20transform%3D%22matrix%28-1%200%200%201%2058%200%29%22%20fill%3D%22%233bb300%22/%3E%3Cpath%20d%3D%22M.3%2021.86V10.18q0-.46.02-.68.04-.22.18-.5.28-.54%201.34-.54%201.06%200%201.42.28.38.26.44.78.76-1.04%202.38-1.04%201.64%200%203.1%201.54%201.46%201.54%201.46%203.58%200%202.04-1.46%203.58-1.44%201.54-3.08%201.54-1.64%200-2.38-.92v4.04q0%20.46-.04.68-.02.22-.18.5-.14.3-.5.42-.36.12-.98.12-.62%200-1-.12-.36-.12-.52-.4-.14-.28-.18-.5-.02-.22-.02-.68zm3.96-9.42q-.46.54-.46%201.18%200%20.64.46%201.18.48.52%201.2.52.74%200%201.24-.52.52-.52.52-1.18%200-.66-.48-1.18-.48-.54-1.26-.54-.76%200-1.22.54zm14.741-8.36q.16-.3.54-.42.38-.12%201-.12.64%200%201.02.12.38.12.52.42.16.3.18.54.04.22.04.68v11.94q0%20.46-.04.7-.02.22-.18.5-.3.54-1.7.54-1.38%200-1.54-.98-.84.96-2.34.96-1.8%200-3.28-1.56-1.48-1.58-1.48-3.66%200-2.1%201.48-3.68%201.5-1.58%203.28-1.58%201.48%200%202.3%201v-4.2q0-.46.02-.68.04-.24.18-.52zm-3.24%2010.86q.52.54%201.26.54.74%200%201.22-.54.5-.54.5-1.18%200-.66-.48-1.22-.46-.56-1.26-.56-.8%200-1.28.56-.48.54-.48%201.2%200%20.66.52%201.2zm7.833-1.2q0-2.4%201.68-3.96%201.68-1.56%203.84-1.56%202.16%200%203.82%201.56%201.66%201.54%201.66%203.94%200%201.66-.86%202.96-.86%201.28-2.1%201.9-1.22.6-2.54.6-1.32%200-2.56-.64-1.24-.66-2.1-1.92-.84-1.28-.84-2.88zm4.18%201.44q.64.48%201.3.48.66%200%201.32-.5.66-.5.66-1.48%200-.98-.62-1.46-.62-.48-1.34-.48-.72%200-1.34.5-.62.5-.62%201.48%200%20.96.64%201.46zm11.412-1.44q0%20.84.56%201.32.56.46%201.18.46.64%200%201.18-.36.56-.38.9-.38.6%200%201.46%201.06.46.58.46%201.04%200%20.76-1.1%201.42-1.14.8-2.8.8-1.86%200-3.58-1.34-.82-.64-1.34-1.7-.52-1.08-.52-2.36%200-1.3.52-2.34.52-1.06%201.34-1.7%201.66-1.32%203.54-1.32.76%200%201.48.22.72.2%201.06.4l.32.2q.36.24.56.38.52.4.52.92%200%20.5-.42%201.14-.72%201.1-1.38%201.1-.38%200-1.08-.44-.36-.34-1.04-.34-.66%200-1.24.48-.58.48-.58%201.34z%22%20fill%3D%22green%22/%3E%3C/svg%3E"/>
+        </a>
+</div>
+    </nav>
+    <main class="pdoc">
+            <section class="module-info">
+                    <h1 class="modulename">
+<a href="./../nrp_cmd.html">nrp_cmd</a><wbr>.types    </h1>
+
+                        <div class="docstring"><p>Types used inside the nrp client.</p>
+</div>
+
+                        <input id="mod-types-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+
+                        <label class="view-source-button" for="mod-types-view-source"><span>View Source</span></label>
+
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Types used inside the nrp client.&quot;&quot;&quot;</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.info</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>    <span class="n">ModelInfo</span><span class="p">,</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>    <span class="n">ModelInfoContentType</span><span class="p">,</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="n">ModelInfoLinks</span><span class="p">,</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>    <span class="n">RepositoryInfo</span><span class="p">,</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>    <span class="n">RepositoryInfoLinks</span><span class="p">,</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="p">)</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.records</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="n">FilesEnabled</span><span class="p">,</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="n">ParentRecord</span><span class="p">,</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="n">Record</span><span class="p">,</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="n">RecordId</span><span class="p">,</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="n">RecordLinks</span><span class="p">,</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="n">RecordList</span><span class="p">,</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="p">)</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="s2">&quot;RepositoryInfo&quot;</span><span class="p">,</span> <span class="s2">&quot;RepositoryInfoLinks&quot;</span><span class="p">,</span> <span class="s2">&quot;ModelInfo&quot;</span><span class="p">,</span> <span class="s2">&quot;ModelInfoContentType&quot;</span><span class="p">,</span> <span class="s2">&quot;ModelInfoLinks&quot;</span><span class="p">,</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="s2">&quot;Record&quot;</span><span class="p">,</span> <span class="s2">&quot;RecordLinks&quot;</span><span class="p">,</span> <span class="s2">&quot;FilesEnabled&quot;</span><span class="p">,</span> <span class="s2">&quot;ParentRecord&quot;</span><span class="p">,</span> <span class="s2">&quot;RecordList&quot;</span><span class="p">,</span> <span class="s2">&quot;RecordId&quot;</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="p">)</span>
+</span></pre></div>
+
+
+            </section>
+                <section id="Model">
+                            <input id="Model-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">Model</span>:
+
+                <label class="view-source-button" for="Model-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Model"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Model-16"><a href="#Model-16"><span class="linenos">16</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">:</span>
+</span><span id="Model-17"><a href="#Model-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base model, which allows getting extra fields via normal dot operator.&quot;&quot;&quot;</span>
+</span><span id="Model-18"><a href="#Model-18"><span class="linenos">18</span></a>
+</span><span id="Model-19"><a href="#Model-19"><span class="linenos">19</span></a>    <span class="n">_extra_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span><span id="Model-20"><a href="#Model-20"><span class="linenos">20</span></a>
+</span><span id="Model-21"><a href="#Model-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>  <span class="c1"># noqa: ANN401</span>
+</span><span id="Model-22"><a href="#Model-22"><span class="linenos">22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get extra fields from the model_extra attribute.&quot;&quot;&quot;</span>
+</span><span id="Model-23"><a href="#Model-23"><span class="linenos">23</span></a>        <span class="k">if</span> <span class="s2">&quot;_extra_data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+</span><span id="Model-24"><a href="#Model-24"><span class="linenos">24</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="Model-25"><a href="#Model-25"><span class="linenos">25</span></a>
+</span><span id="Model-26"><a href="#Model-26"><span class="linenos">26</span></a>        <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">:</span>
+</span><span id="Model-27"><a href="#Model-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+</span><span id="Model-28"><a href="#Model-28"><span class="linenos">28</span></a>        <span class="n">dash_item</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+</span><span id="Model-29"><a href="#Model-29"><span class="linenos">29</span></a>        <span class="k">if</span> <span class="n">dash_item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">:</span>
+</span><span id="Model-30"><a href="#Model-30"><span class="linenos">30</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">[</span><span class="n">dash_item</span><span class="p">]</span>
+</span><span id="Model-31"><a href="#Model-31"><span class="linenos">31</span></a>
+</span><span id="Model-32"><a href="#Model-32"><span class="linenos">32</span></a>        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has no attribute </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Base model, which allows getting extra fields via normal dot operator.</p>
+</div>
+
+
+                </section>
+                <section id="RepositoryInfo">
+                            <input id="RepositoryInfo-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-extend_serialization">@extend_serialization(allow_extra_data=True)</div>
+        <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">RepositoryInfo</span><wbr>(<span class="base"><a href="#Model">nrp_cmd.types.Model</a></span>):
+
+                <label class="view-source-button" for="RepositoryInfo-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#RepositoryInfo"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RepositoryInfo-118"><a href="#RepositoryInfo-118"><span class="linenos">118</span></a><span class="nd">@extend_serialization</span><span class="p">(</span><span class="n">allow_extra_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="RepositoryInfo-119"><a href="#RepositoryInfo-119"><span class="linenos">119</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="RepositoryInfo-120"><a href="#RepositoryInfo-120"><span class="linenos">120</span></a><span class="k">class</span><span class="w"> </span><span class="nc">RepositoryInfo</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="RepositoryInfo-121"><a href="#RepositoryInfo-121"><span class="linenos">121</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Extra info downloaded from nrp-compatible invenio repository.&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-122"><a href="#RepositoryInfo-122"><span class="linenos">122</span></a>    <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="RepositoryInfo-123"><a href="#RepositoryInfo-123"><span class="linenos">123</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Version of this configuration schema&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-124"><a href="#RepositoryInfo-124"><span class="linenos">124</span></a>
+</span><span id="RepositoryInfo-125"><a href="#RepositoryInfo-125"><span class="linenos">125</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="RepositoryInfo-126"><a href="#RepositoryInfo-126"><span class="linenos">126</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the repository&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-127"><a href="#RepositoryInfo-127"><span class="linenos">127</span></a>
+</span><span id="RepositoryInfo-128"><a href="#RepositoryInfo-128"><span class="linenos">128</span></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="RepositoryInfo-129"><a href="#RepositoryInfo-129"><span class="linenos">129</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The description of the repository&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-130"><a href="#RepositoryInfo-130"><span class="linenos">130</span></a>
+</span><span id="RepositoryInfo-131"><a href="#RepositoryInfo-131"><span class="linenos">131</span></a>    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="RepositoryInfo-132"><a href="#RepositoryInfo-132"><span class="linenos">132</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The version of the repository&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-133"><a href="#RepositoryInfo-133"><span class="linenos">133</span></a>
+</span><span id="RepositoryInfo-134"><a href="#RepositoryInfo-134"><span class="linenos">134</span></a>    <span class="n">invenio_version</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="RepositoryInfo-135"><a href="#RepositoryInfo-135"><span class="linenos">135</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The version of invenio the repository is based on&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-136"><a href="#RepositoryInfo-136"><span class="linenos">136</span></a>
+</span><span id="RepositoryInfo-137"><a href="#RepositoryInfo-137"><span class="linenos">137</span></a>    <span class="n">links</span><span class="p">:</span> <span class="n">RepositoryInfoLinks</span>
+</span><span id="RepositoryInfo-138"><a href="#RepositoryInfo-138"><span class="linenos">138</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Links to the repository&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-139"><a href="#RepositoryInfo-139"><span class="linenos">139</span></a>
+</span><span id="RepositoryInfo-140"><a href="#RepositoryInfo-140"><span class="linenos">140</span></a>    <span class="n">transfers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+</span><span id="RepositoryInfo-141"><a href="#RepositoryInfo-141"><span class="linenos">141</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;List of supported file transfer protocols&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-142"><a href="#RepositoryInfo-142"><span class="linenos">142</span></a>
+</span><span id="RepositoryInfo-143"><a href="#RepositoryInfo-143"><span class="linenos">143</span></a>    <span class="n">models</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</span><span id="RepositoryInfo-144"><a href="#RepositoryInfo-144"><span class="linenos">144</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Information about the models in the repository&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfo-145"><a href="#RepositoryInfo-145"><span class="linenos">145</span></a>
+</span><span id="RepositoryInfo-146"><a href="#RepositoryInfo-146"><span class="linenos">146</span></a>    <span class="n">default_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="RepositoryInfo-147"><a href="#RepositoryInfo-147"><span class="linenos">147</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The default model for the repository. </span>
+</span><span id="RepositoryInfo-148"><a href="#RepositoryInfo-148"><span class="linenos">148</span></a><span class="sd">    If set, it is used whenever the model is not specified.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Extra info downloaded from nrp-compatible invenio repository.</p>
+</div>
+
+
+                            <div id="RepositoryInfo.__init__" class="classattr">
+                                        <input id="RepositoryInfo.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">RepositoryInfo</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="n">schema</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">description</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">version</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">invenio_version</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">links</span><span class="p">:</span> <span class="n"><a href="#RepositoryInfoLinks">RepositoryInfoLinks</a></span>,</span><span class="param">	<span class="n">transfers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">NOTHING</span>,</span><span class="param">	<span class="n">models</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n"><a href="#ModelInfo">ModelInfo</a></span><span class="p">]</span> <span class="o">=</span> <span class="n">NOTHING</span>,</span><span class="param">	<span class="n">default_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></span>)</span>
+
+                <label class="view-source-button" for="RepositoryInfo.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RepositoryInfo.__init__-2"><a href="#RepositoryInfo.__init__-2"><span class="linenos"> 2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">invenio_version</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">transfers</span><span class="o">=</span><span class="n">NOTHING</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">NOTHING</span><span class="p">,</span> <span class="n">default_model</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;default_model&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">):</span>
+</span><span id="RepositoryInfo.__init__-3"><a href="#RepositoryInfo.__init__-3"><span class="linenos"> 3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+</span><span id="RepositoryInfo.__init__-4"><a href="#RepositoryInfo.__init__-4"><span class="linenos"> 4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+</span><span id="RepositoryInfo.__init__-5"><a href="#RepositoryInfo.__init__-5"><span class="linenos"> 5</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+</span><span id="RepositoryInfo.__init__-6"><a href="#RepositoryInfo.__init__-6"><span class="linenos"> 6</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+</span><span id="RepositoryInfo.__init__-7"><a href="#RepositoryInfo.__init__-7"><span class="linenos"> 7</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">invenio_version</span> <span class="o">=</span> <span class="n">invenio_version</span>
+</span><span id="RepositoryInfo.__init__-8"><a href="#RepositoryInfo.__init__-8"><span class="linenos"> 8</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">links</span> <span class="o">=</span> <span class="n">links</span>
+</span><span id="RepositoryInfo.__init__-9"><a href="#RepositoryInfo.__init__-9"><span class="linenos"> 9</span></a>    <span class="k">if</span> <span class="n">transfers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NOTHING</span><span class="p">:</span>
+</span><span id="RepositoryInfo.__init__-10"><a href="#RepositoryInfo.__init__-10"><span class="linenos">10</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">transfers</span> <span class="o">=</span> <span class="n">transfers</span>
+</span><span id="RepositoryInfo.__init__-11"><a href="#RepositoryInfo.__init__-11"><span class="linenos">11</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="RepositoryInfo.__init__-12"><a href="#RepositoryInfo.__init__-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">transfers</span> <span class="o">=</span> <span class="n">__attr_factory_transfers</span><span class="p">()</span>
+</span><span id="RepositoryInfo.__init__-13"><a href="#RepositoryInfo.__init__-13"><span class="linenos">13</span></a>    <span class="k">if</span> <span class="n">models</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NOTHING</span><span class="p">:</span>
+</span><span id="RepositoryInfo.__init__-14"><a href="#RepositoryInfo.__init__-14"><span class="linenos">14</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="n">models</span>
+</span><span id="RepositoryInfo.__init__-15"><a href="#RepositoryInfo.__init__-15"><span class="linenos">15</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="RepositoryInfo.__init__-16"><a href="#RepositoryInfo.__init__-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="n">__attr_factory_models</span><span class="p">()</span>
+</span><span id="RepositoryInfo.__init__-17"><a href="#RepositoryInfo.__init__-17"><span class="linenos">17</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">default_model</span> <span class="o">=</span> <span class="n">default_model</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class RepositoryInfo.</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.schema" class="classattr">
+                                <div class="attr variable">
+            <span class="name">schema</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.schema"></a>
+    
+            <div class="docstring"><p>Version of this configuration schema</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.name"></a>
+    
+            <div class="docstring"><p>The name of the repository</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.description" class="classattr">
+                                <div class="attr variable">
+            <span class="name">description</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.description"></a>
+    
+            <div class="docstring"><p>The description of the repository</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.version" class="classattr">
+                                <div class="attr variable">
+            <span class="name">version</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.version"></a>
+    
+            <div class="docstring"><p>The version of the repository</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.invenio_version" class="classattr">
+                                <div class="attr variable">
+            <span class="name">invenio_version</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.invenio_version"></a>
+    
+            <div class="docstring"><p>The version of invenio the repository is based on</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.links" class="classattr">
+                                <div class="attr variable">
+            <span class="name">links</span><span class="annotation">: <a href="#RepositoryInfoLinks">RepositoryInfoLinks</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.links"></a>
+    
+            <div class="docstring"><p>Links to the repository</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.transfers" class="classattr">
+                                <div class="attr variable">
+            <span class="name">transfers</span><span class="annotation">: list[str]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.transfers"></a>
+    
+            <div class="docstring"><p>List of supported file transfer protocols</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.models" class="classattr">
+                                <div class="attr variable">
+            <span class="name">models</span><span class="annotation">: dict[str, <a href="#ModelInfo">ModelInfo</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.models"></a>
+    
+            <div class="docstring"><p>Information about the models in the repository</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfo.default_model" class="classattr">
+                                <div class="attr variable">
+            <span class="name">default_model</span><span class="annotation">: str | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfo.default_model"></a>
+    
+            <div class="docstring"><p>The default model for the repository. 
+If set, it is used whenever the model is not specified.</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="RepositoryInfoLinks">
+                            <input id="RepositoryInfoLinks-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-extend_serialization">@extend_serialization(Rename(&#39;self&#39;, &#39;self_&#39;), allow_extra_data=True)</div>
+        <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">RepositoryInfoLinks</span><wbr>(<span class="base"><a href="#Model">nrp_cmd.types.Model</a></span>):
+
+                <label class="view-source-button" for="RepositoryInfoLinks-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#RepositoryInfoLinks"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RepositoryInfoLinks-20"><a href="#RepositoryInfoLinks-20"><span class="linenos">20</span></a><span class="nd">@extend_serialization</span><span class="p">(</span><span class="n">Rename</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;self_&quot;</span><span class="p">),</span> <span class="n">allow_extra_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="RepositoryInfoLinks-21"><a href="#RepositoryInfoLinks-21"><span class="linenos">21</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="RepositoryInfoLinks-22"><a href="#RepositoryInfoLinks-22"><span class="linenos">22</span></a><span class="k">class</span><span class="w"> </span><span class="nc">RepositoryInfoLinks</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="RepositoryInfoLinks-23"><a href="#RepositoryInfoLinks-23"><span class="linenos">23</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Links within the repository info endpoint.&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfoLinks-24"><a href="#RepositoryInfoLinks-24"><span class="linenos">24</span></a>
+</span><span id="RepositoryInfoLinks-25"><a href="#RepositoryInfoLinks-25"><span class="linenos">25</span></a>    <span class="n">self_</span><span class="p">:</span> <span class="n">URL</span>
+</span><span id="RepositoryInfoLinks-26"><a href="#RepositoryInfoLinks-26"><span class="linenos">26</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the repository itself&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfoLinks-27"><a href="#RepositoryInfoLinks-27"><span class="linenos">27</span></a>
+</span><span id="RepositoryInfoLinks-28"><a href="#RepositoryInfoLinks-28"><span class="linenos">28</span></a>    <span class="n">records</span><span class="p">:</span> <span class="n">URL</span>
+</span><span id="RepositoryInfoLinks-29"><a href="#RepositoryInfoLinks-29"><span class="linenos">29</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the global search endpoint&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfoLinks-30"><a href="#RepositoryInfoLinks-30"><span class="linenos">30</span></a>
+</span><span id="RepositoryInfoLinks-31"><a href="#RepositoryInfoLinks-31"><span class="linenos">31</span></a>    <span class="n">drafts</span><span class="p">:</span> <span class="n">URL</span>
+</span><span id="RepositoryInfoLinks-32"><a href="#RepositoryInfoLinks-32"><span class="linenos">32</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the user&#39;s records&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfoLinks-33"><a href="#RepositoryInfoLinks-33"><span class="linenos">33</span></a>
+</span><span id="RepositoryInfoLinks-34"><a href="#RepositoryInfoLinks-34"><span class="linenos">34</span></a>    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">URL</span><span class="p">]</span>
+</span><span id="RepositoryInfoLinks-35"><a href="#RepositoryInfoLinks-35"><span class="linenos">35</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the models in the repository&quot;&quot;&quot;</span>
+</span><span id="RepositoryInfoLinks-36"><a href="#RepositoryInfoLinks-36"><span class="linenos">36</span></a>
+</span><span id="RepositoryInfoLinks-37"><a href="#RepositoryInfoLinks-37"><span class="linenos">37</span></a>    <span class="n">requests</span><span class="p">:</span> <span class="n">URL</span>
+</span><span id="RepositoryInfoLinks-38"><a href="#RepositoryInfoLinks-38"><span class="linenos">38</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the requests in the repository&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Links within the repository info endpoint.</p>
+</div>
+
+
+                            <div id="RepositoryInfoLinks.__init__" class="classattr">
+                                        <input id="RepositoryInfoLinks.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">RepositoryInfoLinks</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="n">self_</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span>,</span><span class="param">	<span class="n">records</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span>,</span><span class="param">	<span class="n">drafts</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span>,</span><span class="param">	<span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">yarl</span><span class="o">.</span><span class="n">URL</span><span class="p">]</span>,</span><span class="param">	<span class="n">requests</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span></span>)</span>
+
+                <label class="view-source-button" for="RepositoryInfoLinks.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#RepositoryInfoLinks.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RepositoryInfoLinks.__init__-2"><a href="#RepositoryInfoLinks.__init__-2"><span class="linenos">2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">self_</span><span class="p">,</span> <span class="n">records</span><span class="p">,</span> <span class="n">drafts</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">requests</span><span class="p">):</span>
+</span><span id="RepositoryInfoLinks.__init__-3"><a href="#RepositoryInfoLinks.__init__-3"><span class="linenos">3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">self_</span> <span class="o">=</span> <span class="n">self_</span>
+</span><span id="RepositoryInfoLinks.__init__-4"><a href="#RepositoryInfoLinks.__init__-4"><span class="linenos">4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> <span class="n">records</span>
+</span><span id="RepositoryInfoLinks.__init__-5"><a href="#RepositoryInfoLinks.__init__-5"><span class="linenos">5</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">drafts</span> <span class="o">=</span> <span class="n">drafts</span>
+</span><span id="RepositoryInfoLinks.__init__-6"><a href="#RepositoryInfoLinks.__init__-6"><span class="linenos">6</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="n">models</span>
+</span><span id="RepositoryInfoLinks.__init__-7"><a href="#RepositoryInfoLinks.__init__-7"><span class="linenos">7</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">requests</span> <span class="o">=</span> <span class="n">requests</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class RepositoryInfoLinks.</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfoLinks.self_" class="classattr">
+                                <div class="attr variable">
+            <span class="name">self_</span><span class="annotation">: yarl.URL</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfoLinks.self_"></a>
+    
+            <div class="docstring"><p>Link to the repository itself</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfoLinks.records" class="classattr">
+                                <div class="attr variable">
+            <span class="name">records</span><span class="annotation">: yarl.URL</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfoLinks.records"></a>
+    
+            <div class="docstring"><p>Link to the global search endpoint</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfoLinks.drafts" class="classattr">
+                                <div class="attr variable">
+            <span class="name">drafts</span><span class="annotation">: yarl.URL</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfoLinks.drafts"></a>
+    
+            <div class="docstring"><p>Link to the user's records</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfoLinks.models" class="classattr">
+                                <div class="attr variable">
+            <span class="name">models</span><span class="annotation">: Optional[yarl.URL]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfoLinks.models"></a>
+    
+            <div class="docstring"><p>Link to the models in the repository</p>
+</div>
+
+
+                            </div>
+                            <div id="RepositoryInfoLinks.requests" class="classattr">
+                                <div class="attr variable">
+            <span class="name">requests</span><span class="annotation">: yarl.URL</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RepositoryInfoLinks.requests"></a>
+    
+            <div class="docstring"><p>Link to the requests in the repository</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="ModelInfo">
+                            <input id="ModelInfo-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-extend_serialization">@extend_serialization(allow_extra_data=True)</div>
+        <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">ModelInfo</span><wbr>(<span class="base"><a href="#Model">nrp_cmd.types.Model</a></span>):
+
+                <label class="view-source-button" for="ModelInfo-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModelInfo"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelInfo-86"><a href="#ModelInfo-86"><span class="linenos"> 86</span></a><span class="nd">@extend_serialization</span><span class="p">(</span><span class="n">allow_extra_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ModelInfo-87"><a href="#ModelInfo-87"><span class="linenos"> 87</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ModelInfo-88"><a href="#ModelInfo-88"><span class="linenos"> 88</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelInfo</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="ModelInfo-89"><a href="#ModelInfo-89"><span class="linenos"> 89</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Information about metadata model within invenio server.&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-90"><a href="#ModelInfo-90"><span class="linenos"> 90</span></a>    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="ModelInfo-91"><a href="#ModelInfo-91"><span class="linenos"> 91</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-92"><a href="#ModelInfo-92"><span class="linenos"> 92</span></a>
+</span><span id="ModelInfo-93"><a href="#ModelInfo-93"><span class="linenos"> 93</span></a>    <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="ModelInfo-94"><a href="#ModelInfo-94"><span class="linenos"> 94</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The json schema of the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-95"><a href="#ModelInfo-95"><span class="linenos"> 95</span></a>
+</span><span id="ModelInfo-96"><a href="#ModelInfo-96"><span class="linenos"> 96</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="ModelInfo-97"><a href="#ModelInfo-97"><span class="linenos"> 97</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-98"><a href="#ModelInfo-98"><span class="linenos"> 98</span></a>
+</span><span id="ModelInfo-99"><a href="#ModelInfo-99"><span class="linenos"> 99</span></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="ModelInfo-100"><a href="#ModelInfo-100"><span class="linenos">100</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The description of the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-101"><a href="#ModelInfo-101"><span class="linenos">101</span></a>
+</span><span id="ModelInfo-102"><a href="#ModelInfo-102"><span class="linenos">102</span></a>    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="ModelInfo-103"><a href="#ModelInfo-103"><span class="linenos">103</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The version of the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-104"><a href="#ModelInfo-104"><span class="linenos">104</span></a>
+</span><span id="ModelInfo-105"><a href="#ModelInfo-105"><span class="linenos">105</span></a>    <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="ModelInfo-106"><a href="#ModelInfo-106"><span class="linenos">106</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;List of features supported by the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-107"><a href="#ModelInfo-107"><span class="linenos">107</span></a>
+</span><span id="ModelInfo-108"><a href="#ModelInfo-108"><span class="linenos">108</span></a>    <span class="n">links</span><span class="p">:</span> <span class="n">ModelInfoLinks</span>
+</span><span id="ModelInfo-109"><a href="#ModelInfo-109"><span class="linenos">109</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Links to the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-110"><a href="#ModelInfo-110"><span class="linenos">110</span></a>
+</span><span id="ModelInfo-111"><a href="#ModelInfo-111"><span class="linenos">111</span></a>    <span class="n">content_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModelInfoContentType</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+</span><span id="ModelInfo-112"><a href="#ModelInfo-112"><span class="linenos">112</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;List of supported content-types for API serialization&quot;&quot;&quot;</span>
+</span><span id="ModelInfo-113"><a href="#ModelInfo-113"><span class="linenos">113</span></a>    
+</span><span id="ModelInfo-114"><a href="#ModelInfo-114"><span class="linenos">114</span></a>    <span class="n">metadata</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ModelInfo-115"><a href="#ModelInfo-115"><span class="linenos">115</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the model contains metadata inside the metadata element.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Information about metadata model within invenio server.</p>
+</div>
+
+
+                            <div id="ModelInfo.__init__" class="classattr">
+                                        <input id="ModelInfo.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">ModelInfo</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">schema</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">description</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">version</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">links</span><span class="p">:</span> <span class="n"><a href="#ModelInfoLinks">ModelInfoLinks</a></span>,</span><span class="param">	<span class="n">content_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n"><a href="#ModelInfoContentType">ModelInfoContentType</a></span><span class="p">]</span> <span class="o">=</span> <span class="n">NOTHING</span>,</span><span class="param">	<span class="n">metadata</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></span>)</span>
+
+                <label class="view-source-button" for="ModelInfo.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModelInfo.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelInfo.__init__-2"><a href="#ModelInfo.__init__-2"><span class="linenos"> 2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">content_types</span><span class="o">=</span><span class="n">NOTHING</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">):</span>
+</span><span id="ModelInfo.__init__-3"><a href="#ModelInfo.__init__-3"><span class="linenos"> 3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+</span><span id="ModelInfo.__init__-4"><a href="#ModelInfo.__init__-4"><span class="linenos"> 4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+</span><span id="ModelInfo.__init__-5"><a href="#ModelInfo.__init__-5"><span class="linenos"> 5</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+</span><span id="ModelInfo.__init__-6"><a href="#ModelInfo.__init__-6"><span class="linenos"> 6</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+</span><span id="ModelInfo.__init__-7"><a href="#ModelInfo.__init__-7"><span class="linenos"> 7</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+</span><span id="ModelInfo.__init__-8"><a href="#ModelInfo.__init__-8"><span class="linenos"> 8</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span>
+</span><span id="ModelInfo.__init__-9"><a href="#ModelInfo.__init__-9"><span class="linenos"> 9</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">links</span> <span class="o">=</span> <span class="n">links</span>
+</span><span id="ModelInfo.__init__-10"><a href="#ModelInfo.__init__-10"><span class="linenos">10</span></a>    <span class="k">if</span> <span class="n">content_types</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NOTHING</span><span class="p">:</span>
+</span><span id="ModelInfo.__init__-11"><a href="#ModelInfo.__init__-11"><span class="linenos">11</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">content_types</span> <span class="o">=</span> <span class="n">content_types</span>
+</span><span id="ModelInfo.__init__-12"><a href="#ModelInfo.__init__-12"><span class="linenos">12</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelInfo.__init__-13"><a href="#ModelInfo.__init__-13"><span class="linenos">13</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">content_types</span> <span class="o">=</span> <span class="n">__attr_factory_content_types</span><span class="p">()</span>
+</span><span id="ModelInfo.__init__-14"><a href="#ModelInfo.__init__-14"><span class="linenos">14</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class ModelInfo.</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.type" class="classattr">
+                                <div class="attr variable">
+            <span class="name">type</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.type"></a>
+    
+            <div class="docstring"><p>The type of the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.schema" class="classattr">
+                                <div class="attr variable">
+            <span class="name">schema</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.schema"></a>
+    
+            <div class="docstring"><p>The json schema of the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.name"></a>
+    
+            <div class="docstring"><p>The name of the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.description" class="classattr">
+                                <div class="attr variable">
+            <span class="name">description</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.description"></a>
+    
+            <div class="docstring"><p>The description of the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.version" class="classattr">
+                                <div class="attr variable">
+            <span class="name">version</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.version"></a>
+    
+            <div class="docstring"><p>The version of the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.features" class="classattr">
+                                <div class="attr variable">
+            <span class="name">features</span><span class="annotation">: list[str]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.features"></a>
+    
+            <div class="docstring"><p>List of features supported by the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.links" class="classattr">
+                                <div class="attr variable">
+            <span class="name">links</span><span class="annotation">: <a href="#ModelInfoLinks">ModelInfoLinks</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.links"></a>
+    
+            <div class="docstring"><p>Links to the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.content_types" class="classattr">
+                                <div class="attr variable">
+            <span class="name">content_types</span><span class="annotation">: list[<a href="#ModelInfoContentType">ModelInfoContentType</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.content_types"></a>
+    
+            <div class="docstring"><p>List of supported content-types for API serialization</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfo.metadata" class="classattr">
+                                <div class="attr variable">
+            <span class="name">metadata</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfo.metadata"></a>
+    
+            <div class="docstring"><p>Whether the model contains metadata inside the metadata element.</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="ModelInfoContentType">
+                            <input id="ModelInfoContentType-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-extend_serialization">@extend_serialization(allow_extra_data=True)</div>
+        <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">ModelInfoContentType</span><wbr>(<span class="base"><a href="#Model">nrp_cmd.types.Model</a></span>):
+
+                <label class="view-source-button" for="ModelInfoContentType-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModelInfoContentType"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelInfoContentType-62"><a href="#ModelInfoContentType-62"><span class="linenos">62</span></a><span class="nd">@extend_serialization</span><span class="p">(</span><span class="n">allow_extra_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ModelInfoContentType-63"><a href="#ModelInfoContentType-63"><span class="linenos">63</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ModelInfoContentType-64"><a href="#ModelInfoContentType-64"><span class="linenos">64</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelInfoContentType</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="ModelInfoContentType-65"><a href="#ModelInfoContentType-65"><span class="linenos">65</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Acceptable content-types for the model.&quot;&quot;&quot;</span>
+</span><span id="ModelInfoContentType-66"><a href="#ModelInfoContentType-66"><span class="linenos">66</span></a>
+</span><span id="ModelInfoContentType-67"><a href="#ModelInfoContentType-67"><span class="linenos">67</span></a>    <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="ModelInfoContentType-68"><a href="#ModelInfoContentType-68"><span class="linenos">68</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The content-type accepted by the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfoContentType-69"><a href="#ModelInfoContentType-69"><span class="linenos">69</span></a>
+</span><span id="ModelInfoContentType-70"><a href="#ModelInfoContentType-70"><span class="linenos">70</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="ModelInfoContentType-71"><a href="#ModelInfoContentType-71"><span class="linenos">71</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the content-type&quot;&quot;&quot;</span>
+</span><span id="ModelInfoContentType-72"><a href="#ModelInfoContentType-72"><span class="linenos">72</span></a>
+</span><span id="ModelInfoContentType-73"><a href="#ModelInfoContentType-73"><span class="linenos">73</span></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="ModelInfoContentType-74"><a href="#ModelInfoContentType-74"><span class="linenos">74</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The description of the content-type&quot;&quot;&quot;</span>
+</span><span id="ModelInfoContentType-75"><a href="#ModelInfoContentType-75"><span class="linenos">75</span></a>
+</span><span id="ModelInfoContentType-76"><a href="#ModelInfoContentType-76"><span class="linenos">76</span></a>    <span class="n">schema</span><span class="p">:</span> <span class="n">URL</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="ModelInfoContentType-77"><a href="#ModelInfoContentType-77"><span class="linenos">77</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Machine parseable schema for the content-type&quot;&quot;&quot;</span>
+</span><span id="ModelInfoContentType-78"><a href="#ModelInfoContentType-78"><span class="linenos">78</span></a>    
+</span><span id="ModelInfoContentType-79"><a href="#ModelInfoContentType-79"><span class="linenos">79</span></a>    <span class="n">can_export</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="ModelInfoContentType-80"><a href="#ModelInfoContentType-80"><span class="linenos">80</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the content-type can be used for exporting records (via Accept header)&quot;&quot;&quot;</span>
+</span><span id="ModelInfoContentType-81"><a href="#ModelInfoContentType-81"><span class="linenos">81</span></a>    
+</span><span id="ModelInfoContentType-82"><a href="#ModelInfoContentType-82"><span class="linenos">82</span></a>    <span class="n">can_deposit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="ModelInfoContentType-83"><a href="#ModelInfoContentType-83"><span class="linenos">83</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the content-type can be used for importing records (via Content-Type header)&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Acceptable content-types for the model.</p>
+</div>
+
+
+                            <div id="ModelInfoContentType.__init__" class="classattr">
+                                        <input id="ModelInfoContentType.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">ModelInfoContentType</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">schema</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">can_export</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>,</span><span class="param">	<span class="n">can_deposit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span>)</span>
+
+                <label class="view-source-button" for="ModelInfoContentType.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModelInfoContentType.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelInfoContentType.__init__-2"><a href="#ModelInfoContentType.__init__-2"><span class="linenos">2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;schema&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">can_export</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;can_export&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">can_deposit</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;can_deposit&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">):</span>
+</span><span id="ModelInfoContentType.__init__-3"><a href="#ModelInfoContentType.__init__-3"><span class="linenos">3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="n">content_type</span>
+</span><span id="ModelInfoContentType.__init__-4"><a href="#ModelInfoContentType.__init__-4"><span class="linenos">4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+</span><span id="ModelInfoContentType.__init__-5"><a href="#ModelInfoContentType.__init__-5"><span class="linenos">5</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+</span><span id="ModelInfoContentType.__init__-6"><a href="#ModelInfoContentType.__init__-6"><span class="linenos">6</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+</span><span id="ModelInfoContentType.__init__-7"><a href="#ModelInfoContentType.__init__-7"><span class="linenos">7</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">can_export</span> <span class="o">=</span> <span class="n">can_export</span>
+</span><span id="ModelInfoContentType.__init__-8"><a href="#ModelInfoContentType.__init__-8"><span class="linenos">8</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">can_deposit</span> <span class="o">=</span> <span class="n">can_deposit</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class ModelInfoContentType.</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoContentType.content_type" class="classattr">
+                                <div class="attr variable">
+            <span class="name">content_type</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoContentType.content_type"></a>
+    
+            <div class="docstring"><p>The content-type accepted by the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoContentType.name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">name</span><span class="annotation">: str | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoContentType.name"></a>
+    
+            <div class="docstring"><p>The name of the content-type</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoContentType.description" class="classattr">
+                                <div class="attr variable">
+            <span class="name">description</span><span class="annotation">: str | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoContentType.description"></a>
+    
+            <div class="docstring"><p>The description of the content-type</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoContentType.schema" class="classattr">
+                                <div class="attr variable">
+            <span class="name">schema</span><span class="annotation">: yarl.URL | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoContentType.schema"></a>
+    
+            <div class="docstring"><p>Machine parseable schema for the content-type</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoContentType.can_export" class="classattr">
+                                <div class="attr variable">
+            <span class="name">can_export</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoContentType.can_export"></a>
+    
+            <div class="docstring"><p>Whether the content-type can be used for exporting records (via Accept header)</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoContentType.can_deposit" class="classattr">
+                                <div class="attr variable">
+            <span class="name">can_deposit</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoContentType.can_deposit"></a>
+    
+            <div class="docstring"><p>Whether the content-type can be used for importing records (via Content-Type header)</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="ModelInfoLinks">
+                            <input id="ModelInfoLinks-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-extend_serialization">@extend_serialization(allow_extra_data=True)</div>
+        <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">ModelInfoLinks</span><wbr>(<span class="base"><a href="#Model">nrp_cmd.types.Model</a></span>):
+
+                <label class="view-source-button" for="ModelInfoLinks-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModelInfoLinks"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelInfoLinks-41"><a href="#ModelInfoLinks-41"><span class="linenos">41</span></a><span class="nd">@extend_serialization</span><span class="p">(</span><span class="n">allow_extra_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ModelInfoLinks-42"><a href="#ModelInfoLinks-42"><span class="linenos">42</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ModelInfoLinks-43"><a href="#ModelInfoLinks-43"><span class="linenos">43</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelInfoLinks</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="ModelInfoLinks-44"><a href="#ModelInfoLinks-44"><span class="linenos">44</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Links within the model info endpoint.&quot;&quot;&quot;</span>
+</span><span id="ModelInfoLinks-45"><a href="#ModelInfoLinks-45"><span class="linenos">45</span></a>
+</span><span id="ModelInfoLinks-46"><a href="#ModelInfoLinks-46"><span class="linenos">46</span></a>    <span class="n">records</span><span class="p">:</span> <span class="n">URL</span>
+</span><span id="ModelInfoLinks-47"><a href="#ModelInfoLinks-47"><span class="linenos">47</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the published records&quot;&quot;&quot;</span>
+</span><span id="ModelInfoLinks-48"><a href="#ModelInfoLinks-48"><span class="linenos">48</span></a>
+</span><span id="ModelInfoLinks-49"><a href="#ModelInfoLinks-49"><span class="linenos">49</span></a>    <span class="n">html</span><span class="p">:</span> <span class="n">URL</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="ModelInfoLinks-50"><a href="#ModelInfoLinks-50"><span class="linenos">50</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the model records&#39; HTML listing page&quot;&quot;&quot;</span>
+</span><span id="ModelInfoLinks-51"><a href="#ModelInfoLinks-51"><span class="linenos">51</span></a>
+</span><span id="ModelInfoLinks-52"><a href="#ModelInfoLinks-52"><span class="linenos">52</span></a>    <span class="n">drafts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">URL</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="ModelInfoLinks-53"><a href="#ModelInfoLinks-53"><span class="linenos">53</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the user&#39;s draft records&quot;&quot;&quot;</span>
+</span><span id="ModelInfoLinks-54"><a href="#ModelInfoLinks-54"><span class="linenos">54</span></a>
+</span><span id="ModelInfoLinks-55"><a href="#ModelInfoLinks-55"><span class="linenos">55</span></a>    <span class="n">deposit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">URL</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="ModelInfoLinks-56"><a href="#ModelInfoLinks-56"><span class="linenos">56</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Deposition link for the model&quot;&quot;&quot;</span>
+</span><span id="ModelInfoLinks-57"><a href="#ModelInfoLinks-57"><span class="linenos">57</span></a>
+</span><span id="ModelInfoLinks-58"><a href="#ModelInfoLinks-58"><span class="linenos">58</span></a>    <span class="n">model</span><span class="p">:</span> <span class="n">URL</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="ModelInfoLinks-59"><a href="#ModelInfoLinks-59"><span class="linenos">59</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Link to the model definition&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Links within the model info endpoint.</p>
+</div>
+
+
+                            <div id="ModelInfoLinks.__init__" class="classattr">
+                                        <input id="ModelInfoLinks.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">ModelInfoLinks</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="n">records</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span>,</span><span class="param">	<span class="n">html</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">drafts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">yarl</span><span class="o">.</span><span class="n">URL</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">deposit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">yarl</span><span class="o">.</span><span class="n">URL</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">model</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></span>)</span>
+
+                <label class="view-source-button" for="ModelInfoLinks.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModelInfoLinks.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelInfoLinks.__init__-2"><a href="#ModelInfoLinks.__init__-2"><span class="linenos">2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">records</span><span class="p">,</span> <span class="n">html</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;html&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">drafts</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;drafts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">deposit</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;deposit&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">):</span>
+</span><span id="ModelInfoLinks.__init__-3"><a href="#ModelInfoLinks.__init__-3"><span class="linenos">3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> <span class="n">records</span>
+</span><span id="ModelInfoLinks.__init__-4"><a href="#ModelInfoLinks.__init__-4"><span class="linenos">4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">html</span> <span class="o">=</span> <span class="n">html</span>
+</span><span id="ModelInfoLinks.__init__-5"><a href="#ModelInfoLinks.__init__-5"><span class="linenos">5</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">drafts</span> <span class="o">=</span> <span class="n">drafts</span>
+</span><span id="ModelInfoLinks.__init__-6"><a href="#ModelInfoLinks.__init__-6"><span class="linenos">6</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">deposit</span> <span class="o">=</span> <span class="n">deposit</span>
+</span><span id="ModelInfoLinks.__init__-7"><a href="#ModelInfoLinks.__init__-7"><span class="linenos">7</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class ModelInfoLinks.</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoLinks.records" class="classattr">
+                                <div class="attr variable">
+            <span class="name">records</span><span class="annotation">: yarl.URL</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoLinks.records"></a>
+    
+            <div class="docstring"><p>Link to the published records</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoLinks.html" class="classattr">
+                                <div class="attr variable">
+            <span class="name">html</span><span class="annotation">: yarl.URL | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoLinks.html"></a>
+    
+            <div class="docstring"><p>Link to the model records' HTML listing page</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoLinks.drafts" class="classattr">
+                                <div class="attr variable">
+            <span class="name">drafts</span><span class="annotation">: Optional[yarl.URL]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoLinks.drafts"></a>
+    
+            <div class="docstring"><p>Link to the user's draft records</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoLinks.deposit" class="classattr">
+                                <div class="attr variable">
+            <span class="name">deposit</span><span class="annotation">: Optional[yarl.URL]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoLinks.deposit"></a>
+    
+            <div class="docstring"><p>Deposition link for the model</p>
+</div>
+
+
+                            </div>
+                            <div id="ModelInfoLinks.model" class="classattr">
+                                <div class="attr variable">
+            <span class="name">model</span><span class="annotation">: yarl.URL | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelInfoLinks.model"></a>
+    
+            <div class="docstring"><p>Link to the model definition</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="Record">
+                            <input id="Record-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-extend_serialization">@extend_serialization(Rename(&#39;files&#39;, &#39;files_&#39;), Omit(&#39;_etag&#39;, from_unstructure=True), allow_extra_data=True)</div>
+        <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">Record</span><wbr>(<span class="base">nrp_cmd.types.rest.BaseRecord</span>):
+
+                <label class="view-source-button" for="Record-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Record"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Record-55"><a href="#Record-55"><span class="linenos">55</span></a><span class="nd">@extend_serialization</span><span class="p">(</span><span class="n">Rename</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">,</span> <span class="s2">&quot;files_&quot;</span><span class="p">),</span> 
+</span><span id="Record-56"><a href="#Record-56"><span class="linenos">56</span></a>                      <span class="n">Omit</span><span class="p">(</span><span class="s2">&quot;_etag&quot;</span><span class="p">,</span> <span class="n">from_unstructure</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> 
+</span><span id="Record-57"><a href="#Record-57"><span class="linenos">57</span></a>                      <span class="n">allow_extra_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Record-58"><a href="#Record-58"><span class="linenos">58</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Record-59"><a href="#Record-59"><span class="linenos">59</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Record</span><span class="p">(</span><span class="n">BaseRecord</span><span class="p">):</span>
+</span><span id="Record-60"><a href="#Record-60"><span class="linenos">60</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Record in the repository.&quot;&quot;&quot;</span>
+</span><span id="Record-61"><a href="#Record-61"><span class="linenos">61</span></a>
+</span><span id="Record-62"><a href="#Record-62"><span class="linenos">62</span></a>    <span class="n">links</span><span class="p">:</span> <span class="n">RecordLinks</span> <span class="o">=</span> <span class="n">field</span><span class="p">()</span>
+</span><span id="Record-63"><a href="#Record-63"><span class="linenos">63</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Links of the record.&quot;&quot;&quot;</span>
+</span><span id="Record-64"><a href="#Record-64"><span class="linenos">64</span></a>
+</span><span id="Record-65"><a href="#Record-65"><span class="linenos">65</span></a>    <span class="n">files_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FilesEnabled</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="Record-66"><a href="#Record-66"><span class="linenos">66</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Files enabled marker.&quot;&quot;&quot;</span>
+</span><span id="Record-67"><a href="#Record-67"><span class="linenos">67</span></a>
+</span><span id="Record-68"><a href="#Record-68"><span class="linenos">68</span></a>    <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ParentRecord</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="Record-69"><a href="#Record-69"><span class="linenos">69</span></a>
+</span><span id="Record-70"><a href="#Record-70"><span class="linenos">70</span></a>    <span class="nd">@property</span>
+</span><span id="Record-71"><a href="#Record-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="Record-72"><a href="#Record-72"><span class="linenos">72</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the metadata of the record.&quot;&quot;&quot;</span>
+</span><span id="Record-73"><a href="#Record-73"><span class="linenos">73</span></a>        <span class="k">if</span> <span class="s1">&#39;metadata&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">:</span>
+</span><span id="Record-74"><a href="#Record-74"><span class="linenos">74</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span>
+</span><span id="Record-75"><a href="#Record-75"><span class="linenos">75</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Record in the repository.</p>
+</div>
+
+
+                            <div id="Record.__init__" class="classattr">
+                                        <input id="Record.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">Record</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="nb">id</span><span class="p">:</span> <span class="n">RecordIdType</span>,</span><span class="param">	<span class="n">created</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>,</span><span class="param">	<span class="n">updated</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>,</span><span class="param">	<span class="n">revision_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">links</span><span class="p">:</span> <span class="n"><a href="#RecordLinks">RecordLinks</a></span>,</span><span class="param">	<span class="n">files_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n"><a href="#FilesEnabled">FilesEnabled</a></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n"><a href="#ParentRecord">ParentRecord</a></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span>)</span>
+
+                <label class="view-source-button" for="Record.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Record.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Record.__init__-2"><a href="#Record.__init__-2"><span class="linenos"> 2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="n">updated</span><span class="p">,</span> <span class="n">revision_id</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;revision_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">files_</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;files_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;parent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">):</span>
+</span><span id="Record.__init__-3"><a href="#Record.__init__-3"><span class="linenos"> 3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_etag</span> <span class="o">=</span> <span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;_etag&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span>
+</span><span id="Record.__init__-4"><a href="#Record.__init__-4"><span class="linenos"> 4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+</span><span id="Record.__init__-5"><a href="#Record.__init__-5"><span class="linenos"> 5</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="n">created</span>
+</span><span id="Record.__init__-6"><a href="#Record.__init__-6"><span class="linenos"> 6</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">updated</span> <span class="o">=</span> <span class="n">updated</span>
+</span><span id="Record.__init__-7"><a href="#Record.__init__-7"><span class="linenos"> 7</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">revision_id</span> <span class="o">=</span> <span class="n">revision_id</span>
+</span><span id="Record.__init__-8"><a href="#Record.__init__-8"><span class="linenos"> 8</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">links</span> <span class="o">=</span> <span class="n">links</span>
+</span><span id="Record.__init__-9"><a href="#Record.__init__-9"><span class="linenos"> 9</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">files_</span> <span class="o">=</span> <span class="n">files_</span>
+</span><span id="Record.__init__-10"><a href="#Record.__init__-10"><span class="linenos">10</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class Record.</p>
+</div>
+
+
+                            </div>
+                            <div id="Record.links" class="classattr">
+                                <div class="attr variable">
+            <span class="name">links</span><span class="annotation">: <a href="#RecordLinks">RecordLinks</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Record.links"></a>
+    
+            <div class="docstring"><p>Links of the record.</p>
+</div>
+
+
+                            </div>
+                            <div id="Record.files_" class="classattr">
+                                <div class="attr variable">
+            <span class="name">files_</span><span class="annotation">: Optional[<a href="#FilesEnabled">FilesEnabled</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Record.files_"></a>
+    
+            <div class="docstring"><p>Files enabled marker.</p>
+</div>
+
+
+                            </div>
+                            <div id="Record.parent" class="classattr">
+                                <div class="attr variable">
+            <span class="name">parent</span><span class="annotation">: Optional[<a href="#ParentRecord">ParentRecord</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Record.parent"></a>
+    
+    
+
+                            </div>
+                            <div id="Record.metadata" class="classattr">
+                                        <input id="Record.metadata-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr variable">
+            <span class="name">metadata</span><span class="annotation">: dict</span>
+
+                <label class="view-source-button" for="Record.metadata-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Record.metadata"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Record.metadata-70"><a href="#Record.metadata-70"><span class="linenos">70</span></a>    <span class="nd">@property</span>
+</span><span id="Record.metadata-71"><a href="#Record.metadata-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="Record.metadata-72"><a href="#Record.metadata-72"><span class="linenos">72</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the metadata of the record.&quot;&quot;&quot;</span>
+</span><span id="Record.metadata-73"><a href="#Record.metadata-73"><span class="linenos">73</span></a>        <span class="k">if</span> <span class="s1">&#39;metadata&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">:</span>
+</span><span id="Record.metadata-74"><a href="#Record.metadata-74"><span class="linenos">74</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span>
+</span><span id="Record.metadata-75"><a href="#Record.metadata-75"><span class="linenos">75</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_data</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Return the metadata of the record.</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="RecordLinks">
+                            <input id="RecordLinks-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">RecordLinks</span><wbr>(<span class="base">nrp_cmd.types.rest.RESTObjectLinks</span>):
+
+                <label class="view-source-button" for="RecordLinks-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#RecordLinks"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RecordLinks-28"><a href="#RecordLinks-28"><span class="linenos">28</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="RecordLinks-29"><a href="#RecordLinks-29"><span class="linenos">29</span></a><span class="k">class</span><span class="w"> </span><span class="nc">RecordLinks</span><span class="p">(</span><span class="n">RESTObjectLinks</span><span class="p">):</span>
+</span><span id="RecordLinks-30"><a href="#RecordLinks-30"><span class="linenos">30</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Links of a record.&quot;&quot;&quot;</span>
+</span><span id="RecordLinks-31"><a href="#RecordLinks-31"><span class="linenos">31</span></a>
+</span><span id="RecordLinks-32"><a href="#RecordLinks-32"><span class="linenos">32</span></a>    <span class="c1"># TODO: add rest of the links here so that code editors can autocomplete</span>
+</span><span id="RecordLinks-33"><a href="#RecordLinks-33"><span class="linenos">33</span></a>    <span class="k">pass</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Links of a record.</p>
+</div>
+
+
+                            <div id="RecordLinks.__init__" class="classattr">
+                                        <input id="RecordLinks.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">RecordLinks</span><span class="signature pdoc-code condensed">(<span class="param"><span class="o">*</span>, </span><span class="param"><span class="n">self_</span><span class="p">:</span> <span class="n">yarl</span><span class="o">.</span><span class="n">URL</span>, </span><span class="param"><span class="n">self_html</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">yarl</span><span class="o">.</span><span class="n">URL</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span>)</span>
+
+                <label class="view-source-button" for="RecordLinks.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#RecordLinks.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RecordLinks.__init__-2"><a href="#RecordLinks.__init__-2"><span class="linenos">2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">self_</span><span class="p">,</span> <span class="n">self_html</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;self_html&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">):</span>
+</span><span id="RecordLinks.__init__-3"><a href="#RecordLinks.__init__-3"><span class="linenos">3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">self_</span> <span class="o">=</span> <span class="n">self_</span>
+</span><span id="RecordLinks.__init__-4"><a href="#RecordLinks.__init__-4"><span class="linenos">4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">self_html</span> <span class="o">=</span> <span class="n">self_html</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class RecordLinks.</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="FilesEnabled">
+                            <input id="FilesEnabled-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">FilesEnabled</span><wbr>(<span class="base"><a href="#Model">nrp_cmd.types.Model</a></span>):
+
+                <label class="view-source-button" for="FilesEnabled-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#FilesEnabled"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="FilesEnabled-36"><a href="#FilesEnabled-36"><span class="linenos">36</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="FilesEnabled-37"><a href="#FilesEnabled-37"><span class="linenos">37</span></a><span class="k">class</span><span class="w"> </span><span class="nc">FilesEnabled</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="FilesEnabled-38"><a href="#FilesEnabled-38"><span class="linenos">38</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Files enabled marker.&quot;&quot;&quot;</span>
+</span><span id="FilesEnabled-39"><a href="#FilesEnabled-39"><span class="linenos">39</span></a>
+</span><span id="FilesEnabled-40"><a href="#FilesEnabled-40"><span class="linenos">40</span></a>    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Files enabled marker.</p>
+</div>
+
+
+                            <div id="FilesEnabled.__init__" class="classattr">
+                                        <input id="FilesEnabled.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">FilesEnabled</span><span class="signature pdoc-code condensed">(<span class="param"><span class="o">*</span>, </span><span class="param"><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span></span>)</span>
+
+                <label class="view-source-button" for="FilesEnabled.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#FilesEnabled.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="FilesEnabled.__init__-2"><a href="#FilesEnabled.__init__-2"><span class="linenos">2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">enabled</span><span class="p">):</span>
+</span><span id="FilesEnabled.__init__-3"><a href="#FilesEnabled.__init__-3"><span class="linenos">3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class FilesEnabled.</p>
+</div>
+
+
+                            </div>
+                            <div id="FilesEnabled.enabled" class="classattr">
+                                <div class="attr variable">
+            <span class="name">enabled</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FilesEnabled.enabled"></a>
+    
+    
+
+                            </div>
+                </section>
+                <section id="ParentRecord">
+                            <input id="ParentRecord-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">ParentRecord</span><wbr>(<span class="base"><a href="#Model">nrp_cmd.types.Model</a></span>):
+
+                <label class="view-source-button" for="ParentRecord-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ParentRecord"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ParentRecord-43"><a href="#ParentRecord-43"><span class="linenos">43</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ParentRecord-44"><a href="#ParentRecord-44"><span class="linenos">44</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ParentRecord</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="ParentRecord-45"><a href="#ParentRecord-45"><span class="linenos">45</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Parent record of the record.&quot;&quot;&quot;</span>
+</span><span id="ParentRecord-46"><a href="#ParentRecord-46"><span class="linenos">46</span></a>
+</span><span id="ParentRecord-47"><a href="#ParentRecord-47"><span class="linenos">47</span></a>    <span class="n">communities</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+</span><span id="ParentRecord-48"><a href="#ParentRecord-48"><span class="linenos">48</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Communities of the record.&quot;&quot;&quot;</span>
+</span><span id="ParentRecord-49"><a href="#ParentRecord-49"><span class="linenos">49</span></a>
+</span><span id="ParentRecord-50"><a href="#ParentRecord-50"><span class="linenos">50</span></a>    <span class="n">workflow</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="ParentRecord-51"><a href="#ParentRecord-51"><span class="linenos">51</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Workflow of the record.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Parent record of the record.</p>
+</div>
+
+
+                            <div id="ParentRecord.__init__" class="classattr">
+                                        <input id="ParentRecord.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">ParentRecord</span><span class="signature pdoc-code condensed">(<span class="param"><span class="o">*</span>, </span><span class="param"><span class="n">communities</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>, </span><span class="param"><span class="n">workflow</span><span class="p">:</span> <span class="nb">str</span></span>)</span>
+
+                <label class="view-source-button" for="ParentRecord.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ParentRecord.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ParentRecord.__init__-2"><a href="#ParentRecord.__init__-2"><span class="linenos">2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">communities</span><span class="p">,</span> <span class="n">workflow</span><span class="p">):</span>
+</span><span id="ParentRecord.__init__-3"><a href="#ParentRecord.__init__-3"><span class="linenos">3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">communities</span> <span class="o">=</span> <span class="n">communities</span>
+</span><span id="ParentRecord.__init__-4"><a href="#ParentRecord.__init__-4"><span class="linenos">4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">workflow</span> <span class="o">=</span> <span class="n">workflow</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class ParentRecord.</p>
+</div>
+
+
+                            </div>
+                            <div id="ParentRecord.communities" class="classattr">
+                                <div class="attr variable">
+            <span class="name">communities</span><span class="annotation">: dict[str, str]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ParentRecord.communities"></a>
+    
+            <div class="docstring"><p>Communities of the record.</p>
+</div>
+
+
+                            </div>
+                            <div id="ParentRecord.workflow" class="classattr">
+                                <div class="attr variable">
+            <span class="name">workflow</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ParentRecord.workflow"></a>
+    
+            <div class="docstring"><p>Workflow of the record.</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="RecordList">
+                            <input id="RecordList-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+                    <div class="decorator decorator-extend_serialization">@extend_serialization(Omit(&#39;_etag&#39;, from_unstructure=True), allow_extra_data=True)</div>
+        <div class="decorator decorator-define">@define(kw_only=True)</div>
+
+    <span class="def">class</span>
+    <span class="name">RecordList</span><wbr>(<span class="base">nrp_cmd.types.rest.RESTList[nrp_cmd.types.records.Record]</span>):
+
+                <label class="view-source-button" for="RecordList-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#RecordList"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RecordList-78"><a href="#RecordList-78"><span class="linenos">78</span></a><span class="nd">@extend_serialization</span><span class="p">(</span><span class="n">Omit</span><span class="p">(</span><span class="s2">&quot;_etag&quot;</span><span class="p">,</span> <span class="n">from_unstructure</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">allow_extra_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="RecordList-79"><a href="#RecordList-79"><span class="linenos">79</span></a><span class="nd">@define</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="RecordList-80"><a href="#RecordList-80"><span class="linenos">80</span></a><span class="k">class</span><span class="w"> </span><span class="nc">RecordList</span><span class="p">(</span><span class="n">RESTList</span><span class="p">[</span><span class="n">Record</span><span class="p">]):</span>
+</span><span id="RecordList-81"><a href="#RecordList-81"><span class="linenos">81</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;List of records.&quot;&quot;&quot;</span>
+</span><span id="RecordList-82"><a href="#RecordList-82"><span class="linenos">82</span></a>
+</span><span id="RecordList-83"><a href="#RecordList-83"><span class="linenos">83</span></a>    <span class="n">sortBy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="RecordList-84"><a href="#RecordList-84"><span class="linenos">84</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort by field.&quot;&quot;&quot;</span>
+</span><span id="RecordList-85"><a href="#RecordList-85"><span class="linenos">85</span></a>    <span class="n">aggregations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="RecordList-86"><a href="#RecordList-86"><span class="linenos">86</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregations.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>List of records.</p>
+</div>
+
+
+                            <div id="RecordList.__init__" class="classattr">
+                                        <input id="RecordList.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">RecordList</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="n">links</span><span class="p">:</span> <span class="n">nrp_cmd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">rest</span><span class="o">.</span><span class="n">RESTPaginationLinks</span>,</span><span class="param">	<span class="n">hits</span><span class="p">:</span> <span class="n">nrp_cmd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">rest</span><span class="o">.</span><span class="n">RESTHits</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>,</span><span class="param">	<span class="n">sortBy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">aggregations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span>)</span>
+
+                <label class="view-source-button" for="RecordList.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#RecordList.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RecordList.__init__-2"><a href="#RecordList.__init__-2"><span class="linenos">2</span></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">hits</span><span class="p">,</span> <span class="n">sortBy</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;sortBy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">aggregations</span><span class="o">=</span><span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;aggregations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">):</span>
+</span><span id="RecordList.__init__-3"><a href="#RecordList.__init__-3"><span class="linenos">3</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_etag</span> <span class="o">=</span> <span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;_etag&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default</span>
+</span><span id="RecordList.__init__-4"><a href="#RecordList.__init__-4"><span class="linenos">4</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">links</span> <span class="o">=</span> <span class="n">links</span>
+</span><span id="RecordList.__init__-5"><a href="#RecordList.__init__-5"><span class="linenos">5</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">hits</span> <span class="o">=</span> <span class="n">hits</span>
+</span><span id="RecordList.__init__-6"><a href="#RecordList.__init__-6"><span class="linenos">6</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">sortBy</span> <span class="o">=</span> <span class="n">sortBy</span>
+</span><span id="RecordList.__init__-7"><a href="#RecordList.__init__-7"><span class="linenos">7</span></a>    <span class="bp">self</span><span class="o">.</span><span class="n">aggregations</span> <span class="o">=</span> <span class="n">aggregations</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Method generated by attrs for class RecordList.</p>
+</div>
+
+
+                            </div>
+                            <div id="RecordList.sortBy" class="classattr">
+                                <div class="attr variable">
+            <span class="name">sortBy</span><span class="annotation">: Optional[str]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RecordList.sortBy"></a>
+    
+            <div class="docstring"><p>Sort by field.</p>
+</div>
+
+
+                            </div>
+                            <div id="RecordList.aggregations" class="classattr">
+                                <div class="attr variable">
+            <span class="name">aggregations</span><span class="annotation">: Optional[Any]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RecordList.aggregations"></a>
+    
+            <div class="docstring"><p>Aggregations.</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="RecordId">
+                    <div class="attr variable">
+            <span class="name">RecordId</span>        =
+<span class="default_value">str | int | yarl.URL</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RecordId"></a>
+    
+    
+
+                </section>
+    </main>
+<script>
+    function escapeHTML(html) {
+        return document.createElement('div').appendChild(document.createTextNode(html)).parentNode.innerHTML;
+    }
+
+    const originalContent = document.querySelector("main.pdoc");
+    let currentContent = originalContent;
+
+    function setContent(innerHTML) {
+        let elem;
+        if (innerHTML) {
+            elem = document.createElement("main");
+            elem.classList.add("pdoc");
+            elem.innerHTML = innerHTML;
+        } else {
+            elem = originalContent;
+        }
+        if (currentContent !== elem) {
+            currentContent.replaceWith(elem);
+            currentContent = elem;
+        }
+    }
+
+    function getSearchTerm() {
+        return (new URL(window.location)).searchParams.get("search");
+    }
+
+    const searchBox = document.querySelector(".pdoc input[type=search]");
+    searchBox.addEventListener("input", function () {
+        let url = new URL(window.location);
+        if (searchBox.value.trim()) {
+            url.hash = "";
+            url.searchParams.set("search", searchBox.value);
+        } else {
+            url.searchParams.delete("search");
+        }
+        history.replaceState("", "", url.toString());
+        onInput();
+    });
+    window.addEventListener("popstate", onInput);
+
+
+    let search, searchErr;
+
+    async function initialize() {
+        try {
+            search = await new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.type = "text/javascript";
+                script.async = true;
+                script.onload = () => resolve(window.pdocSearch);
+                script.onerror = (e) => reject(e);
+                script.src = "../search.js";
+                document.getElementsByTagName("head")[0].appendChild(script);
+            });
+        } catch (e) {
+            console.error("Cannot fetch pdoc search index");
+            searchErr = "Cannot fetch search index.";
+        }
+        onInput();
+
+        document.querySelector("nav.pdoc").addEventListener("click", e => {
+            if (e.target.hash) {
+                searchBox.value = "";
+                searchBox.dispatchEvent(new Event("input"));
+            }
+        });
+    }
+
+    function onInput() {
+        setContent((() => {
+            const term = getSearchTerm();
+            if (!term) {
+                return null
+            }
+            if (searchErr) {
+                return `<h3>Error: ${searchErr}</h3>`
+            }
+            if (!search) {
+                return "<h3>Searching...</h3>"
+            }
+
+            window.scrollTo({top: 0, left: 0, behavior: 'auto'});
+
+            const results = search(term);
+
+            let html;
+            if (results.length === 0) {
+                html = `No search results for '${escapeHTML(term)}'.`
+            } else {
+                html = `<h4>${results.length} search result${results.length > 1 ? "s" : ""} for '${escapeHTML(term)}'.</h4>`;
+            }
+            for (let result of results.slice(0, 10)) {
+                let doc = result.doc;
+                let url = `../${doc.modulename.replaceAll(".", "/")}.html`;
+                if (doc.qualname) {
+                    url += `#${doc.qualname}`;
+                }
+
+                let heading;
+                switch (result.doc.kind) {
+                    case "function":
+                        if (doc.fullname.endsWith(".__init__")) {
+                            heading = `<span class="name">${doc.fullname.replace(/\.__init__$/, "")}</span>${doc.signature}`;
+                        } else {
+                            heading = `<span class="def">${doc.funcdef}</span> <span class="name">${doc.fullname}</span>${doc.signature}`;
+                        }
+                        break;
+                    case "class":
+                        heading = `<span class="def">class</span> <span class="name">${doc.fullname}</span>`;
+                        if (doc.bases)
+                            heading += `<wbr>(<span class="base">${doc.bases}</span>)`;
+                        heading += `:`;
+                        break;
+                    case "variable":
+                        heading = `<span class="name">${doc.fullname}</span>`;
+                        if (doc.annotation)
+                            heading += `<span class="annotation">${doc.annotation}</span>`;
+                        if (doc.default_value)
+                            heading += `<span class="default_value"> = ${doc.default_value}</span>`;
+                        break;
+                    default:
+                        heading = `<span class="name">${doc.fullname}</span>`;
+                        break;
+                }
+                html += `
+                        <section class="search-result">
+                        <a href="${url}" class="attr ${doc.kind}">${heading}</a>
+                        <div class="docstring">${doc.doc}</div>
+                        </section>
+                    `;
+
+            }
+            return html;
+        })());
+    }
+
+    if (getSearchTerm()) {
+        initialize();
+        searchBox.value = getSearchTerm();
+        onInput();
+    } else {
+        searchBox.addEventListener("focus", initialize, {once: true});
+    }
+
+    searchBox.addEventListener("keydown", e => {
+        if (["ArrowDown", "ArrowUp", "Enter"].includes(e.key)) {
+            let focused = currentContent.querySelector(".search-result.focused");
+            if (!focused) {
+                currentContent.querySelector(".search-result").classList.add("focused");
+            } else if (
+                e.key === "ArrowDown"
+                && focused.nextElementSibling
+                && focused.nextElementSibling.classList.contains("search-result")
+            ) {
+                focused.classList.remove("focused");
+                focused.nextElementSibling.classList.add("focused");
+                focused.nextElementSibling.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "nearest"
+                });
+            } else if (
+                e.key === "ArrowUp"
+                && focused.previousElementSibling
+                && focused.previousElementSibling.classList.contains("search-result")
+            ) {
+                focused.classList.remove("focused");
+                focused.previousElementSibling.classList.add("focused");
+                focused.previousElementSibling.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "nearest"
+                });
+            } else if (
+                e.key === "Enter"
+            ) {
+                focused.querySelector("a").click();
+            }
+        }
+    });
+</script></body>
+</html>

@@ -1,0 +1,11 @@
+forks: {}
+models: []
+repository:
+  model_package: models
+  oarepo_version: 12
+  repository_human_name: Test repository for nrp-cmd
+  repository_package: repo
+  shared_package: common
+  ui_package: ui
+uis: []
+

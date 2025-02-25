@@ -1,0 +1,58 @@
+plugins:
+  builder:
+    disable:
+    - script_sample_data
+    - invenio_record_metadata_alembic_setup_cfg
+  packages:
+  - oarepo-model-builder-requests
+  - oarepo-model-builder-drafts
+  - oarepo-model-builder-relations
+  - oarepo-model-builder-vocabularies
+  - oarepo-model-builder-drafts-files
+  - oarepo-model-builder-ui
+  - oarepo-model-builder-files
+  - oarepo-model-builder-cf
+  - oarepo-model-builder-polymorphic
+  - oarepo-model-builder-communities>=5.0.0
+  - oarepo-model-builder-rdm
+profiles:
+- record
+- draft
+- files
+- draft_files
+record:
+  use: 
+  - invenio
+  - rdm
+  properties:
+    metadata:
+      properties:
+        title:
+          type: fulltext+keyword
+  draft: {}
+  draft-files: {}
+  permissions:
+    presets:
+      - community-workflow
+  files:
+    resource-config:
+      base-html-url: /simple/
+    properties:
+      caption:
+        type: keyword
+    use:
+    - invenio_files
+  module:
+    qualified: simple
+  pid:
+    type: smpl
+  resource-config:
+    base-html-url: /simple/
+    base-url: /simple/
+
+runtime-dependencies:
+  oarepo-dashboard: 1.0.0
+
+settings:
+  i18n-languages:
+  - en
