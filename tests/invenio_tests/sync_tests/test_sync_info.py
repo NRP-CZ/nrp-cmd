@@ -367,16 +367,16 @@ def test_info_zenodo(zenodo_repository_config):
         "schema": "local://introspection-v1.0.0.json",
         "name": "RDM repository",
         "description": "",
-        "version": "rdm",
-        "invenio_version": "rdm",
+        "version": "RDM",
+        "invenio_version": "RDM 13",
         "features": [],
         "links": {
             "self": "https://www.zenodo.org/",
-            "records": "https://www.zenodo.org/api/records/",
-            "drafts": "https://www.zenodo.org/api/user/records/",
-            "requests": "https://www.zenodo.org/api/requests/",
+            "records": "https://www.zenodo.org/api/records",
+            "drafts": "https://www.zenodo.org/api/user/records",
+            "requests": "https://www.zenodo.org/api/requests",
         },
-        "transfers": ["L"],
+        "transfers": ["L", "F", "R", "M"],
         "models": {
             "records": {
                 "type": "rdm-records",
@@ -386,9 +386,9 @@ def test_info_zenodo(zenodo_repository_config):
                 "version": "unknown",
                 "features": ["rdm"],
                 "links": {
-                    "records": "https://www.zenodo.org/api/records/",
-                    "html": "https://www.zenodo.org/records/",
-                    "drafts": "https://www.zenodo.org/api/user/records/",
+                    "records": "https://www.zenodo.org/api/records",
+                    "html": "https://www.zenodo.org/records",
+                    "drafts": "https://www.zenodo.org/api/user/records",
                 },
                 "content_types": [
                     {

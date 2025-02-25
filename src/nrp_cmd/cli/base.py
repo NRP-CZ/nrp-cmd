@@ -51,14 +51,14 @@ def format_output(output_format: OutputFormat, data: Any) -> str:  # noqa: ANN40
     """
     if not isinstance(data, (dict, list)):
         data = converter.unstructure(data)
-    unstructured_data = []
     if isinstance(data, list):
+        unstructured_data = []
         for record in data:
             if not isinstance(record, (dict, list)):
                 unstructured_data.append(converter.unstructure(record))
             else:
                 unstructured_data.append(record)
-    data = unstructured_data
+        data = unstructured_data
     match output_format:
         case OutputFormat.JSON:
             return json.dumps(data, indent=4)

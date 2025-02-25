@@ -62,9 +62,6 @@ async def download_record(
     The metadata of the record are stored together with the files in output directory.
     """
     console = Console()
-    variables = config.load_variables()
-
-
     tasks = []
     with (
         limit_connections(10),

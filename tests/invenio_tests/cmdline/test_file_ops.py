@@ -221,6 +221,7 @@ def test_download_record_with_files(nrp_repository_config, run_cmdline_and_check
             "",
         )
         metadata = Path(tempdir) / "metadata.json"
+        print("Metadata text", metadata.read_text())
         assert "Test record A" in metadata.read_text()
 
         attachment = Path(tempdir) / Path(greeting.name).name
