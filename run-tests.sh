@@ -1,5 +1,7 @@
 #!/bin/bash
 python -m venv .venv
+source .venv/bin/activate 
+pip install -U setuptools pip wheel
 
 
 exit 0
