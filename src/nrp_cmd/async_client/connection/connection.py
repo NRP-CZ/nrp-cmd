@@ -591,7 +591,7 @@ class AsyncConnection:
         if (
             size
             and size > MINIMAL_DOWNLOAD_PART_SIZE
-            and any(x == "bytes" for x in headers.getall("Accept-Ranges"))
+            and any(x == "bytes" for x in headers.getall("Accept-Ranges", []))
         ):
             await self._download_multipart(
                 location, sink, size, progress_bar, parts, part_size
