@@ -21,11 +21,13 @@ from nrp_cmd.cli.records.get import read_record
 from nrp_cmd.cli.records.record_file_name import create_output_file_name
 from nrp_cmd.config import Config
 from nrp_cmd.converter import converter
+from nrp_cmd.progress import show_progress
 
 from ..arguments import (
     Output,
     VerboseLevel,
     with_config,
+    with_progress,
     with_repository,
     with_resolved_vars,
     with_verbosity,
@@ -37,6 +39,7 @@ from ..arguments import (
 @with_repository
 @with_resolved_vars("record_id")
 @with_verbosity
+@with_progress
 async def download_files(
     *,
     # generic options
@@ -59,18 +62,19 @@ async def download_files(
     output = output or Path.cwd()
     console = Console()
 
-    await download_single_record_files(
-        console,
-        record_id,
-        keys,
-        output,
-        config,
-        repository,
-        model,
-        published,
-        draft,
-        verbosity=out.verbosity,
-    )
+    with show_progress(total=1, quiet=not out.progress):
+        await download_single_record_files(
+            console,
+            record_id,
+            keys,
+            output,
+            config,
+            repository,
+            model,
+            published,
+            draft,
+            verbosity=out.verbosity,
+        )
 
 
 async def download_single_record_files(
