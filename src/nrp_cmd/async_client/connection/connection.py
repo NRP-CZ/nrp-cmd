@@ -48,8 +48,6 @@ communication_log_url = logging.getLogger("nrp_cmd.communication.url")
 communication_log_request = logging.getLogger("nrp_cmd.communication.request")
 communication_log_response = logging.getLogger("nrp_cmd.communication.response")
 
-HttpClient = RetryClient
-
 
 class try_until_success:
     def __init__(
@@ -652,4 +650,4 @@ def connection_unstructure_hook(data: Any, previous: UnstructureHook) -> Any:
 
 
 
-__all__ = ("HttpClient", "AsyncConnection")
+__all__ = ("AsyncConnection",)
