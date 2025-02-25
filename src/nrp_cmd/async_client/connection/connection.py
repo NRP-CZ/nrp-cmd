@@ -5,7 +5,7 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 #
-"""Asynchronous connection for the NRP client using the aiohttp and aiohttp-retry library."""
+"""Asynchronous connection for the NRP client using the aiohttp library."""
 
 import asyncio
 import contextlib
@@ -22,7 +22,6 @@ from functools import partial
 from typing import Any, Literal, Optional, cast, overload
 
 from aiohttp import ClientResponse, ClientSession, TCPConnector
-from aiohttp_retry import RetryClient
 from cattrs.dispatch import UnstructureHook
 from multidict import CIMultiDictProxy, MultiDictProxy
 from yarl import URL
