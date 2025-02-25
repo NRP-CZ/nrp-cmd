@@ -43,10 +43,6 @@ install_test_repository() {
 
   source .venv/bin/activate
   
-  # local patches
-  uv pip install -e ~/w/cesnet/oarepo-runtime
-  uv pip install -e ~/w/cesnet/oarepo-global-search
-
 
   invenio users create a@test.com --password atestcom -c -a
   invenio users create b@test.com --password btestcom -c -a
