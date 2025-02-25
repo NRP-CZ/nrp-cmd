@@ -1,4 +1,6 @@
 #!/bin/bash
+python -m venv .venv
+
 
 exit 0
 # temporarily suspending tests
