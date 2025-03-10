@@ -10,9 +10,9 @@
 import asyncio
 from functools import partial
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Optional
 
-import typer
+import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client.connection import limit_connections
@@ -25,39 +25,39 @@ from nrp_cmd.types.records import Record
 from nrp_cmd.types.requests import Request
 
 from ..arguments import (
+    Model,
     Output,
     VerboseLevel,
     with_config,
+    with_model,
     with_output,
+    with_record_ids,
     with_repository,
-    with_resolved_vars,
     with_verbosity,
 )
 from ..repository_requests.table_formatter import format_request_table
 from .get import read_record
 
 
-@async_command
 @with_config
 @with_repository
-@with_resolved_vars("record_ids")
-@with_output
+@with_record_ids
 @with_verbosity
+@with_output
+@with_model(draft=False, published=False)
+@async_command
 async def edit_record(
-    # generic options
-    *,
     config: Config,
     repository: Optional[str],
-    # specific options
-    record_ids: Annotated[list[str], typer.Argument(help="Record ID")],
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
+    record_ids: list[str],
+    model: Model,
     out: Output,
 ) -> None:
     """Edit published record's metadata."""
     console = Console()
 
     with limit_connections(10):
-        tasks = []
+        tasks: list[asyncio.Task[Record | Request | None]] = []
         async with asyncio.TaskGroup() as tg:
             for record_id in record_ids:
                 tasks.append(
@@ -67,7 +67,7 @@ async def edit_record(
                             console,
                             config,
                             repository,
-                            model,
+                            model.model,
                             out.output,
                             out.output_format,
                             out.verbosity,
@@ -77,7 +77,7 @@ async def edit_record(
         results = [x.result() for x in tasks]
         for r in results:
             if r is None:
-                raise typer.Abort()
+                raise click.Abort()
 
 
 async def edit_single_record(
@@ -94,10 +94,10 @@ async def edit_single_record(
     try:
         (
             record,
-            final_record_id,
-            repository_config,
+            _final_record_id,
+            _repository_config,
             record_client,
-            repository_client,
+            _repository_client,
         ) = await read_record(
             record_id, repository, config, False, model, published=False, draft=True
         )
@@ -135,4 +135,3 @@ async def edit_single_record(
             printer.output(ret)
 
     return ret
-        

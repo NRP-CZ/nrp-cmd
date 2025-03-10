@@ -8,9 +8,9 @@
 """Command-line interface for searching records."""
 
 from functools import partial
-from typing import Annotated, Optional
+from typing import Optional
 
-import typer
+import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client import AsyncRecordsClient, RecordStatus, get_async_client
@@ -19,8 +19,11 @@ from nrp_cmd.cli.base import set_variable as setvar
 from nrp_cmd.config import Config
 
 from ..arguments import (
+    Model,
     Output,
+    argument_with_help,
     with_config,
+    with_model,
     with_output,
     with_repository,
     with_setvar,
@@ -31,43 +34,47 @@ from .table_formatters import (
 )
 
 
-@async_command
+@argument_with_help("query", type=str, required=False, help="Query string")
+@click.option(
+    "--size", type=int, default=10, help="Number of results to return on a page"
+)
+@click.option("--page", type=int, default=1, help="Page number")
+@click.option("--sort", type=str, default="bestmatch", help="Sort order")
 @with_config
 @with_repository
 @with_output
 @with_verbosity
 @with_setvar
+@with_model(community=True)
+@async_command
 async def search_records(
-    # generic options
     *,
     config: Config,
     repository: Optional[str] = None,
-    # specific options
-    query: Annotated[Optional[str], typer.Argument(help="Query string")] = None,
+    query: Optional[str] = None,
     variable: Optional[str] = None,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    community: Annotated[Optional[str], typer.Option(help="Community name")] = None,
-    size: Annotated[
-        int, typer.Option(help="Number of results to return on a page")
-    ] = 10,
-    page: Annotated[int, typer.Option(help="Page number")] = 1,
-    sort: Annotated[Optional[str], typer.Option(help="Sort order")] = "bestmatch",
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
+    model: Model,
+    size: int = 10,
+    page: int = 1,
+    sort: str = "bestmatch",
     out: Output,
 ) -> None:
     """Return a page of records inside repository that match the given query."""
     console = Console()
 
-    records_api, args = await _prepare_search(
-        community, config, model, page, published, query, repository, size, sort
+    records_api = await prepare_records_api(
+        config, model.model, model.draft, model.published, repository
     )
 
-    record_list = await records_api.search(**args)
+    record_list = await records_api.search(
+        q=query,
+        page=page,
+        size=size,
+        sort=sort,
+        model=model.model,
+        status=RecordStatus.PUBLISHED if model.published else RecordStatus.DRAFT,
+        facets={},
+    )
 
     if variable:
         urls = [str(record.links.self_) for record in record_list]
@@ -83,39 +90,21 @@ async def search_records(
         printer.output(record_list)
 
 
-async def _prepare_search(
-    community: str | None,
+async def prepare_records_api(
     config: Config,
     model: str | None,
-    page: int,
+    draft: bool,
     published: bool,
-    query: str | None,
     repository: str | None,
-    size: int | None = None,
-    sort: str | None = None,
-) -> tuple[AsyncRecordsClient, dict]:
-    """Prepare the search for records."""
+) -> AsyncRecordsClient:
+    """Get records API for the model and publish status."""
     client = await get_async_client(repository, config=config)
     records_api: AsyncRecordsClient = client.records
     if model is not None:
         records_api = records_api.with_model(model)
-    if published:
+    # TODO: published AND draft should be allowed and use the new /all/ endpoint
+    if published or not draft:
         records_api = records_api.published_records
-    else:
+    if draft:
         records_api = records_api.draft_records
-    args: dict[str, str | RecordStatus] = {}
-    if community:
-        args["community"] = community
-    if sort:
-        args["sort"] = sort
-    if query:
-        args["q"] = query
-    if page is not None:
-        args["page"] = str(page)
-    if size is not None:
-        args["size"] = str(size)
-    if published:
-        args["status"] = RecordStatus.PUBLISHED
-    else:
-        args["status"] = RecordStatus.DRAFT
-    return records_api, args
+    return records_api

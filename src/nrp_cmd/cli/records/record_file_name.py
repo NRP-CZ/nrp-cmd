@@ -27,7 +27,7 @@ def create_output_file_name(
     # we need to make sure that the expanded output name does not contain illegal combinations,
     # such as /../ or /./ or leading '/' - we strip them if that is the case
 
-    output_parts = output_name.parts if output_name else []
+    output_parts: tuple[str, ...] = output_name.parts if output_name else ()
     is_absolute = output_name.is_absolute()
 
     transformed_parts = [
@@ -61,7 +61,7 @@ def format_part(
     variables from the record and the kwargs.
     """
     if "{" in part and "}" in part:
-        options = {
+        options: dict[str, str] = {
             "id": obj_id,
             "ext": f".{output_format.value}" if output_format else "table",
             **(converter.unstructure(obj) if obj else {}),

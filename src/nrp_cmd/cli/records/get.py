@@ -10,9 +10,9 @@
 import asyncio
 from functools import partial
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Optional
 
-import typer
+import rich_click as click
 from rich.console import Console
 from yarl import URL
 
@@ -31,44 +31,48 @@ from nrp_cmd.errors import DoesNotExistError
 from nrp_cmd.types.records import Record
 
 from ..arguments import (
+    Model,
     Output,
     VerboseLevel,
     with_config,
+    with_model,
     with_output,
+    with_record_ids,
     with_repository,
-    with_resolved_vars,
     with_verbosity,
 )
 
 
-@async_command
 @with_config
 @with_repository
-@with_resolved_vars("record_ids")
+@with_record_ids
 @with_output
 @with_verbosity
+@with_model
+@click.option("--expand", is_flag=True, help="Expand the record")
+@async_command
 async def get_record(
-    # generic options
-    *,
     config: Config,
     repository: Optional[str],
-    # specific options
-    record_ids: Annotated[list[str], typer.Argument(help="Record ID")],
+    record_ids: list[str],
     out: Output,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    expand: Annotated[bool, typer.Option(help="Expand the record")] = False,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only published records")
-    ] = False,
+    model: Model,
+    expand: bool = False,
 ) -> None:
     """Get a record from the repository."""
     console = Console()
 
     with limit_connections(10):
-        tasks = []
+        tasks: list[
+            asyncio.Task[
+                tuple[
+                    Record | None,
+                    Path | None,
+                    RepositoryConfig | None,
+                    AsyncRepositoryClient | None,
+                ]
+            ]
+        ] = []
         async with asyncio.TaskGroup() as tg:
             for record_id in record_ids:
                 tasks.append(
@@ -78,11 +82,11 @@ async def get_record(
                             console,
                             config,
                             repository,
-                            model,
+                            model.model,
                             out.output,
                             out.output_format,
-                            published,
-                            draft,
+                            model.published,
+                            model.draft,
                             expand,
                             out.verbosity,
                         )
@@ -91,7 +95,8 @@ async def get_record(
         results = [x.result() for x in tasks]
         for r in results:
             if r[0] is None:
-                raise typer.Abort()
+                raise click.Abort()
+
 
 async def get_single_record(
     record_id: str,
@@ -112,9 +117,9 @@ async def get_single_record(
     try:
         (
             record,
-            final_record_id,
+            _final_record_id,
             repository_config,
-            record_client,
+            _record_client,
             repository_client,
         ) = await read_record(
             record_id, repository, config, expand, model, published, draft
@@ -171,10 +176,9 @@ async def read_record(
         records_api = records_api.published_records
     if draft:
         records_api = records_api.draft_records
-    query = {}
+    query: dict[str, str] = {}
     if expand:
         query["expand"] = "true"
 
     record = await records_api.read(record_id=final_record_id, query=query)
     return record, final_record_id, repository_config, records_api, client
-

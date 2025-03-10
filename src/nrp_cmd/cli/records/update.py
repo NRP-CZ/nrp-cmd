@@ -9,9 +9,9 @@
 
 from collections.abc import Callable
 from functools import partial
-from typing import Annotated, Any, Optional, Self
+from typing import Any, Optional, Self, cast
 
-import typer
+import rich_click as click
 from deepmerge import always_merger
 from rich.console import Console
 
@@ -27,8 +27,11 @@ from nrp_cmd.cli.records.table_formatters import format_record_table
 from nrp_cmd.config import Config
 
 from ..arguments import (
+    Model,
     Output,
+    argument_with_help,
     with_config,
+    with_model,
     with_output,
     with_repository,
     with_resolved_vars,
@@ -36,33 +39,31 @@ from ..arguments import (
 )
 
 
-@async_command
 @with_config
 @with_repository
 @with_resolved_vars("record_id")
 @with_output
 @with_verbosity
+@with_model
+@argument_with_help("record_id", type=str, help="Record ID")
+@argument_with_help("metadata", type=str, help="Metadata")
+@click.option("--replace/--merge", default=True, help="Replace or merge the metadata")
+@click.option("--path", "-p", type=str, help="Path within the metadata")
+@click.option("--model", type=str, help="Model name")
+@click.option(
+    "--published/--no-published", default=False, help="Include only published records"
+)
+@click.option("--draft/--no-draft", default=False, help="Include only drafts")
+@async_command
 async def update_record(
-    # generic options
     *,
     config: Config,
     repository: Optional[str],
-    # specific options
-    record_id: Annotated[str, typer.Argument(help="Record ID")],
-    metadata: Annotated[str, typer.Argument(help="Metadata")],
-    replace: Annotated[
-        bool, typer.Option("--replace/--merge", help="Replace or merge the metadata")
-    ] = True,
-    path: Annotated[
-        Optional[str], typer.Option("--path", "-p", help="Path within the metadata")
-    ] = None,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
+    record_id: str,
+    metadata: str,
+    replace: bool = True,
+    path: Optional[str] = None,
+    model: Model,
     out: Output,
 ) -> None:
     """Update a record with new metadata."""
@@ -78,20 +79,25 @@ async def update_record(
         record_id = loaded_record_ids[0]
 
     metadata_json = read_metadata(metadata)
-    record_id, repository_config = await get_repository_from_record_id(
+    record_url, repository_config = await get_repository_from_record_id(
         AsyncConnection(), record_id, config, repository
     )
 
-    client = await get_async_client(repository, config=config)
-    records_api: AsyncRecordsClient = client.records.draft_records
+    published = model.published
+    draft = model.draft
 
-    if model is not None:
-        records_api = records_api.with_model(model)
-    if model and not published and not draft:
+    client = await get_async_client(repository, config=config)
+
+    records_api: AsyncRecordsClient = client.records.draft_records
+    if model.model is not None:
+        # normally we use draft records, as most of the use cases are for draft records
+        records_api = records_api.with_model(model.model)
+    if model.model and not model.published and not model.draft:
         # make sure we have models information
         await client.get_repository_info()
         assert repository_config.info, "Repository info is missing"
-        repository_model = repository_config.info.models[model]
+        assert model.model, "Need to specify a model"
+        repository_model = repository_config.info.models[model.model]
         if "drafts" in repository_model.features:
             draft = True
         else:
@@ -102,9 +108,9 @@ async def update_record(
     elif draft:
         records_api = client.records.draft_records
 
-    record = await records_api.read(record_id)
+    record = await records_api.read(record_url)
     merge_metadata_at_path(
-        record.metadata if record.metadata is not None else record._extra_data,
+        record.metadata,
         metadata_json,
         replace,
         path,
@@ -126,7 +132,7 @@ def merge_metadata_at_path(
     new_metadata: Any,  # noqa: ANN401
     replace: bool,
     path: str | None,
-) -> dict:
+) -> dict[str, Any]:
     """Merge metadata at a path in a nested dictionary/list.
 
     :param metadata:         the whole metadata into which the new metadata should be merged
@@ -141,17 +147,17 @@ def merge_metadata_at_path(
     if replace:
         if isinstance(old, dict):
             old.clear()
-            old.update(new_metadata)
+            cast(dict[str, Any], old).update(new_metadata)
         elif isinstance(old, list):
             old.clear()
-            old.extend(new_metadata)
+            cast(list[Any], old).extend(new_metadata)
         else:
             old = new_metadata
     else:
         if isinstance(old, dict):
-            always_merger.merge(old, new_metadata)
+            always_merger.merge(cast(dict[str, Any], old), new_metadata)
         elif isinstance(old, list):
-            old.extend(new_metadata)
+            cast(list[Any], old).extend(new_metadata)
         else:
             old = new_metadata
     setters[-1].value = old
@@ -163,17 +169,17 @@ class InPathMDSetter:
 
     def __init__(
         self,
-        metadata: dict | list,
+        metadata: dict[str, Any] | list[Any],
         parent: Self | None = None,
         parent_key: str | int | None = None,
     ):
         """Create a new InPathMDSetter object."""
-        self.metadata = metadata
+        self.metadata: dict[str, Any] | list[Any] = metadata
         self.parent = parent
         self.parent_key = parent_key
 
     @classmethod
-    def from_path(cls, metadata: dict | list, path: str) -> list[Self]:
+    def from_path(cls, metadata: dict[str, Any] | list[Any], path: str) -> list[Self]:
         """Create a list of InPathMDSetter objects representing the path to the metadata.
 
         Each object in the list represents a key in the path to the metadata with a getter
@@ -182,12 +188,14 @@ class InPathMDSetter:
         path_parts = path.split(".") if path else []
         path_parts = [x for x in path_parts if x]
         ret = [cls(metadata)]
+        empty_factory: Callable[[], Any]
+
+        def _empty_factory() -> None:
+            return None
+
         for key_idx, key in enumerate(path_parts):
 
-            empty_factory: Callable
-
-            def empty_factory() -> None:
-                return None
+            empty_factory = _empty_factory
 
             if key_idx < len(path_parts) - 1:
                 next_key = path_parts[key_idx + 1]
@@ -195,19 +203,17 @@ class InPathMDSetter:
             ret.append(ret[-1]._get_key(key, empty_factory))
         return ret
 
-    def _get_key(self, key: str, empty_factory: Callable) -> Self:
+    def _get_key(self, key: str, empty_factory: Callable[[], Any]) -> Self:
         cls: type[Self] = type(self)
         if isinstance(self.metadata, dict):
             if key not in self.metadata:
                 return cls(empty_factory(), self, key)
             return cls(self.metadata[key], self, key)
-        elif isinstance(self.metadata, list):
+        else:
             if int(key) >= len(self.metadata):
                 return cls(empty_factory(), self, key)
             else:
                 return cls(self.metadata[int(key)], self, key)
-        else:
-            raise ValueError(f"Cannot get key {key} from {self.metadata}")
 
     @property
     def value(self) -> Any:  # noqa: ANN401
@@ -225,13 +231,12 @@ class InPathMDSetter:
     def _set_key_in_parent(self, key: str | int, value: Any) -> None:  # noqa: ANN401
         assert self.parent_key is not None
         if isinstance(self.metadata, dict):
+            assert isinstance(key, str)
             self.metadata[key] = value
-        elif isinstance(self.metadata, list):
+        else:
             if int(key) < len(self.metadata):
                 self.metadata[int(key)] = value
             else:
                 self.metadata.append(value)
-        else:
-            raise ValueError(f"Cannot set key {key} in {self.metadata}")
         if self.parent:
             self.parent._set_key_in_parent(self.parent_key, self.metadata)

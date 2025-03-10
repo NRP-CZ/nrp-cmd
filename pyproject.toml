@@ -5,7 +5,8 @@ description = "Python and commandline client for NRP repositories"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "typer~=0.12.3",
+    "click",
+    "rich-click",
     "aiohttp[speedups]~=3.10.3",
     "aiofiles>=24.1.0",
     "pyyaml~=6.0.2",

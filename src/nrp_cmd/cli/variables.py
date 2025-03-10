@@ -7,42 +7,42 @@
 #
 """Commandline clients for working with variables."""
 
-from pathlib import Path
-from typing import Annotated, Optional
 
-import typer
+from typing import Any
+
 from rich import box
 from rich.console import Console
 from rich.table import Table
 
 from nrp_cmd.config import Config
 
-from .base import OutputFormat, OutputWriter
+from .arguments import Output, argument_with_help, with_config, with_output
+from .base import OutputWriter
 
 
-def set_variable(
-    name: Annotated[str, typer.Argument(help="The name of the variable")],
-    values: Annotated[list[str], typer.Argument(help="The values of the variable")],
-) -> None:
+@with_config
+@argument_with_help("name", type=str, help="The name of the variable")
+@argument_with_help("values", type=str, nargs=-1, help="The values of the variable")
+def set_variable(*, config: Config, name: str, values: list[str]) -> None:
     """Add a variable to the configuration."""
     console = Console()
     console.print()
-    config = Config.from_file()
     variables = config.load_variables()
 
     variables[name] = values
     variables.save()
+    msg = f"Added variable {name} -> "
+    ln = len(msg)
+    formatted_values = (f"\n{' ' * ln}".join(values)).strip()
+    console.print(f"[green]{msg}{formatted_values}[/green]")
 
-    console.print(f"[green]Added variable {name} -> {values}[/green]")
 
-
-def remove_variable(
-    name: Annotated[str, typer.Argument(help="The name of the variable")],
-) -> None:
+@with_config
+@argument_with_help("name", type=str, help="The name of the variable")
+def remove_variable(config: Config, name: str) -> None:
     """Remove a variable from the configuration."""
     console = Console()
     console.print()
-    config = Config.from_file()
     variables = config.load_variables()
 
     del variables[name]
@@ -51,50 +51,38 @@ def remove_variable(
     console.print(f"[green]Removed variable {name}[/green]")
 
 
-def list_variables(
-    output: Annotated[
-        Optional[Path],
-        typer.Option(help="Save the output to a file"),
-    ] = None,
-    output_format: Annotated[
-        Optional[OutputFormat],
-        typer.Option(help="The format of the output"),
-    ] = "table",    # type: ignore # typer needs it as a string and converts it to OutputFormat
-) -> None:
+@with_config
+@with_output
+def list_variables(*, config: Config, out: Output) -> None:
     """List all variables."""
     console = Console()
-    config = Config.from_file()
     variables = config.load_variables()
 
-    with OutputWriter(output, output_format, console, variables_table) as printer:
+    with OutputWriter(
+        out.output, out.output_format, console, variables_table
+    ) as printer:
         printer.output(variables.variables)
 
 
-def get_variable(
-    variable: Annotated[str, typer.Argument(help="The name of the variable")],
-    output: Annotated[
-        Optional[Path],
-        typer.Option(help="Save the output to a file"),
-    ] = None,
-    output_format: Annotated[
-        Optional[OutputFormat],
-        typer.Option(help="The format of the output"),
-    ] = "table",    # type: ignore # typer needs it as a string and converts it to OutputFormat
-) -> None:
+@with_config
+@with_output
+@argument_with_help("variable", type=str, help="The name of the variable")
+def get_variable(*, config: Config, variable: str, out: Output) -> None:
     """Get all variables."""
     console = Console()
-    config = Config.from_file()
     variables = config.load_variables()
     value = variables.get(variable)
 
-    def variable_table(data: list[str]) -> str:
+    def variable_table(data: list[str], **kwargs: Any) -> str:
         return "\n".join(data)
 
-    with OutputWriter(output, output_format, console, variable_table) as printer:
+    with OutputWriter(
+        out.output, out.output_format, console, variable_table
+    ) as printer:
         printer.output(value)
 
 
-def variables_table(data: dict[str, list[str]]) -> Table:
+def variables_table(data: dict[str, list[str]], **kwargs: Any) -> Table:
     """Render a table of variables."""
     table = Table(title="Variables", box=box.SIMPLE, title_justify="left")
     table.add_column("Name", style="cyan")

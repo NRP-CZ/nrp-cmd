@@ -9,10 +9,9 @@
 
 from __future__ import annotations
 
-from pathlib import Path  # noqa
-from typing import TYPE_CHECKING, Annotated, Optional
+from typing import TYPE_CHECKING, Optional
 
-import typer  # noqa
+import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client import (
@@ -20,49 +19,48 @@ from nrp_cmd.async_client import (
     limit_connections,
 )
 from nrp_cmd.async_client.connection import limit_connections
-from nrp_cmd.cli.base import OutputFormat, OutputWriter, async_command
+from nrp_cmd.cli.base import OutputWriter, async_command
 from nrp_cmd.cli.records.get import read_record
 from nrp_cmd.config import Config
 from nrp_cmd.types.records import Record
 from nrp_cmd.types.requests import Request
 
-from ..arguments import with_config, with_repository, with_resolved_vars
+from ..arguments import (
+    Model,
+    Output,
+    argument_with_help,
+    with_config,
+    with_model,
+    with_output,
+    with_repository,
+    with_resolved_vars,
+)
 from .table_formatter import format_request_table
 
 if TYPE_CHECKING:
     from nrp_cmd.types.requests import RequestType
 
 
-@async_command
 @with_config
 @with_repository
 @with_resolved_vars("record_id")
+@with_output
+@with_model
+@argument_with_help("request_type_id", type=str, help="Request type ID")
+@argument_with_help("record_id", type=str, help="Record ID")
+@argument_with_help("variable", type=str, required=False, help="Variable name")
+@click.option("--submit/--no-submit", default=True, help="Submit the request")
+@async_command
 async def create_request(
     *,
-    # generic arguments
     config: Config,
     repository: Optional[str] = None,
-    # specific arguments
-    request_type_id: Annotated[str, typer.Argument(help="Request type ID")],
-    record_id: Annotated[str, typer.Argument(help="Record ID")],
-    variable: Annotated[Optional[str], typer.Argument(help="Variable name")] = None,
-    output: Annotated[
-        Optional[Path], typer.Option("-o", help="Save the output to a file")
-    ] = None,
-    output_format: Annotated[
-        Optional[OutputFormat],
-        typer.Option("-f", help="The format of the output"),
-    ] = None,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = True,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
-    submit: Annotated[
-        bool, typer.Option("--submit/--no-submit", help="Submit the request")
-    ] = True,
+    request_type_id: str,
+    record_id: str,
+    variable: Optional[str] = None,
+    out: Output,
+    model: Model,
+    submit: bool = True,
 ) -> None:
     """Create a request."""
     console = Console()
@@ -70,18 +68,26 @@ async def create_request(
     with limit_connections(10):
         (
             record,
-            final_record_id,
-            repository_config,
-            record_client,
+            _final_record_id,
+            _repository_config,
+            _record_client,
             repository_client,
         ) = await read_record(
-            record_id, repository, config, False, model, published, draft
+            record_id,
+            repository,
+            config,
+            False,
+            model.model,
+            model.published,
+            model.draft,
         )
         request = await create_request_helper(
             console, repository_client, record, request_type_id, submit
         )
 
-    with OutputWriter(output, output_format, console, format_request_table) as printer:
+    with OutputWriter(
+        out.output, out.output_format, console, format_request_table
+    ) as printer:
         printer.output(request)
 
     if variable:
@@ -106,6 +112,6 @@ async def create_request_helper(
         console.print(
             f"[red]Request type {request_type_id} not applicable to record {record.id}[/red]"
         )
-        raise typer.Abort()
+        raise click.Abort()
 
     return await repository_client.requests.create(request_type, {}, submit=submit)

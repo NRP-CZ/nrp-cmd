@@ -10,11 +10,17 @@
 from __future__ import annotations
 
 import dataclasses
+import functools
 from collections.abc import Callable
-from typing import Annotated, Optional
+from typing import Any, Optional
 
-import typer
+import rich_click as click
+from rich import box
+from rich.panel import Panel
+from rich.table import Table
+from rich_click.rich_help_formatter import RichHelpFormatter
 
+from nrp_cmd.cli.arguments import Argument, ClickCommand
 from nrp_cmd.cli.files import (
     delete_file,
     download_files,
@@ -59,7 +65,7 @@ from nrp_cmd.cli.variables import (
     set_variable,
 )
 
-commands = [
+commands: list[tuple[str, str, ClickCommand]] = [
     #
     #
     # verb centric
@@ -142,6 +148,86 @@ commands = [
 ]
 """CLI commands."""
 
+click.rich_click.OPTION_GROUPS = {
+    "nrp-cmd *": [
+        {
+            "name": "Output",
+            "options": ["--verbose", "--quiet", "--output", "--output-format"],
+        },
+        {
+            "name": "Debugging and Logging",
+            "options": ["--log-url", "--log-request", "--log-response"],
+        },
+        {
+            "name": "Configuration",
+            "options": [
+                "--config-path",
+            ],
+        },
+    ],
+}
+
+
+class CommandWithAttributeHelp(click.RichCommand):
+    def format_help(
+        self, ctx: click.RichContext, formatter: RichHelpFormatter  # type: ignore[override]
+    ) -> None:
+        self.format_usage(ctx, formatter)
+        self.format_help_text(ctx, formatter)
+        self.format_arguments(ctx, formatter)
+        self.format_options(ctx, formatter)
+        self.format_epilog(ctx, formatter)
+
+    def format_arguments(
+        self, ctx: click.RichContext, formatter: RichHelpFormatter
+    ) -> None:
+        """Writes all the options into the formatter if they exist."""
+        options_rows: list[tuple[str, str]] = []
+        for param in self.get_params(ctx):
+            if isinstance(param, Argument):
+                rv = param.get_argument_help_record(ctx)
+                if rv is not None:
+                    options_rows.append(rv)
+
+        if len(options_rows) > 0:
+            t_styles: dict[str, Any] = {
+                "show_lines": formatter.config.style_options_table_show_lines,
+                "leading": formatter.config.style_options_table_leading,
+                "box": formatter.config.style_options_table_box,
+                "border_style": formatter.config.style_options_table_border_style,
+                "row_styles": formatter.config.style_options_table_row_styles,
+                "pad_edge": formatter.config.style_options_table_pad_edge,
+                "padding": formatter.config.style_options_table_padding,
+            }
+            if isinstance(formatter.config.style_options_table_box, str):
+                t_styles["box"] = getattr(box, t_styles.pop("box"), None)  # type: ignore[arg-type]
+
+            options_table = Table(
+                highlight=True,
+                show_header=False,
+                expand=True,
+                **t_styles,  # type: ignore[arg-type]
+            )
+            # Strip the required column if none are required
+            for row in options_rows:
+                options_table.add_row(*row)
+
+            kw: dict[str, Any] = {
+                "border_style": formatter.config.style_options_panel_border,
+                "title": "Arguments",
+                "title_align": formatter.config.align_options_panel,
+            }
+
+            if isinstance(formatter.config.style_options_panel_box, str):
+                box_style = getattr(box, formatter.config.style_options_panel_box, None)
+            else:
+                box_style = formatter.config.style_options_panel_box
+
+            if box_style:
+                kw["box"] = box_style
+
+            formatter.write(Panel(options_table, **kw))
+
 
 @dataclasses.dataclass
 class CommandTreeNode:
@@ -152,16 +238,29 @@ class CommandTreeNode:
     command: Optional[Callable[..., None]] = None
     """Command to execute at this node, if the children are empty."""
 
-    def register_commands(self, parent_typer_group: typer.Typer) -> None:
+    def register_commands(self, parent_click_group: click.Group) -> None:
         """Register the commands to parent's typer group."""
         for child_name, child in self.children.items():
             if child.children:
                 children_names = ", ".join(child.children.keys())
-                grp = typer.Typer(help=f"{children_names}")
+                grp = parent_click_group.group(
+                    name=child_name, help=f"{children_names}"
+                )(lambda: None)
                 child.register_commands(grp)
-                parent_typer_group.add_typer(grp, name=child_name)
             else:
-                parent_typer_group.command(child_name)(child.command)
+                assert child.command
+                parent_click_group.command(child_name, cls=CommandWithAttributeHelp)(
+                    self.wrapped(child.command)
+                )
+
+    def wrapped(self, command: Callable[..., None]) -> Callable[..., None]:
+        """Wrap the command so that it can be used multiple times in click."""
+
+        @functools.wraps(command)
+        def wrapped_command(*args: Any, **kwargs: Any) -> None:
+            command(*args, **kwargs)
+
+        return wrapped_command
 
     def add_command(
         self,
@@ -185,9 +284,9 @@ class CommandTreeNode:
             )
 
 
-def generate_typer_command() -> typer.Typer:
+def generate_click_command() -> click.Group:
     """Register all commands into the typer app."""
-    app = typer.Typer(no_args_is_help=True)
+    app = click.group(name="nrp-cmd")(lambda: None)
 
     tree_root = CommandTreeNode()
     for cmd in commands:
@@ -196,28 +295,10 @@ def generate_typer_command() -> typer.Typer:
 
     tree_root.register_commands(app)
 
-    @app.callback()
-    def main(
-        show_communication: Annotated[
-            Optional[bool],
-            typer.Option(
-                "--show-communication", is_flag=True, help="Show network communication"
-            ),
-        ] = False,
-    ) -> None:
-        """Run the client."""
-        import logging
-
-        logging.basicConfig(level=logging.ERROR)
-
-        if show_communication:
-            communication_log = logging.getLogger("invenio_nrp.communication")
-            communication_log.setLevel(logging.INFO)
-
     return app
 
 
-app = generate_typer_command()
+app = generate_click_command()
 """Typer main application."""
 
 

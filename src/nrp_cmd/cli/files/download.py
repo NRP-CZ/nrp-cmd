@@ -8,11 +8,11 @@
 """Commandline client for downloading files."""
 # TODO: test !!!!
 import sys
-from asyncio import TaskGroup
+from asyncio import Task, TaskGroup
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Any, Optional
 
-import typer
+import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client.streams import FileSink
@@ -24,9 +24,13 @@ from nrp_cmd.converter import converter
 from nrp_cmd.progress import show_progress
 
 from ..arguments import (
+    Model,
     Output,
     VerboseLevel,
+    argument_with_help,
     with_config,
+    with_model,
+    with_output,
     with_progress,
     with_repository,
     with_resolved_vars,
@@ -34,28 +38,25 @@ from ..arguments import (
 )
 
 
-@async_command
 @with_config
 @with_repository
 @with_resolved_vars("record_id")
-@with_verbosity
+@with_output
 @with_progress
+@with_verbosity
+@with_model
+@argument_with_help("record_id", type=str, help="Record ID")
+@argument_with_help("keys", type=str, nargs=-1, help="File key")
+@click.option("-o", "--output", type=click.Path(), help="Output path")
+@async_command
 async def download_files(
     *,
-    # generic options
     config: Config,
     repository: Optional[str] = None,
-    # specific options
-    record_id: Annotated[str, typer.Argument(help="Record ID")],
-    keys: Annotated[list[str], typer.Argument(help="File key")],
-    output: Annotated[Optional[Path], typer.Option("-o", help="Output path")],
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
+    record_id: str,
+    keys: list[str],
+    output: Optional[Path] = None,
+    model: Model,
     out: Output,
 ) -> None:
     """Download files from a record."""
@@ -70,30 +71,30 @@ async def download_files(
             output,
             config,
             repository,
-            model,
-            published,
-            draft,
+            model.model,
+            model.published,
+            model.draft,
             verbosity=out.verbosity,
         )
 
 
 async def download_single_record_files(
-    console,
-    record_id,
-    keys,
-    output,
-    config,
-    repository,
-    model,
-    published,
-    draft,
-    verbosity,
+    console: Console,
+    record_id: str,
+    keys: list[str],
+    output: Path,
+    config: Config,
+    repository: str | None,
+    model: str | None,
+    published: bool,
+    draft: bool,
+    verbosity: VerboseLevel,
 ):
     (
         record,
-        record_id,
-        repository_config,
-        record_client,
+        record_id_url,
+        _repository_config,
+        _record_client,
         repository_client,
     ) = await read_record(record_id, repository, config, False, model, published, draft)
     assert repository_client
@@ -111,7 +112,7 @@ async def download_single_record_files(
             )
             return False
 
-    tasks = []
+    tasks: list[tuple[str, Any, Task[Any]]] = []
     async with TaskGroup() as tg:
         for key in keys:
             try:
@@ -153,13 +154,15 @@ async def download_single_record_files(
             ))
 
     ok = True
-    for idx, (key, fname, task) in enumerate(tasks):
+    for key, fname, task in tasks:
         if task.exception():
             ok = False
-            console.print(f"[red]Failed to download file {key} of {record_id}[/red]")
+            console.print(
+                f"[red]Failed to download file {key} of {record_id_url}[/red]"
+            )
         else:
             if verbosity != VerboseLevel.QUIET:
                 console.print(
-                    f"[green]File {key} of {record_id} downloaded to {fname}[/green]"
+                    f"[green]File {key} of {record_id_url} downloaded to {fname}[/green]"
                 )
     return ok

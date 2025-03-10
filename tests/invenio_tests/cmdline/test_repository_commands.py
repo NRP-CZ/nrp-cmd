@@ -1,6 +1,5 @@
-
 import pytest
-from typer.testing import CliRunner
+from click.testing import CliRunner
 from yarl import URL
 
 from nrp_cmd.cli import app

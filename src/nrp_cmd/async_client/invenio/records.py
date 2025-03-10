@@ -231,7 +231,7 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
         q: Optional[str] = None,
         model: str | None = None,
         status: RecordStatus | None = None,
-        **facets: str,
+        facets: dict[str, str],
     ) -> AsyncGenerator[AsyncIterator[Record], None]:
         """Scan all the records in the repository.
 
@@ -254,10 +254,10 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
             * searching page by page if the number of records < OPENSEARCH_SCAN_WINDOW
             * scanning by date bisection if the number of records > OPENSEARCH_SCAN_WINDOW
         """
-        
+
         def opensearch_date_serialize(date: datetime) -> str:
             return date.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        
+
         def opensearch_date_interval(start: datetime, end: datetime) -> str:
             return f"[{opensearch_date_serialize(start)} TO {opensearch_date_serialize(end)}{'}'}"
 
@@ -381,7 +381,6 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
             result_class=Record,
         )
         return ret
-
 
     @override
     async def delete(

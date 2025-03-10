@@ -37,7 +37,7 @@ def format_request_table(data: Request, **kwargs: Any) -> Generator[Table, None,
         if data.payload.published_record:
             write_table_row(table, "published record", data.payload.published_record.links.self_)
             write_table_row(table, "published record html", data.payload.published_record.links.self_html)
-        if data.payload._extra_data is not None and len(data.payload._extra_data) > 0:
+        if len(data.payload._extra_data or {}) > 0:
             write_table_row(table, "payload", data.payload._extra_data)
     write_table_row(table, "links", "")
     write_table_row(table, "    self", data.links.self_)
@@ -65,7 +65,9 @@ def format_request_type_table(data: RequestType) -> Generator[Table, None, None]
     yield table
 
 
-def format_request_and_types_table(data: dict, **kwargs: Any) -> Generator[Table, None, None]:
+def format_request_and_types_table(
+    data: dict[str, Any], **kwargs: Any
+) -> Generator[Table, None, None]:
     """Format request and request types table."""
     request: Request
     for request in converter.structure(data["requests"], list[Request]):

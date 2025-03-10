@@ -8,6 +8,7 @@
 """Table formatters for files."""
 
 from collections.abc import Generator
+from typing import Any
 
 from rich import box
 from rich.table import Table
@@ -20,8 +21,8 @@ from ..arguments import VerboseLevel
 
 
 def format_files_table(
-    record: Record, data: list[File], verbosity: VerboseLevel
-) -> Generator[Table | str, None, None]:
+    record: Record, data: list[File], verbosity: VerboseLevel, **kwargs: Any
+) -> Generator[Table, None, None] | Generator[str, None, None]:
     """Format the files table."""
     if verbosity == VerboseLevel.QUIET:
         yield "\n".join(sorted([file.key for file in data]))
@@ -42,4 +43,3 @@ def format_files_table(
         for file in sorted(data, key=lambda f: f.key):
             table.add_row(file.key, str(file.size), str(file.links.content))
         yield table
-
