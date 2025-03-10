@@ -231,7 +231,7 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
         q: Optional[str] = None,
         model: str | None = None,
         status: RecordStatus | None = None,
-        facets: dict[str, str],
+        facets: dict[str, str] | None = None,
     ) -> AsyncGenerator[AsyncIterator[Record], None]:
         """Scan all the records in the repository.
 
@@ -265,7 +265,7 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
             q: str | None,
             model: str | None,
             status: RecordStatus | None,
-            facets: dict[str, str],
+            facets: dict[str, str] | None = None,
         ) -> AsyncIterator[Record]:
             result = await self.search(
                 q=q,

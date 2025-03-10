@@ -147,6 +147,7 @@ class SyncConnection:
                 total=self._retry_count,
                 backoff_factor=self._retry_after_seconds,
                 status_forcelist=[429, 500, 502, 503, 504],
+                respect_retry_after_header=True,
             )
             adapter = adapters.HTTPAdapter(max_retries=retry)
         else:
