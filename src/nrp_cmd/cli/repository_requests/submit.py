@@ -9,38 +9,33 @@
 
 from __future__ import annotations
 
-from pathlib import Path  # noqa
-from typing import Annotated, Optional
+from typing import Optional
 
-import typer  # noqa
 from rich.console import Console
 
-from nrp_cmd.cli.base import OutputFormat, OutputWriter, async_command
+from nrp_cmd.cli.base import OutputWriter, async_command
 from nrp_cmd.config import Config
 
-from ..arguments import with_config, with_repository, with_resolved_vars
+from ..arguments import (
+    Output,
+    argument_with_help,
+    with_config,
+    with_output,
+    with_repository,
+    with_resolved_vars,
+)
 from .table_formatter import format_request_table
 from .utils import resolve_request
 
 
-@async_command
 @with_config
 @with_repository
 @with_resolved_vars("request_id")
+@argument_with_help("request_id", type=str, help="Request IDs")
+@with_output
+@async_command
 async def submit_request(
-    *,
-    # generic arguments
-    config: Config,
-    repository: Optional[str] = None,
-    # specific arguments
-    request_id: Annotated[str, typer.Argument(help="Request type ID")],
-    output: Annotated[
-        Optional[Path], typer.Option("-o", help="Save the output to a file")
-    ] = None,
-    output_format: Annotated[
-        Optional[OutputFormat],
-        typer.Option("-f", help="The format of the output"),
-    ] = None,
+    *, config: Config, repository: Optional[str] = None, request_id: str, out: Output
 ) -> None:
     """Submit a request."""
     console = Console()
@@ -49,5 +44,7 @@ async def submit_request(
 
     request = await requests_client.submit(request_url)
 
-    with OutputWriter(output, output_format, console, format_request_table) as printer:
+    with OutputWriter(
+        out.output, out.output_format, console, format_request_table
+    ) as printer:
         printer.output(request)

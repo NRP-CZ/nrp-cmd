@@ -30,9 +30,7 @@ async def resolve_request(
             request_url = URL(final_request_id)
         else:
             request_url = repository_config.requests_url / final_request_id
-    elif isinstance(final_request_id, URL):
-        request_url = final_request_id
     else:
-        raise ValueError("Invalid request id - expecting string or URL")
+        request_url = final_request_id
 
     return repository_client.requests, request_url

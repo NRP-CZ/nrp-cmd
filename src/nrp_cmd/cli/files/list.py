@@ -9,9 +9,9 @@
 
 from asyncio import TaskGroup
 from functools import partial
-from typing import Annotated, Optional
+from pathlib import Path
+from typing import Optional
 
-import typer
 from rich.console import Console
 
 from nrp_cmd.async_client import limit_connections
@@ -22,8 +22,13 @@ from nrp_cmd.cli.records.record_file_name import create_output_file_name
 from nrp_cmd.config import Config
 
 from ..arguments import (
+    Model,
     Output,
+    OutputFormat,
+    VerboseLevel,
+    argument_with_help,
     with_config,
+    with_model,
     with_output,
     with_repository,
     with_resolved_vars,
@@ -31,34 +36,28 @@ from ..arguments import (
 )
 
 
-@async_command
 @with_config
 @with_repository
-@with_resolved_vars("record_id")
+@with_resolved_vars("record_ids")
 @with_output
 @with_verbosity
+@with_model
+@argument_with_help("record_ids", type=str, nargs=-1, help="Record ID(s)")
+@async_command
 async def list_files(
     *,
-    # generic options
     config: Config,
     repository: Optional[str] = None,
-    # specific options
-    record_id: Annotated[list[str], typer.Argument(help="Record ID(s)")],
+    record_ids: list[str],
     out: Output,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
+    model: Model,
 ) -> None:
-    """Commandline client for listing files."""
+    """List record's files."""
     console = Console()
 
     with limit_connections(10):
         async with TaskGroup() as tg:
-            for record_id in record_id:
+            for record_id in record_ids:
                 tg.create_task(
                     list_single_record(
                         record_id,
@@ -67,31 +66,32 @@ async def list_files(
                         out.output,
                         out.output_format,
                         repository,
-                        model,
-                        published,
-                        draft,
+                        model.model,
+                        model.published,
+                        model.draft,
                         out.verbosity,
                     )
                 )
 
 
 async def list_single_record(
-    record_id,
-    console,
-    config,
-    output,
-    output_format,
-    repository,
-    model,
-    published,
-    draft,
-    verbosity,
+    record_id: str,
+    console: Console,
+    config: Config,
+    output: Optional[Path],
+    output_format: Optional[OutputFormat],
+    repository: Optional[str],
+    model: Optional[str],
+    published: bool,
+    draft: bool,
+    verbosity: VerboseLevel,
 ):
+    """List and print single record files."""
     (
         record,
-        record_id,
-        repository_config,
-        record_client,
+        _record_id_url,
+        _repository_config,
+        _record_client,
         repository_client,
     ) = await read_record(record_id, repository, config, False, model, published, draft)
     files = await repository_client.files.list(record)

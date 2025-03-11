@@ -7,11 +7,11 @@
 #
 """Commandline interface for creating records."""
 
-from asyncio import TaskGroup
+from asyncio import Task, TaskGroup
 from functools import partial
-from typing import Annotated, Optional
+from typing import Optional
 
-import typer
+import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client import AsyncRecordsClient, get_async_client
@@ -21,10 +21,14 @@ from nrp_cmd.cli.records.metadata import read_metadata
 from nrp_cmd.cli.records.table_formatters import format_record_table
 from nrp_cmd.config import Config
 from nrp_cmd.progress import show_progress
+from nrp_cmd.types.records import Record
 
 from ..arguments import (
+    Model,
     Output,
+    argument_with_help,
     with_config,
+    with_model,
     with_output,
     with_progress,
     with_repository,
@@ -33,32 +37,34 @@ from ..arguments import (
 )
 
 
-@async_command
+@argument_with_help("metadata", type=str, help="Metadata")
+@argument_with_help("files", type=str, nargs=-1, help="List of files to upload")
+@click.option("--model", type=str, help="Model name")
+@click.option("--community", type=str, help="Community name")
+@click.option("--workflow", type=str, help="Workflow name")
+@click.option(
+    "--metadata-only/--no-metadata-only",
+    default=False,
+    help="The record will only have metadata",
+)
 @with_config
 @with_output
 @with_verbosity
 @with_setvar
 @with_repository
 @with_progress
+@with_model(community=True, workflow=True, draft=False, published=False)
+@async_command
 async def create_record(
-    # generic options
     *,
     config: Config,
     out: Output,
     variable: Optional[str] = None,
     repository: Optional[str] = None,
-    # command specific options
-    metadata: Annotated[str, typer.Argument(help="Metadata")],
-    files: Annotated[
-        Optional[list[str]], typer.Argument(help="List of files to upload")
-    ] = None,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    community: Annotated[Optional[str], typer.Option(help="Community name")] = None,
-    workflow: Annotated[Optional[str], typer.Option(help="Workflow name")] = None,
-    metadata_only: Annotated[
-        bool,
-        typer.Option("--metadata-only/", help="The record will only have metadata"),
-    ] = False,
+    metadata: str,
+    files: Optional[list[str]] = None,
+    model: Model,
+    metadata_only: bool = False,
 ) -> None:
     """Create a new record in the repository and optionally upload files to it.
 
@@ -86,14 +92,14 @@ async def create_record(
     client = await get_async_client(repository, config=config)
     records_api: AsyncRecordsClient = client.records
 
-    if model is not None:
-        records_api = records_api.with_model(model)
+    if model.model is not None:
+        records_api = records_api.with_model(model.model)
 
     if not isinstance(metadata_json, list):
         assert isinstance(metadata_json, dict), "Metadata must be a dictionary."
         metadata_json = [metadata_json]
 
-    create_results = []
+    create_results: list[Task[Record]] = []
     assert isinstance(metadata_json, list)
     with show_progress(total=len(metadata_json), quiet=not out.progress):
         async with TaskGroup() as tg:
@@ -102,10 +108,10 @@ async def create_record(
                     tg.create_task(
                         records_api.create(
                             record_metadata,
-                            community=community,
-                            workflow=workflow,
+                            community=model.community,
+                            workflow=model.workflow,
                             files_enabled=not metadata_only,
-                            model=model,
+                            model=model.model,
                         )
                     )
                 )

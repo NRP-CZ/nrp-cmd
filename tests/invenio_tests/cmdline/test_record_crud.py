@@ -1,7 +1,7 @@
 import json
 import time
 
-from typer.testing import CliRunner
+from click.testing import CliRunner
 
 runner = CliRunner()
 
@@ -86,6 +86,7 @@ def test_create_record(nrp_repository_config, run_cmdline_and_check) -> None:
         title                 Test record B
         """,
     )
+    print("Update output: ", update_output)
     # endregion
 
     # region: Get the record to check if the metadata has been updated
@@ -104,7 +105,7 @@ def test_create_record(nrp_repository_config, run_cmdline_and_check) -> None:
     # endregion
 
     # region: Search for the record by its id
-    # propagating the changes to the search index takes 
+    # propagating the changes to the search index takes
     # app. 5 seconds, so waiting a bit longer here
     time.sleep(10)
     search_output = run_cmdline_and_check(

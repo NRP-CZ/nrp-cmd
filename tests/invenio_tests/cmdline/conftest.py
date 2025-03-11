@@ -1,9 +1,8 @@
-
 import re
 from collections.abc import Callable
 
 import pytest
-from typer.testing import CliRunner
+from click.testing import CliRunner
 
 from nrp_cmd.config import Config
 

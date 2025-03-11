@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if ! $HOME/.local/bin/uv --version > /dev/null 2>&1; then
+  echo "uv not found, installing..."
+
+  export UNMANAGED_INSTALL=1
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+
+$HOME/.local/bin/uvx "--python" ">=3.12" nrp-cmd "$@"

@@ -7,14 +7,13 @@
 #
 """Base utilities for the commandline client."""
 
-import enum
+import functools
 import inspect
 import json
 from collections.abc import Callable, Generator, Iterable
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, Protocol, Self, get_origin
 
-import typer
 import yaml
 from rich.console import Console
 from rich.table import Table
@@ -22,26 +21,10 @@ from rich.table import Table
 from nrp_cmd.config import Config
 from nrp_cmd.converter import converter
 
-from .argmerge import merge_arguments
+from .arguments import OutputFormat
 
 if TYPE_CHECKING:
     from io import TextIOWrapper
-
-VERBOSITY_NORMAL = 0
-VERBOSITY_QUIET = -1
-VERBOSITY_VERBOSE = 1
-
-class OutputFormat(enum.Enum):
-    """Output format."""
-
-    JSON = "json"
-    JSON_LINES = "jsonl"
-    YAML = "yaml"
-    TABLE = "table"
-
-    def __str__(self):
-        """Return the value of the enum."""
-        return self.value
 
 
 def format_output(output_format: OutputFormat, data: Any) -> str:  # noqa: ANN401
@@ -107,19 +90,22 @@ def _is_typer_argument(name: str, parameter: inspect.Parameter) -> bool:
     return False
 
 
-def async_command(func: Callable) -> Callable:
+def async_command(func: Any) -> Callable[..., None]:
     """Run an async function synchronously.
 
     This decorator is used to run an async function synchronously.
     """
+    import asyncio
 
-    async def runner(*args, **kwargs):
-        return await func(*args, **kwargs)
+    import uvloop
 
-    ret = merge_arguments(
-        runner, func, _is_typer_argument, orig_async=True, wrapper_async=False
-    )
-    return ret
+    @functools.wraps(func)
+    def runner(*args: Any, **kwargs: Any):
+        with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+            runner.run(func(*args, **kwargs))
+
+    return runner
+
 
 def set_variable(config: Config, name: str, value: list[str] | str) -> None:
     """Set a variable into the configuration (local directory or global)."""
@@ -143,7 +129,13 @@ class TableMaker(Protocol):
 
     def __call__(
         self, data: Any, **kwargs: Any
-    ) -> Table | Generator[Table, None, None] | list[Table] | str:
+    ) -> (
+        Table
+        | Generator[Table, None, None]
+        | list[Table]
+        | str
+        | Generator[str, None, None]
+    ):
         """Create a table or a list of tables from the data."""
         ...
 

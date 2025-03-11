@@ -2,7 +2,7 @@ import json
 import tempfile
 from pathlib import Path
 
-from typer.testing import CliRunner
+from click.testing import CliRunner
 
 runner = CliRunner()
 
@@ -211,14 +211,11 @@ def test_download_record_with_files(nrp_repository_config, run_cmdline_and_check
 
     with tempfile.TemporaryDirectory() as tempdir:
         run_cmdline_and_check(
-            [
-                "download",
-                "record",
-                record_url,
-                "-o",
-                tempdir,
-            ],
-            "",
+            ["download", "record", record_url, "-o", tempdir, "--no-progress"],
+            {
+                "COLUMNS": "1000",
+            },
+            f"Record {record_url} downloaded to {tempdir}",
         )
         metadata = Path(tempdir) / "metadata.json"
         print("Metadata text", metadata.read_text())

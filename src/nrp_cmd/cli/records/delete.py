@@ -8,9 +8,8 @@
 """Command line interface for getting records."""
 
 import asyncio
-from typing import Annotated, Optional
+from typing import Optional
 
-import typer
 from rich.console import Console
 
 from nrp_cmd.async_client import (
@@ -23,37 +22,31 @@ from nrp_cmd.cli.base import async_command
 from nrp_cmd.config import Config
 
 from ..arguments import (
+    Model,
     Output,
     VerboseLevel,
     with_config,
+    with_model,
     with_output,
+    with_record_ids,
     with_repository,
-    with_resolved_vars,
     with_verbosity,
 )
 
 
-@async_command
+@with_model
 @with_config
 @with_repository
-@with_resolved_vars("record_ids")
+@with_record_ids
 @with_output
 @with_verbosity
+@async_command
 async def delete_record(
-    # generic options
-    *,
     config: Config,
     repository: Optional[str],
     out: Output,
-    # specific options
-    record_ids: Annotated[list[str], typer.Argument(help="Record ID")],
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only published records")
-    ] = False,
+    record_ids: list[str],
+    model: Model,
 ) -> None:
     """Get a record from the repository."""
     console = Console()
@@ -67,9 +60,9 @@ async def delete_record(
                         console,
                         config,
                         repository,
-                        model,
-                        published,
-                        draft,
+                        model.model,
+                        model.published,
+                        model.draft,
                         out.verbosity,
                     )
                 )

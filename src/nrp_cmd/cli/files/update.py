@@ -8,9 +8,8 @@
 """Commandline client for updating metadata of files."""
 
 from functools import partial
-from typing import Annotated, Optional
+from typing import Optional
 
-import typer
 from rich.console import Console
 
 from nrp_cmd.async_client import limit_connections
@@ -21,8 +20,11 @@ from nrp_cmd.cli.records.metadata import read_metadata
 from nrp_cmd.config import Config
 
 from ..arguments import (
+    Model,
     Output,
+    argument_with_help,
     with_config,
+    with_model,
     with_output,
     with_repository,
     with_resolved_vars,
@@ -30,30 +32,24 @@ from ..arguments import (
 )
 
 
-@async_command
 @with_config
 @with_repository
 @with_resolved_vars("record_id")
 @with_output
 @with_verbosity
+@with_model
+@argument_with_help("record_id", type=str, help="Record ID")
+@argument_with_help("key", type=str, help="Key for the file")
+@argument_with_help("metadata", type=str, required=False, help="Metadata for the file")
+@async_command
 async def update_file_metadata(
     *,
-    # generic options
     config: Config,
     repository: Optional[str] = None,
-    # specific options
-    record_id: Annotated[str, typer.Argument(help="Record ID")],
-    key: Annotated[str, typer.Argument(help="Key for the file")],
-    metadata: Annotated[
-        Optional[str], typer.Argument(help="Metadata for the file")
-    ] = None,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
+    record_id: str,
+    key: str,
+    metadata: Optional[str] = None,
+    model: Model,
     out: Output,
 ) -> None:
     """Update the metadata of a file in a record."""
@@ -62,12 +58,18 @@ async def update_file_metadata(
     with limit_connections(10):
         (
             record,
-            record_id,
-            repository_config,
-            record_client,
+            _record_id,
+            _repository_config,
+            _record_client,
             repository_client,
         ) = await read_record(
-            record_id, repository, config, False, model, published, draft
+            record_id,
+            repository,
+            config,
+            False,
+            model.model,
+            model.published,
+            model.draft,
         )
 
         metadata = metadata or "{}"
@@ -85,7 +87,7 @@ async def update_file_metadata(
 
         file.metadata = metadata_json
         updated_file = await files_client.update(file)
-    
+
     with OutputWriter(
         out.output,
         out.output_format,

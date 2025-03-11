@@ -12,10 +12,9 @@ import urllib
 import urllib.parse
 from collections.abc import Generator
 from functools import partial
-from pathlib import Path
-from typing import TYPE_CHECKING, Annotated, Any, Optional
+from typing import Any
 
-import typer
+import rich_click as click
 from rich import box
 from rich.console import Console
 from rich.table import Table
@@ -26,34 +25,55 @@ from nrp_cmd.config.repository import RepositoryConfig
 from nrp_cmd.converter import converter
 from nrp_cmd.sync_client import SyncRepositoryClient, get_sync_client
 
-from .base import OutputFormat, OutputWriter
+from .arguments import (
+    Output,
+    VerboseLevel,
+    argument_with_help,
+    with_config,
+    with_output,
+    with_verbosity,
+)
+from .base import OutputWriter
 
-if TYPE_CHECKING:
-    from nrp_cmd.config.info import ModelInfo
 
-
+@argument_with_help("url", type=str, help="The URL of the repository")
+@argument_with_help(
+    "alias", type=str, required=False, help="The alias of the repository"
+)
+@click.option("--token", type=str, help="The token to access the repository")
+@click.option(
+    "--verify-tls/--no-verify-tls", default=True, help="Verify the TLS certificate"
+)
+@click.option("--retry-count", type=int, default=5, help="Number of retries")
+@click.option(
+    "--retry-after-seconds", type=int, default=5, help="Retry after this interval"
+)
+@click.option(
+    "--anonymous/--no-anonymous",
+    default=False,
+    help="Do not store the token in the configuration",
+)
+@click.option(
+    "--default/--no-default", default=False, help="Set this repository as the default"
+)
+@click.option(
+    "--launch-browser/--no-launch-browser",
+    default=True,
+    help="Open the browser to create a token",
+)
+@with_config
 def add_repository(
-    url: Annotated[str, typer.Argument(help="The URL of the repository")],
-    alias: Annotated[
-        Optional[str], typer.Argument(help="The alias of the repository")
-    ] = None,
-    token: Annotated[
-        Optional[str], typer.Option(help="The token to access the repository")
-    ] = None,
-    verify_tls: Annotated[bool, typer.Option(help="Verify the TLS certificate")] = True,
-    retry_count: Annotated[int, typer.Option(help="Number of retries")] = 5,
-    retry_after_seconds: Annotated[
-        int, typer.Option(help="Retry after this interval")
-    ] = 5,
-    anonymous: Annotated[
-        bool, typer.Option(help="Do not store the token in the configuration")
-    ] = False,
-    default: Annotated[
-        bool, typer.Option(help="Set this repository as the default")
-    ] = False,
-    launch_browser: Annotated[
-        bool, typer.Option(help="Open the browser to create a token")
-    ] = True,
+    *,
+    config: Config,
+    url: str,
+    alias: str | None,
+    token: str | None,
+    verify_tls: bool,
+    retry_count: int,
+    retry_after_seconds: int,
+    anonymous: bool,
+    default: bool,
+    launch_browser: bool,
 ) -> None:
     """Add a new repository to the configuration."""
     console = Console()
@@ -64,8 +84,6 @@ def add_repository(
 
     if alias is None:
         alias = urllib.parse.urlparse(url).netloc
-
-    config = Config.from_file()
 
     try:
         config.get_repository(alias)
@@ -91,18 +109,19 @@ def add_repository(
             "that the token has been created, \ncopy the token and paste it here.",
         )
         console.print("Press enter to open the page ...")
-        typer.getchar()
+        click.getchar()
 
         if launch_browser:
             try:
-                typer.launch(login_url)
-            except Exception as e:  # noqa
+                click.launch(login_url)
+            except Exception:  # noqa
                 console.print(
                     "Failed to open the browser. Please open the URL above manually."
                 )
 
         # wait until the token is created at /account/settings/applications/tokens/retrieve
-        token = typer.prompt("\nPaste the token here").strip()
+        token = click.prompt("\nPaste the token here").strip()
+
     console.print("Creating repository with token ...")
     config.add_repository(
         RepositoryConfig(
@@ -125,37 +144,39 @@ def add_repository(
     config.save()
 
 
-def remove_repository(
-    alias: Annotated[str, typer.Argument(help="The alias of the repository")],
-) -> None:
+@argument_with_help("alias", type=str, help="The alias of the repository")
+@with_config
+def remove_repository(*, config: Config, alias: str) -> None:
     """Remove a repository from the configuration."""
     console = Console()
     console.print()
-    config = Config.from_file()
     config.remove_repository(alias)
     console.print(f'[green]Removed repository "{alias}"[/green]')
     config.save()
 
 
-def select_repository(
-    alias: Annotated[str, typer.Argument(help="The alias of the repository")],
-) -> None:
+@argument_with_help("alias", type=str, help="The alias of the repository")
+@with_config
+def select_repository(*, config: Config, alias: str) -> None:
     """Select a default repository."""
     console = Console()
     console.print()
-    config = Config.from_file()
 
     config.set_default_repository(alias)
     console.print(f'[green]Selected repository "{alias}"[/green]')
     config.save()
 
+
+@argument_with_help("alias", type=str, help="The alias of the repository")
+@with_config
 def enable_repository(
-    alias: Annotated[str, typer.Argument(help="The alias of the repository")],
+    *,
+    config: Config,
+    alias: str,
 ) -> None:
-    """Select a default repository."""
+    """Enable a disabled repository. Enabling it will make it usable for subsequent commands."""
     console = Console()
     console.print()
-    config = Config.from_file()
 
     for repo in config.repositories:
         if repo.alias == alias:
@@ -168,13 +189,16 @@ def enable_repository(
     config.save()
 
 
+@argument_with_help("alias", type=str, help="The alias of the repository")
+@with_config
 def disable_repository(
-    alias: Annotated[str, typer.Argument(help="The alias of the repository")],
+    *,
+    config: Config,
+    alias: str,
 ) -> None:
-    """Select a default repository."""
+    """Disable a repository. This repository will not be used for any operation."""
     console = Console()
     console.print()
-    config = Config.from_file()
 
     for repo in config.repositories:
         if repo.alias == alias:
@@ -186,38 +210,79 @@ def disable_repository(
     console.print(f'[green]Disabled repository "{alias}"[/green]')
     config.save()
 
+
+@with_output
+@with_verbosity
+@with_config
 def list_repositories(
-    verbose: Annotated[
-        bool, typer.Option(help="Show more information about the repositories")
-    ] = False,
-    output_file: Annotated[
-        Optional[Path],
-        typer.Option(help="Output file name")
-    ] = None,
-    output_format: Annotated[
-        Optional[OutputFormat],
-        typer.Option(help="The format of the output"),
-    ] = None,
+    *,
+    config: Config,
+    out: Output,
 ) -> None:
     """List all repositories."""
     console = Console()
-    config = Config.from_file()
 
     with OutputWriter(
-        output_file,
-        output_format,
+        out.output,
+        out.output_format,
         console,
-        partial(output_tables, verbose=verbose),
+        partial(output_tables, verbose=out.verbosity == VerboseLevel.VERBOSE),
     ) as printer:
-        printer.output([
-            dump_repo_configuration(repo, verbose, config.default_alias)
-            for repo in config.repositories
-        ])
+        printer.output(
+            [
+                dump_repo_configuration(
+                    repo, out.verbosity == VerboseLevel.VERBOSE, config.default_alias
+                )
+                for repo in config.repositories
+            ]
+        )
+
+
+@with_verbosity(VerboseLevel.VERBOSE)
+@with_output
+@with_config
+@argument_with_help("alias", type=str, help="The alias of the repository")
+@click.option(
+    "--refresh",
+    is_flag=True,
+    help="Force a refresh of the information",
+)
+def describe_repository(
+    *,
+    config: Config,
+    out: Output,
+    alias: str,
+    refresh: bool,
+) -> None:
+    """Get information about a repository."""
+    console = Console()
+
+    client: SyncRepositoryClient = get_sync_client(alias, config=config)
+
+    repo_config = config.get_repository(alias)
+
+    if refresh:
+        repo_config.info = client.get_repository_info(refresh=refresh)
+        config.save()
+
+    with OutputWriter(
+        out.output,
+        out.output_format,
+        console,
+        output_repository_info_table,
+    ) as printer:
+        printer.output(
+            dump_repo_configuration(
+                repo_config,
+                verbose=out.verbosity == VerboseLevel.VERBOSE,
+                default_alias=config.default_alias,
+            )
+        )
 
 
 def dump_repo_configuration(
     repo: RepositoryConfig, verbose: bool, default_alias: str | None
-) -> dict:
+) -> dict[str, Any]:
     """Dump the repository configuration into a json-compatible structure."""
     if not verbose:
         return {
@@ -240,7 +305,7 @@ def dump_repo_configuration(
 
 
 def output_tables(
-    data, *, verbose: bool, **kwargs: dict
+    data: Any, *, verbose: bool, **kwargs: Any
 ) -> Generator[Table, None, None]:
     """Output the information about the repositories formatted as a table."""
     if not verbose:
@@ -292,7 +357,7 @@ def output_repository_info_table(
     yield table
 
     if repo["info"]:
-        model_info: ModelInfo
+        model_info: Any
         for model_name, model_info in repo["info"]["models"].items():
             table = Table(
                 title=f"Model '{model_name}'",
@@ -319,45 +384,5 @@ def output_repository_info_table(
                 table.add_row("    Schema", str(ct["schema"]))
                 table.add_row("    Can Export", "✓" if ct["can_export"] else "")
                 table.add_row("    Can Deposit", "✓" if ct["can_deposit"] else "")
-    
+
             yield table
-
-
-
-
-def describe_repository(
-    alias: Annotated[str, typer.Argument(help="The alias of the repository")],
-    refresh: Annotated[
-        bool, typer.Option(help="Force a refresh of the information")
-    ] = False,
-    output_file: Annotated[
-        Optional[Path],
-        typer.Option(help="Save the output to a file"),
-    ] = None,
-    output_format: Annotated[
-        Optional[OutputFormat],
-        typer.Option(help="The format of the output"),
-    ] = None,
-) -> None:
-    """Get information about a repository."""
-    console = Console()
-    config = Config.from_file()
-    client: SyncRepositoryClient = get_sync_client(alias, config=config)
-
-    repo_config = config.get_repository(alias)
-
-    if refresh:
-        repo_config.info = client.get_repository_info(refresh=refresh)
-        config.save()
-
-    with OutputWriter(
-        output_file,
-        output_format,
-        console,
-        output_repository_info_table,
-    ) as printer:
-        printer.output(
-            dump_repo_configuration(
-                repo_config, verbose=True, default_alias=config.default_alias
-            )
-        )

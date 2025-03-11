@@ -7,12 +7,12 @@
 #
 """Commandline client for uploading files."""
 
-from asyncio import TaskGroup
+from asyncio import Task, TaskGroup
 from functools import partial
 from pathlib import Path
-from typing import Annotated, Any, Optional
+from typing import Any, Optional
 
-import typer
+import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client import AsyncRepositoryClient, limit_connections
@@ -29,8 +29,11 @@ from nrp_cmd.types.files import File
 from nrp_cmd.types.records import Record
 
 from ..arguments import (
+    Model,
     Output,
+    argument_with_help,
     with_config,
+    with_model,
     with_output,
     with_progress,
     with_repository,
@@ -43,15 +46,16 @@ async def upload_files_to_record(
     client: AsyncRepositoryClient,
     record: Record,
     *files: tuple[str | DataSource | Path, dict[str, Any] | str],
-    transfer_type="L",
+    transfer_type: str = "L",
 ) -> list[File]:
     """Upload files to a record."""
     # convert files to pairs
     file_client = client.files
 
-    tasks = []
+    tasks: list[Task[Any]] = []
     async with TaskGroup() as tg:
         for _file, metadata in files:
+            metadata_json: dict[str, Any]
             if not isinstance(metadata, dict):
                 metadata_json = read_metadata(metadata)
             else:
@@ -70,7 +74,7 @@ async def upload_files_to_record(
                 # only use multipart for larger files
                 if isinstance(_file, DataSource):
                     fs = await _file.size()
-                elif isinstance(_file, (str, Path)):
+                elif isinstance(_file, (str, Path)):  # type: ignore
                     fs = await FileSource(_file).size()
                 else:
                     raise ValueError("Invalid file source")
@@ -93,34 +97,29 @@ async def upload_files_to_record(
     return [t.result() for t in tasks]
 
 
-
-@async_command
 @with_config
 @with_repository
 @with_resolved_vars("record_id")
 @with_output
 @with_verbosity
+@with_model
 @with_progress
+@argument_with_help("record_id", type=str, help="Record ID")
+@argument_with_help("file", type=str, help="File to upload")
+@argument_with_help("metadata", type=str, required=False, help="Metadata for the file")
+@click.option("--key", type=str, help="Key for the file")
+@click.option("--transfer-type", type=str, help="Transfer type")
+@async_command
 async def upload_files(
     *,
-    # generic options
     config: Config,
     repository: Optional[str] = None,
-    # specific options
-    record_id: Annotated[str, typer.Argument(help="Record ID")],
-    file: Annotated[str, typer.Argument(help="File to upload")],
-    metadata: Annotated[
-        Optional[str], typer.Argument(help="Metadata for the file")
-    ] = None,
-    key: Annotated[Optional[str], typer.Option(help="Key for the file")] = None,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
-    transfer_type: Annotated[Optional[str], typer.Option(help="Transfer type")] = None,
+    record_id: str,
+    file: str,
+    metadata: Optional[str] = None,
+    key: Optional[str] = None,
+    model: Model,
+    transfer_type: Optional[str] = None,
     out: Output,
 ) -> None:
     """Upload a file to a record."""
@@ -128,12 +127,18 @@ async def upload_files(
     with limit_connections(10):
         (
             record,
-            record_id,
+            _record_id,
             repository_config,
-            record_client,
+            _record_client,
             repository_client,
         ) = await read_record(
-            record_id, repository, config, False, model, published, draft
+            record_id,
+            repository,
+            config,
+            False,
+            model.model,
+            model.published,
+            model.draft,
         )
 
         metadata = metadata or "{}"
@@ -141,14 +146,14 @@ async def upload_files(
         assert isinstance(metadata_json, dict), "Metadata must be a dictionary."
         if key:
             metadata_json["key"] = key
-        with (
-            show_progress(total=1, quiet=not out.progress),
-        ):
+        with show_progress(total=1, quiet=not out.progress):
             if not transfer_type:
-                if "M" in repository_config.info.transfers:
-                    transfer_type = "M"
-                else:
-                    transfer_type = "L"
+                assert repository_config.info, (
+                    "Do not have info for this repository to get transfer type, "
+                    "please specify it manually."
+                )
+
+                transfer_type = "M" if "M" in repository_config.info.transfers else "L"
 
             files = await upload_files_to_record(
                 repository_client,

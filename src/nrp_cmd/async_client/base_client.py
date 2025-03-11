@@ -149,7 +149,7 @@ class AsyncRecordsClient(Protocol):
         q: Optional[str] = None,
         model: str | None = None,
         status: RecordStatus | None = None,
-        facets: dict[str, str],
+        facets: dict[str, str] | None = None,
     ) -> AbstractAsyncContextManager[AsyncIterator[Record]]:
         """Scan all the records in the repository.
 

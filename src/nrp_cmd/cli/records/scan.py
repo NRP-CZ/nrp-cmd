@@ -8,11 +8,11 @@
 """Command-line interface for searching records."""
 
 from functools import partial
-from typing import Annotated, Optional
+from typing import Optional
 
-import typer
 from rich.console import Console
 
+from nrp_cmd.async_client.base_client import RecordStatus
 from nrp_cmd.cli.base import OutputWriter, async_command
 from nrp_cmd.cli.base import set_variable as setvar
 from nrp_cmd.cli.records.table_formatters import (
@@ -21,55 +21,44 @@ from nrp_cmd.cli.records.table_formatters import (
 from nrp_cmd.config import Config
 
 from ..arguments import (
+    Model,
     Output,
+    argument_with_help,
     with_config,
+    with_model,
     with_output,
     with_repository,
     with_setvar,
     with_verbosity,
 )
-from .search import _prepare_search
+from .search import prepare_records_api
 
 
-@async_command
 @with_config
 @with_repository
 @with_output
 @with_verbosity
 @with_setvar
+@with_model(community=True)
+@argument_with_help("query", type=str, required=False, help="Query string")
+@async_command
 async def scan_records(
-    # generic options
     *,
     config: Config,
     repository: Optional[str],
-    # specific options
-    query: Annotated[Optional[str], typer.Argument(help="Query string")] = None,
+    query: Optional[str] = None,
     variable: Optional[str] = None,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    community: Annotated[Optional[str], typer.Option(help="Community name")] = None,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
+    model: Model,
     out: Output,
 ) -> None:
     """Return all records inside repository that match the given query."""
     console = Console()
 
-    records_api, args = await _prepare_search(
-        community,
-        config,
-        model,
-        1,
-        published,
-        query,
-        repository,
+    records_api = await prepare_records_api(
+        config, model.model, model.draft, model.published, repository
     )
 
-    urls = set()
-    last_created = None
+    urls: set[str] = set()
 
     with OutputWriter(
         out.output,
@@ -79,7 +68,12 @@ async def scan_records(
     ) as printer:
         printer.multiple()
 
-        async with records_api.scan(**args) as scan:
+        async with records_api.scan(
+            q=query,
+            model=model.model,
+            status=RecordStatus.PUBLISHED if model.published else RecordStatus.DRAFT,
+            facets={},
+        ) as scan:
             async for entry in scan:
                 link = str(entry.links.self_)
                 if link not in urls:

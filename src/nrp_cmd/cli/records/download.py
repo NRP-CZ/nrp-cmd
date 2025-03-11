@@ -7,11 +7,11 @@
 #
 """Command-line interface for downloading records."""
 
-from asyncio import TaskGroup
+from asyncio import Task, TaskGroup
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Any, Optional
 
-import typer
+import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client import limit_connections
@@ -22,47 +22,43 @@ from nrp_cmd.config import Config
 from nrp_cmd.progress import show_progress
 
 from ..arguments import (
+    Model,
     Output,
     VerboseLevel,
     with_config,
+    with_model,
     with_output,
     with_progress,
+    with_record_ids,
     with_repository,
-    with_resolved_vars,
     with_verbosity,
 )
 
 
-@async_command
-@with_output
+@click.option("--expand", is_flag=True, help="Expand the record")
 @with_config
 @with_repository
-@with_resolved_vars("record_ids")
+@with_record_ids
 @with_verbosity
+@with_output
 @with_progress
+@with_model
+@async_command
 async def download_record(
-    # generic options
     *,
     config: Config,
     repository: Optional[str],
-    # specific options
-    record_ids: Annotated[list[str], typer.Argument(help="Record ID")],
+    record_ids: list[str],
     out: Output,
-    model: Annotated[Optional[str], typer.Option(help="Model name")] = None,
-    expand: Annotated[bool, typer.Option(help="Expand the record")] = False,
-    published: Annotated[
-        bool, typer.Option("--published/", help="Include only published records")
-    ] = False,
-    draft: Annotated[
-        bool, typer.Option("--draft/", help="Include only drafts")
-    ] = False,
+    model: Model,
+    expand: bool = False,
 ) -> None:
     """Download a record from the repository.
 
     The metadata of the record are stored together with the files in output directory.
     """
     console = Console()
-    tasks = []
+    tasks: list[Task[Any]] = []
     with (
         limit_connections(10),
         show_progress(total=len(record_ids), quiet=not out.progress),
@@ -76,11 +72,11 @@ async def download_record(
                             console,
                             config,
                             repository,
-                            model,
+                            model.model,
                             out.output,
                             out.output_format,
-                            published,
-                            draft,
+                            model.published,
+                            model.draft,
                             expand,
                             out.verbosity,
                         )
@@ -93,7 +89,8 @@ async def download_record(
 
     if abort:
         console.print("[red]Failed to download some of the records[/red]")
-        raise typer.Abort()
+        raise click.Abort()
+
 
 async def download_single_record(
     record_id: str,
@@ -116,7 +113,7 @@ async def download_single_record(
     if not output_format:
         output_format = OutputFormat.JSON
 
-    record, output, repository_config, repository_client = await get_single_record(
+    record, output, _repository_config, repository_client = await get_single_record(
         record_id,
         console,
         config,
@@ -140,7 +137,7 @@ async def download_single_record(
 
     file_list = await file_client.list(record)
 
-    tasks = []
+    tasks: list[Any] = []
     async with TaskGroup() as tg:
         for file_ in file_list:
             file_key = file_.key
