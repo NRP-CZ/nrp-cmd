@@ -7,4 +7,4 @@ if ! $HOME/.local/bin/uv --version > /dev/null 2>&1; then
   curl -LsSf https://astral.sh/uv/install.sh | sh
 fi
 
-$HOME/.local/bin/uvx nrp-cmd "$@"
+$HOME/.local/bin/uvx "--python" ">=3.12" nrp-cmd "$@"
