@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Optional, overload
 
 import rich_click as click
+from click.exceptions import Exit
 
 from nrp_cmd.config import Config
 
@@ -387,3 +388,26 @@ def with_record_ids(func: ClickCommand) -> ClickCommand:
 
     wrapper.__name__ += "_with_record_ids"
     return with_resolved_vars("record_ids")(wrapper)
+
+
+def with_errors(func: ClickCommand) -> ClickCommand:
+    """Add error handling to a command."""
+
+    @click.option(
+        "--log-stacktrace", is_flag=True, help="Log stack traces in case of error"
+    )
+    @functools.wraps(func)
+    def wrapper(
+        log_stactrace: bool = False,
+        **kwargs: Any,
+    ) -> None:
+        try:
+            func(**kwargs)
+        except Exception as e:
+            click.echo(f"Error: {e}", err=True)
+            if log_stactrace:
+                raise
+            raise Exit(1) from None
+
+    wrapper.__name__ += "_with_errors"
+    return wrapper

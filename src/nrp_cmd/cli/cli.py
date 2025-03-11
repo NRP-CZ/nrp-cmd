@@ -10,7 +10,6 @@
 from __future__ import annotations
 
 import dataclasses
-import functools
 from collections.abc import Callable
 from typing import Any, Optional
 
@@ -20,7 +19,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich_click.rich_help_formatter import RichHelpFormatter
 
-from nrp_cmd.cli.arguments import Argument, ClickCommand
+from nrp_cmd.cli.arguments import Argument, ClickCommand, with_errors
 from nrp_cmd.cli.files import (
     delete_file,
     download_files,
@@ -155,13 +154,35 @@ click.rich_click.OPTION_GROUPS = {
             "options": ["--verbose", "--quiet", "--output", "--output-format"],
         },
         {
-            "name": "Debugging and Logging",
-            "options": ["--log-url", "--log-request", "--log-response"],
+            "name": "Configuration",
+            "options": ["--config-path", "--repository"],
         },
         {
-            "name": "Configuration",
+            "name": "Model",
             "options": [
-                "--config-path",
+                "--model",
+                "--community",
+                "--workflow",
+                "--draft",
+                "--published",
+            ],
+        },
+        {
+            "name": "Search",
+            "options": ["--page", "--size", "--sort"],
+        },
+        {
+            "name": "Variables",
+            "options": ["--set"],
+        },
+        {
+            "name": "Debugging and Logging",
+            "options": [
+                "--progress",
+                "--log-url",
+                "--log-request",
+                "--log-response",
+                "--log-stacktrace",
             ],
         },
     ],
@@ -250,17 +271,8 @@ class CommandTreeNode:
             else:
                 assert child.command
                 parent_click_group.command(child_name, cls=CommandWithAttributeHelp)(
-                    self.wrapped(child.command)
+                    with_errors(child.command)
                 )
-
-    def wrapped(self, command: Callable[..., None]) -> Callable[..., None]:
-        """Wrap the command so that it can be used multiple times in click."""
-
-        @functools.wraps(command)
-        def wrapped_command(*args: Any, **kwargs: Any) -> None:
-            command(*args, **kwargs)
-
-        return wrapped_command
 
     def add_command(
         self,
