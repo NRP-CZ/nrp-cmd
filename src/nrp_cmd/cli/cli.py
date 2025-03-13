@@ -10,6 +10,8 @@
 from __future__ import annotations
 
 import dataclasses
+import logging
+import logging.handlers
 from collections.abc import Callable
 from typing import Any, Optional
 
@@ -63,6 +65,8 @@ from nrp_cmd.cli.variables import (
     remove_variable,
     set_variable,
 )
+
+logging.basicConfig(level=logging.ERROR)
 
 commands: list[tuple[str, str, ClickCommand]] = [
     #

@@ -135,7 +135,9 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
             if is_instance_of_exceptions(exc, StructureError):
                 raise exc
             # not a NRP based repository, suppose that it is plain invenio rdm
-            info = self._config.info = make_rdm_info(self._config.url)
+            info = self._config.info = make_rdm_info(
+                self._config.url, self._config.verify_tls
+            )
 
         return info
 
@@ -163,4 +165,3 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
             self._config.info
         ), "Repository info is not available, can not create requests client."
         return SyncInvenioRequestsClient(self._connection, self._config.info)
-
