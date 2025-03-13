@@ -129,7 +129,9 @@ class AsyncInvenioRepositoryClient(AsyncRepositoryClient):
             if is_instance_of_exceptions(exc, StructureError):
                 raise exc
             # not a NRP based repository, suppose that it is plain invenio rdm
-            info = self._config.info = make_rdm_info(self._config.url)
+            info = self._config.info = make_rdm_info(
+                self._config.url, self._config.verify_tls
+            )
 
         return info
 

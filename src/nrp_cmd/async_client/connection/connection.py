@@ -22,6 +22,7 @@ from functools import partial
 from typing import Any, Literal, Optional, cast, overload
 
 from aiohttp import ClientResponse, ClientSession, TCPConnector
+from aiohttp.client_exceptions import ClientConnectorError
 from cattrs.dispatch import UnstructureHook
 from multidict import CIMultiDictProxy, MultiDictProxy
 from yarl import URL
@@ -50,8 +51,13 @@ communication_log_response = logging.getLogger("nrp_cmd.communication.response")
 
 
 class try_until_success:
+
     def __init__(
-        self, attempts: int, retry_interval: int, too_many_requests_retry_count: int = 5
+        self,
+        attempts: int,
+        retry_interval: int,
+        too_many_requests_retry_count: int = 5,
+        quiet: bool = False,
     ):
         self.attempts = attempts
         self.attempt = 0
@@ -60,11 +66,19 @@ class try_until_success:
         self.failures: list[Exception] = []
         self.retry_interval = retry_interval
         self.current_sleep_interval = 0
+        self.quiet = quiet
 
     async def __aiter__(self):
         while not self.done and self.attempt < self.attempts:
             yield self
             if not self.done:
+                log.error(
+                    "Retrying %s of %s. Will retry in %s seconds. Latest error: %s...",
+                    self.attempt,
+                    self.attempts,
+                    self.current_sleep_interval,
+                    str(self.failures[-1])[:40],
+                )
                 await asyncio.sleep(self.current_sleep_interval)
 
         if self.done:
@@ -108,6 +122,8 @@ async def _cast_error() -> AsyncIterator[None]:
     except RepositoryError:
         raise
     except RepositoryRetryError:
+        raise
+    except ClientConnectorError:
         raise
     except Exception as e:
         raise RepositoryCommunicationError(str(e)) from e
@@ -646,8 +662,6 @@ def connection_unstructure_hook(data: Any, previous: UnstructureHook) -> Any:
     ret.pop("_connection", None)
     ret.pop("_etag", None)
     return ret
-
-
 
 
 __all__ = ("AsyncConnection",)

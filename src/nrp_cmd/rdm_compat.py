@@ -42,12 +42,12 @@ def _generate_rdm_vocabulary(
     )
 
 
-def make_rdm_info(url: URL) -> RepositoryInfo:
+def make_rdm_info(url: URL, verify_tls: bool = True) -> RepositoryInfo:
     """If repository does not provide the info endpoint, we assume it is a plain invenio rdm."""
     url = url.with_path("/")
     import requests
 
-    homepage = requests.get(url, verify=False).text
+    homepage = requests.get(str(url), verify=verify_tls).text
     grp = re.search('meta name="generator" content="InvenioRDM ([0-9.]+)"', homepage)
     if grp:
         rdm_version = math.floor(float(grp.group(1)))

@@ -20,10 +20,11 @@ from rich.console import Console
 from rich.table import Table
 from yarl import URL
 
+from nrp_cmd.async_client import AsyncRepositoryClient, get_async_client
+from nrp_cmd.cli.base import OutputWriter, async_command
 from nrp_cmd.config import Config
 from nrp_cmd.config.repository import RepositoryConfig
 from nrp_cmd.converter import converter
-from nrp_cmd.sync_client import SyncRepositoryClient, get_sync_client
 
 from .arguments import (
     Output,
@@ -62,9 +63,12 @@ from .base import OutputWriter
     help="Open the browser to create a token",
 )
 @with_config
-def add_repository(
+@with_verbosity
+@async_command
+async def add_repository(
     *,
     config: Config,
+    out: Output,
     url: str,
     alias: str | None,
     token: str | None,
@@ -137,8 +141,8 @@ def add_repository(
         config.set_default_repository(alias)
 
     # check if the repository is reachable and get its parameters
-    client = get_sync_client(alias, config=config)
-    client.get_repository_info(refresh=True)
+    client: AsyncRepositoryClient = await get_async_client(alias, config=config)
+    await client.get_repository_info(refresh=True)
 
     console.print(f"[green]Added repository {alias} -> {url}[/green]")
     config.save()
@@ -146,7 +150,8 @@ def add_repository(
 
 @argument_with_help("alias", type=str, help="The alias of the repository")
 @with_config
-def remove_repository(*, config: Config, alias: str) -> None:
+@async_command
+async def remove_repository(*, config: Config, alias: str) -> None:
     """Remove a repository from the configuration."""
     console = Console()
     console.print()
@@ -157,7 +162,8 @@ def remove_repository(*, config: Config, alias: str) -> None:
 
 @argument_with_help("alias", type=str, help="The alias of the repository")
 @with_config
-def select_repository(*, config: Config, alias: str) -> None:
+@async_command
+async def select_repository(*, config: Config, alias: str) -> None:
     """Select a default repository."""
     console = Console()
     console.print()
@@ -169,7 +175,8 @@ def select_repository(*, config: Config, alias: str) -> None:
 
 @argument_with_help("alias", type=str, help="The alias of the repository")
 @with_config
-def enable_repository(
+@async_command
+async def enable_repository(
     *,
     config: Config,
     alias: str,
@@ -191,7 +198,8 @@ def enable_repository(
 
 @argument_with_help("alias", type=str, help="The alias of the repository")
 @with_config
-def disable_repository(
+@async_command
+async def disable_repository(
     *,
     config: Config,
     alias: str,
@@ -214,7 +222,8 @@ def disable_repository(
 @with_output
 @with_verbosity
 @with_config
-def list_repositories(
+@async_command
+async def list_repositories(
     *,
     config: Config,
     out: Output,
@@ -247,7 +256,8 @@ def list_repositories(
     is_flag=True,
     help="Force a refresh of the information",
 )
-def describe_repository(
+@async_command
+async def describe_repository(
     *,
     config: Config,
     out: Output,
@@ -257,12 +267,12 @@ def describe_repository(
     """Get information about a repository."""
     console = Console()
 
-    client: SyncRepositoryClient = get_sync_client(alias, config=config)
+    client: AsyncRepositoryClient = await get_async_client(alias, config=config)
 
     repo_config = config.get_repository(alias)
 
     if refresh:
-        repo_config.info = client.get_repository_info(refresh=refresh)
+        repo_config.info = await client.get_repository_info(refresh=refresh)
         config.save()
 
     with OutputWriter(

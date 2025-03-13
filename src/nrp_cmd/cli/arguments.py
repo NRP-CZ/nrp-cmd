@@ -398,14 +398,14 @@ def with_errors(func: ClickCommand) -> ClickCommand:
     )
     @functools.wraps(func)
     def wrapper(
-        log_stactrace: bool = False,
+        log_stacktrace: bool = False,
         **kwargs: Any,
     ) -> None:
         try:
             func(**kwargs)
         except Exception as e:
             click.echo(f"Error: {e}", err=True)
-            if log_stactrace:
+            if log_stacktrace:
                 raise
             raise Exit(1) from None
 
