@@ -25,6 +25,7 @@ from ..arguments import (
     with_output,
     with_repository,
     with_resolved_vars,
+    with_verbosity,
 )
 from .table_formatter import (
     format_request_and_types_table,
@@ -35,6 +36,7 @@ from .table_formatter import (
 @with_repository
 @with_model
 @with_output
+@with_verbosity
 @with_resolved_vars("record_id")
 @argument_with_help("record_id", type=str, help="Record ID")
 @async_command

@@ -320,18 +320,15 @@ log = logging.getLogger("invenio_nrp.client.deserialize")
 
 def deserialize_rest_response[T](
     connection: Any,
-    communication_log: logging.Logger,
     json_payload: bytes,
     result_class: type[T],
     etag: Optional[str],
 ) -> T:
     try:
-        if communication_log.isEnabledFor(logging.INFO):
-            communication_log.info("%s", _json.dumps(_json.loads(json_payload)))
         if get_origin(result_class) is list:
             arg_type = get_args(result_class)[0]
             return cast(
-                result_class,
+                "result_class",
                 [
                     converter.structure(
                         {

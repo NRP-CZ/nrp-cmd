@@ -108,7 +108,7 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
             create_url = self._info.models[model].links.records
             has_metadata = self._info.models[model].metadata
 
-        if has_metadata:
+        if has_metadata and "metadata" not in data:
             data = {"metadata": {**data}}
         else:
             data = {**data}
@@ -434,7 +434,11 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
                 (rt for rt in request_types.hits if rt.type_id == request_type_id), None
             )
             if not request_type:
-                raise ValueError(f"{error_msg} {record.id}")
+                raise ValueError(
+                    f"{error_msg}: Request type {request_type_id} not found "
+                    f"in applicable requests on {record.id}. Run list requests operation "
+                    "to get the list of available requests."
+                )
 
             request = await self._requests_client.create(request_type, {}, submit=True)
             if request.status == "accepted":

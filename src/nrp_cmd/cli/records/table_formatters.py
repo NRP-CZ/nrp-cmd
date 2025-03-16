@@ -68,4 +68,12 @@ def format_record_table(
             for k, v in record_dump["metadata"].items():
                 write_table_row(table, k, v, prefix=prefix)
 
+        if verbosity != VerboseLevel.VERBOSE and "errors" in record_dump:
+            error_table = Table(box=None, show_header=False)
+            for err in record_dump["errors"]:
+                error_table.add_row(
+                    err["field"], "\n".join(str(x) for x in err["messages"])
+                )
+            table.add_row("Errors", error_table)
+
         yield table

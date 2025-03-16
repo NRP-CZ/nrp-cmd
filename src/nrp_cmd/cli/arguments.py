@@ -2,14 +2,17 @@ import dataclasses
 import enum
 import functools
 import logging
+import sys
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Optional, overload
 
 import rich_click as click
+import yaml
 from click.exceptions import Exit
 
 from nrp_cmd.config import Config
+from nrp_cmd.errors import RepositoryClientError, RepositoryError, RepositoryJSONError
 
 
 class VerboseLevel(enum.Enum):
@@ -390,6 +393,49 @@ def with_record_ids(func: ClickCommand) -> ClickCommand:
     return with_resolved_vars("record_ids")(wrapper)
 
 
+def _print_error(e: Exception) -> None:
+    if isinstance(e, ExceptionGroup):
+        for e in e.exceptions:
+            _print_error(e)
+    elif isinstance(e, RepositoryJSONError):
+
+        if "message" in e.json:
+            click.secho(
+                f"Client error: {e.json['message']} ({e.json.get('status', 'unknown status')})",
+                err=True,
+                fg="red",
+            )
+            click.secho(f"  {e.request_info.url}", err=True, fg="yellow")
+        else:
+            click.secho(f"Client error: {e.request_info.url}", err=True, fg="red")
+        if "errors" in e.json:
+            if isinstance(e.json["errors"], list):
+                for error in e.json["errors"]:
+                    if (
+                        isinstance(error, dict)
+                        and "field" in error
+                        and "messages" in error
+                    ):
+                        click.secho(f"  {error['field']}:", err=True)
+                        click.secho(
+                            "    " + "\n    ".join(error["messages"]),
+                            err=True,
+                            fg="red",
+                        )
+                    else:
+                        yaml.safe_dump(error, sys.stderr)
+            else:
+                yaml.safe_dump(e.json, sys.stderr)
+        else:
+            yaml.safe_dump(e.json, sys.stderr)
+    elif isinstance(e, RepositoryClientError):
+        click.echo(f"Client error: {e}", err=True)
+    elif isinstance(e, RepositoryError):
+        click.echo(f"Repository error: {e}", err=True)
+    else:
+        click.echo(f"Error: {e}", err=True)
+
+
 def with_errors(func: ClickCommand) -> ClickCommand:
     """Add error handling to a command."""
 
@@ -403,8 +449,13 @@ def with_errors(func: ClickCommand) -> ClickCommand:
     ) -> None:
         try:
             func(**kwargs)
+        except ExceptionGroup as eg:
+            _print_error(eg)
+            if log_stacktrace:
+                raise
+            raise Exit(1) from None
         except Exception as e:
-            click.echo(f"Error: {e}", err=True)
+            _print_error(e)
             if log_stacktrace:
                 raise
             raise Exit(1) from None

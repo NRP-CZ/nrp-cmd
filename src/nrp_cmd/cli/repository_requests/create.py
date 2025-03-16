@@ -34,6 +34,7 @@ from ..arguments import (
     with_output,
     with_repository,
     with_resolved_vars,
+    with_verbosity,
 )
 from .table_formatter import format_request_table
 
@@ -46,6 +47,7 @@ if TYPE_CHECKING:
 @with_resolved_vars("record_id")
 @with_output
 @with_model
+@with_verbosity
 @argument_with_help("request_type_id", type=str, help="Request type ID")
 @argument_with_help("record_id", type=str, help="Record ID")
 @argument_with_help("variable", type=str, required=False, help="Variable name")
