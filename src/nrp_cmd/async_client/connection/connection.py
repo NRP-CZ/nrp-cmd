@@ -92,7 +92,7 @@ class try_until_success:
 
     async def __aexit__(self, _ext, exc, _tb):  # type: ignore
         if exc:
-            self.failures.append(cast(Exception, exc))
+            self.failures.append(cast("Exception", exc))
             if isinstance(exc, RepositoryRetryError):
                 # if too many requests, we can repeat,
                 # so try again and do not add the attempt
@@ -144,7 +144,7 @@ class AsyncConnection:
         self._verify_tls = verify_tls
         self._retry_count = retry_count
         self._retry_after_seconds = retry_after_seconds
-        
+
         _tokens: list[BearerTokenForHost] = [
             BearerTokenForHost(host_url=url, token=token)
             for url, token in (tokens or {}).items()
@@ -170,14 +170,8 @@ class AsyncConnection:
             request_class=AuthenticatedClientRequest,
             response_class=RepositoryResponse,
             connector=connector,
+            raise_for_status=False,
         ) as session:
-            # retry_client = RetryClient(
-            #     client_session=session,
-            #     retry_options=ServerAssistedRetry(
-            #         attempts=self._retry_count,
-            #         start_timeout=self._retry_after_seconds,
-            #     ),
-            # )
             yield session
 
     @overload
@@ -400,7 +394,7 @@ class AsyncConnection:
         :raises RepositoryServerError: if the request fails due to server error (HTTP 5xx)
         :raises RepositoryCommunicationError: if the request fails due to network error
         """
-        
+
         async def _copy_stream(response: ClientResponse) -> None:
             chunk = await sink.open_chunk(offset=offset)
             try:
@@ -408,7 +402,7 @@ class AsyncConnection:
                     await chunk.write(data)
             finally:
                 await chunk.close()
-        
+
         if size is not None:
             range_header = f"bytes={offset}-{offset + size - 1}"
         else:
@@ -476,22 +470,30 @@ class AsyncConnection:
         :raises RepositoryServerError: if the request fails due to server error (HTTP 5xx)
         :raises RepositoryCommunicationError: if the request fails due to network
         """
+        if response.status != 204:
+            json_payload = await response.read()
+        else:
+            json_payload = b""
+
+        if communication_log_response.isEnabledFor(logging.INFO):
+            communication_log_response.info(
+                "%s", _json.dumps(_json.loads(json_payload))
+            )
+
         await response.raise_for_invenio_status()  # type: ignore
         if response.status == 204:
             assert result_class is None
             return None
-        json_payload = await response.read()
+
         assert result_class is not None
         if issubclass(result_class, ClientResponse):
-            return cast(T, response)    # mypy can not get it
+            return cast("T", response)  # mypy can not get it
         elif issubclass(result_class, str):
-            return cast(T, json_payload.decode('utf-8'))    # mypy can not get it
+            return cast("T", json_payload.decode("utf-8"))  # mypy can not get it
         elif issubclass(result_class, dict):
             return _json.loads(json_payload)
         etag = remove_quotes(response.headers.get("ETag"))
-        return deserialize_rest_response(
-            self, communication_log_response, json_payload, result_class, etag
-        )
+        return deserialize_rest_response(self, json_payload, result_class, etag)
 
     @overload
     async def _retried[T](
@@ -502,7 +504,7 @@ class AsyncConnection:
         idempotent: bool,
         **kwargs: Any,  # noqa: ANN401
     ) -> T: ...
-    
+
     @overload
     async def _retried(
         self,
@@ -561,9 +563,10 @@ class AsyncConnection:
                     print_log(),
                     client.request(method, url, auth=self._auth, **kwargs) as response,
                 ):
-                    await response.raise_for_invenio_status()  # type: ignore
                     if callback is not None:
                         return await callback(response)
+                    else:
+                        await response.raise_for_invenio_status()  # type: ignore
                     return None
             finally:
                 if actual_data is not None and hasattr(actual_data, "close"):

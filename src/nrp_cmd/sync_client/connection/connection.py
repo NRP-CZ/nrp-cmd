@@ -464,15 +464,19 @@ class SyncConnection:
             raise RepositoryCommunicationError("Expected response with content")
 
         json_payload = response.content
+        if communication_log.isEnabledFor(logging.INFO):
+            communication_log.info(
+                "%s", _json.dumps(_json.loads(json_payload))
+            )
         if issubclass(result_class, requests.Response):
-            return cast(T, response)    # mypy can not get it
+            return cast("T", response)    # mypy can not get it
         elif issubclass(result_class, str):
-            return cast(T, json_payload.decode('utf-8'))    # mypy can not get it
+            return cast("T", json_payload.decode('utf-8'))    # mypy can not get it
         elif issubclass(result_class, dict):
             return _json.loads(json_payload)
         etag = remove_quotes(response.headers.get("ETag"))
         return deserialize_rest_response(
-            self, communication_log, json_payload, result_class, etag
+            self, json_payload, result_class, etag
         )
 
     def _retried[T](

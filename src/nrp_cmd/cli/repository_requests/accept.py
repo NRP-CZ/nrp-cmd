@@ -23,6 +23,7 @@ from ..arguments import (
     with_output,
     with_repository,
     with_resolved_vars,
+    with_verbosity,
 )
 from .table_formatter import format_request_table
 from .utils import resolve_request
@@ -33,6 +34,7 @@ from .utils import resolve_request
 @with_resolved_vars("request_id")
 @argument_with_help("request_id", type=str, help="Request IDs")
 @with_output
+@with_verbosity
 @async_command
 async def accept_request(
     *, config: Config, repository: Optional[str] = None, request_id: str, out: Output
