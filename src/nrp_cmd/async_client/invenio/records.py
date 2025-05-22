@@ -442,7 +442,11 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
 
             request = await self._requests_client.create(request_type, {}, submit=True)
             if request.status == "accepted":
-                return await self.read(request.links.topic)
+                if isinstance(request.links.topic, dict):
+                    topic_link = request.links.topic["self"]
+                else:
+                    topic_link = str(request.links.topic)
+                return await self.read(topic_link)
             return request
         else:
             return await getattr(self._connection, link_op)(
