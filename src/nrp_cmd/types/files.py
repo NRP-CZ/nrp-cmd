@@ -66,14 +66,14 @@ class File(RESTObject):
     key: str
     """Key(filename) of the file."""
 
-    metadata: dict[str, Any] = field(factory=dict)
+    metadata: dict[str, Any] | None = field(factory=dict)
     """Metadata of the file, as defined in the model."""
 
-    links: FileLinks
+    links: FileLinks | None = None
     """Links to the file content and commit."""
 
     transfer: FileTransfer = field(
-        factory=lambda: FileTransfer(type_=TRANSFER_TYPE_LOCAL.value)
+        factory=lambda: FileTransfer(type_=TRANSFER_TYPE_LOCAL)
     )
     """File transfer type and metadata."""
 
@@ -100,3 +100,28 @@ class FilesList(RESTObject):
                 return v
         raise KeyError(f"File with key {key} not found")
 
+
+class FilesAPIList(list):
+
+    def as_dataframe(self, *keys: str):
+        """Convert the list of files to a pandas DataFrame."""
+        import pandas as pd
+
+        from .records import _getter
+
+        if not keys:
+            keys = [
+                "key",
+                "metadata",
+                "size",
+                "checksum",
+                "links.content",
+            ]
+
+        converted_files = []
+        for _file in self:
+            converted_file = {}
+            for key in keys:
+                converted_file[key] = _getter(_file, key.split("."))
+            converted_files.append(converted_file)
+        return pd.DataFrame(converted_files)

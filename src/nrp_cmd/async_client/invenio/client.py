@@ -159,3 +159,9 @@ class AsyncInvenioRepositoryClient(AsyncRepositoryClient):
             self._config.info
         ), "Repository info is not available, can not create requests client."
         return AsyncInvenioRequestsClient(self._connection, self._config.info)
+
+    @property
+    @override
+    def config(self) -> RepositoryConfig:
+        """Return the configuration of the repository."""
+        return self._config

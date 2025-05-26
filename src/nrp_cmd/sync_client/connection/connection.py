@@ -8,6 +8,7 @@
 """Synchronous low-level connection."""
 
 import contextlib
+import inspect
 import json as _json
 import logging
 from collections.abc import Callable, Generator
@@ -204,16 +205,36 @@ class SyncConnection:
             response: requests.Response,
         ) -> CaseInsensitiveDict[str] | dict[str, URL]:
             if get_links:
-                return {k: URL(v) for k, v in response.links.items()}
+                links = {}
+                for k, v in response.links.items():
+                    if isinstance(v, str):
+                        links[k] = URL(v)
+                    elif isinstance(v, dict) and "url" in v:
+                        links[k] = URL(v["url"])
+                    else:
+                        raise RepositoryCommunicationError(
+                            f"Unexpected link format: {v}"
+                        )
+                return links
             else:
                 return response.headers
 
         if use_get:
             return self._retried(
-                "GET", url, _head, idempotent=True, headers={"Range": "bytes=0-0"}
+                "GET",
+                url,
+                _head,
+                idempotent=True,
+                headers={"Range": "bytes=0-0", "Accept-Encoding": "identity"},
             )
         else:
-            return self._retried("HEAD", url, _head, idempotent=True)
+            return self._retried(
+                "HEAD",
+                url,
+                _head,
+                idempotent=True,
+                headers={"Accept-Encoding": "identity"},
+            )
 
     def get[T](
         self,
@@ -468,12 +489,13 @@ class SyncConnection:
             communication_log.info(
                 "%s", _json.dumps(_json.loads(json_payload))
             )
-        if issubclass(result_class, requests.Response):
-            return cast("T", response)    # mypy can not get it
-        elif issubclass(result_class, str):
-            return cast("T", json_payload.decode('utf-8'))    # mypy can not get it
-        elif issubclass(result_class, dict):
-            return _json.loads(json_payload)
+        if inspect.isclass(result_class):
+            if issubclass(result_class, requests.Response):
+                return cast("T", response)  # mypy can not get it
+            elif issubclass(result_class, str):
+                return cast("T", json_payload.decode("utf-8"))  # mypy can not get it
+            elif issubclass(result_class, dict):
+                return _json.loads(json_payload)
         etag = remove_quotes(response.headers.get("ETag"))
         return deserialize_rest_response(
             self, json_payload, result_class, etag

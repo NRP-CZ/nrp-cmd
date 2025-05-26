@@ -3,10 +3,6 @@ python -m venv .venv
 source .venv/bin/activate 
 pip install -U setuptools pip wheel
 
-
-exit 0
-# temporarily suspending tests
-
 set -e
 set -x
 

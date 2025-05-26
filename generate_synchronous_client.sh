@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 
 # Generate synchronous client from the asynchronous client
 export skipped_directories=( "connection" )
-export skipped_files=( "streams/os.py" "__init__.py" "streams/memory.py" "invenio/transfer/multipart.py" )
+export skipped_files=( "streams/os.py" "__init__.py" "streams/memory.py" "streams/os.py" "invenio/transfer/multipart.py" )
 
 isSkipped () {
   local fn="$1"

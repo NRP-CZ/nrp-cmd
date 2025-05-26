@@ -72,6 +72,7 @@ async def test_info_nrp_repository(local_repository_config):
             "requests": "https://127.0.0.1:5000/api/requests/",
             "api": "https://127.0.0.1:5000/api",
         },
+        "default_content_type": "application/json",
         "transfers": ["L", "F", "R", "M"],
         "models": {
             "simple": {
@@ -99,7 +100,7 @@ async def test_info_nrp_repository(local_repository_config):
                     },
                     {
                         "content_type": "application/vnd.inveniordm.v1+json",
-                        "name": "application/vnd.inveniordm.v1+json",
+                        "name": "Native UI JSON",
                         "description": "",
                         "can_export": True,
                         "can_deposit": False,
@@ -371,6 +372,7 @@ async def test_info_zenodo(zenodo_repository_config):
         },
         "features": [],
         "transfers": ["L", "F", "R", "M"],
+        "default_content_type": "application/json",
         "models": {
             "records": {
                 "type": "rdm-records",

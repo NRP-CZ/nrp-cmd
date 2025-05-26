@@ -41,7 +41,16 @@ class RepositoryConfig:
     """Cached repository info"""
 
     enabled: bool = True
+    """Whether the repository is enabled in the configuration.
     
+    If the repository is not enabled, it will not be used by the client
+    even if user wants to access URL that points to the repository.
+    This is useful for disabling repositories that are not available
+    or are not supposed to be used at the moment or switching between
+    testing repositories that live on the same URL but have different
+    credentials.
+    """
+
     class Config:  # noqa
         extra = "forbid"
 

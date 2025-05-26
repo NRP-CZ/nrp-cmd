@@ -10,7 +10,7 @@ from typing import Any, overload, override
 from yarl import URL
 
 from ...progress import DummyProgressBar, current_progress
-from ...types.files import TRANSFER_TYPE_LOCAL, File, FilesList
+from ...types.files import TRANSFER_TYPE_LOCAL, File, FilesAPIList, FilesList
 from ...types.info import RepositoryInfo
 from ...types.records import Record
 from ..base_client import SyncFilesClient
@@ -34,7 +34,7 @@ class SyncInvenioFilesClient(SyncFilesClient):
         """List the files of a record."""
         files_url = self._get_files_url(record_or_url)
         files_list = self._connection.get(url=files_url, result_class=FilesList)
-        return files_list.entries
+        return FilesAPIList(files_list.entries)
 
     @override
     @overload
@@ -135,6 +135,7 @@ class SyncInvenioFilesClient(SyncFilesClient):
             progress_bar = current_progress.start_long_task(progress)
         else:
             progress_bar = DummyProgressBar()
+        progress_bar.set_total(source.size())
         try:
             transfer.upload(
                 self._connection, initialized_upload_metadata, source, progress_bar

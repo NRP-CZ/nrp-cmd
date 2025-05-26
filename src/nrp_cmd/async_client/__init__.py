@@ -27,7 +27,7 @@ def async_client_classes() -> list[type[AsyncRepositoryClient]]:
 
 
 async def get_async_client(
-    repository: str | URL | None,
+    repository: str | URL | None | RepositoryConfig,
     refresh: bool = False,
     config: Config | None = None,
 ) -> AsyncRepositoryClient:
@@ -40,13 +40,19 @@ async def get_async_client(
     from the configuration file.
     :return: an asynchronous client for the repository
     """
+    if isinstance(repository, RepositoryConfig):
+        config = Config()
     if not config:
         config = Config.from_file()
     if repository is None:
         repository = config.default_alias
     if repository is None:
         raise ValueError("No repository specified and no default repository set")
-    repository_config = config.find_repository(repository)
+    if isinstance(repository, RepositoryConfig):
+        config.add_repository(repository)
+        repository_config = repository
+    else:
+        repository_config = config.find_repository(repository)
     for async_client_class in async_client_classes():
         if await async_client_class.can_handle_repository(
             repository_config.url, verify_tls=repository_config.verify_tls
@@ -102,6 +108,28 @@ async def get_repository_from_record_id(
         return record_url, repository_config
 
 
+async def resolve_record_id(
+    url: str | URL,
+    config: Config | None = None,
+    refresh: bool = False,
+) -> tuple[AsyncRepositoryClient, URL]:
+    """Get an asynchronous client for the given URL."""
+    if not config:
+        config = Config.from_file()
+    connection = AsyncConnection()
+    record_url, repository_config = await get_repository_from_record_id(
+        connection, str(url), config
+    )
+    return (
+        await get_async_client(
+            repository=record_url,
+            refresh=refresh,
+            config=config,
+        ),
+        URL(record_url),
+    )
+
+
 __all__ = (
     "get_async_client",
     "AsyncRepositoryClient",
@@ -116,4 +144,5 @@ __all__ = (
     "doi",
     "RecordStatus",
     "limit_connections",
+    "resolve_record_id",
 )

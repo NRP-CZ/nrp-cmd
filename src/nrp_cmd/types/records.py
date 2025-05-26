@@ -18,10 +18,10 @@ from yarl import URL
 
 from ..converter import Omit, Rename, extend_serialization
 from .base import Model
+from .files import File  # noqa: F401
 from .rest import BaseRecord, RESTList, RESTObjectLinks
 
 RecordId = str | int | URL
-
 
 
 @extend_serialization(Rename("self", "self_"), allow_extra_data=True)
@@ -36,7 +36,8 @@ class RecordLinks(RESTObjectLinks):
 class FilesEnabled(Model):
     """Files enabled marker."""
 
-    enabled: bool
+    enabled: bool = True
+    entries: Optional[dict[str, File]] = None
 
 
 @define(kw_only=True)
@@ -83,3 +84,34 @@ class RecordList(RESTList[Record]):
     """Sort by field."""
     aggregations: Optional[Any] = None
     """Aggregations."""
+
+    def as_dataframe(self, *keys: str):
+        """Convert the record list to a pandas DataFrame."""
+        import pandas as pd
+
+        if not keys:
+            keys = ["id", "metadata.title", "created", "updated", "links.self"]
+
+        converted_records = []
+        for record in self:
+            converted_record = {}
+            for key in keys:
+                converted_record[key] = _getter(record, key.split("."))
+            converted_records.append(converted_record)
+        return pd.DataFrame(converted_records)
+
+
+def _getter(data: Any, key: list[str]) -> Any:
+    if not key:
+        return data
+
+    if isinstance(data, dict):
+        if key[0] in data:
+            return _getter(data[key[0]], key[1:])
+        else:
+            return None
+    else:
+        if hasattr(data, key[0]):
+            return _getter(getattr(data, key[0]), key[1:])
+        else:
+            return None

@@ -8,11 +8,11 @@ from functools import partial
 
 import pytest
 
-from nrp_cmd.errors import RepositoryCommunicationError
-from nrp_cmd.progress import show_progress
 from nrp_cmd.sync_client import RecordStatus
 from nrp_cmd.sync_client.connection.task_group import Task, TaskGroup
 from nrp_cmd.sync_client.invenio import SyncInvenioRepositoryClient
+from nrp_cmd.errors import RepositoryCommunicationError
+from nrp_cmd.progress import show_progress
 from nrp_cmd.types.records import Record, RecordLinks
 
 
@@ -95,7 +95,7 @@ def test_update_draft_record(local_client: SyncInvenioRepositoryClient):
 def test_scan(local_client: SyncInvenioRepositoryClient):
     records_client = local_client.records.draft_records
     results: list[Task] = []
-    with show_progress(total=100) as p:
+    with show_progress(total=100):
         with TaskGroup() as g:
             for i in range(100):
                 results.append(
@@ -105,7 +105,6 @@ def test_scan(local_client: SyncInvenioRepositoryClient):
                         )
                     )
                 )
-                p.increment(1)
     record_ids = [r.result().id for r in results]
 
     # limit scan window to properly test it. Normally it is like 5000 records

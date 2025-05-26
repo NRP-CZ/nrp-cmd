@@ -1,5 +1,6 @@
 import math
 import re
+from urllib.parse import urlparse
 
 from yarl import URL
 
@@ -58,11 +59,18 @@ def make_rdm_info(url: URL, verify_tls: bool = True) -> RepositoryInfo:
     if rdm_version >= 13:
         transfers.extend(["F", "R", "M"])
 
+    if urlparse(str(url)).netloc in ("zenodo.org", "sandbox.zenodo.org"):
+        version = "Zenodo"
+        default_content_type = "application/vnd.inveniordm.v1+json"
+    else:
+        version = "RDM"
+        default_content_type = "application/json"
+
     return RepositoryInfo(
         schema="local://introspection-v1.0.0.json",
         name="RDM repository",
         description="",
-        version="RDM",
+        version=version,
         invenio_version=f"RDM {rdm_version}",
         transfers=transfers,
         links=RepositoryInfoLinks(
@@ -73,6 +81,7 @@ def make_rdm_info(url: URL, verify_tls: bool = True) -> RepositoryInfo:
             models=None,
         ),
         default_model="records",
+        default_content_type=default_content_type,
         models={
             "records": ModelInfo(
                 schema="local://records-v6.0.0.json",

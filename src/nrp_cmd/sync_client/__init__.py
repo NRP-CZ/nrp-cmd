@@ -6,6 +6,7 @@ from yarl import URL
 from ..config import Config, RepositoryConfig
 from . import base_client, connection, doi, invenio, streams
 from .base_client import RecordStatus, SyncRepositoryClient
+from .connection import SyncConnection
 from .doi import resolve_doi
 
 
@@ -19,7 +20,7 @@ def sync_client_classes() -> list[type[SyncRepositoryClient]]:
 
 
 def get_sync_client(
-    repository: str | URL,
+    repository: str | URL | RepositoryConfig,
     refresh: bool = False,
     config: Config | None = None,
 ) -> SyncRepositoryClient:
@@ -32,10 +33,17 @@ def get_sync_client(
     from the configuration file.
     :return: a synchronous client for the repository
     """
+    if isinstance(repository, RepositoryConfig):
+        config = Config()
     if not config:
         config = Config.from_file()
 
-    repository_config = config.find_repository(repository)
+    if isinstance(repository, RepositoryConfig):
+        config.add_repository(repository)
+        repository_config = repository
+    else:
+        repository_config = config.find_repository(repository)
+
     for sync_client_class in sync_client_classes():
         if sync_client_class.can_handle_repository(
             repository_config.url, verify_tls=repository_config.verify_tls
@@ -81,14 +89,35 @@ def get_repository_from_record_id(
     # try to head the record to get the id
     api_url = None
     resp = connection.head(url=record_url, get_links=True)
-    for linkset in resp.getall("linkset"):
-        api_url = linkset["url"]
-        break
+    if "linkset" in resp:
+        api_url = resp["linkset"]
 
     if api_url:
         return str(api_url), repository_config
     else:
         return str(record_url), repository_config
+
+
+def resolve_record_id(
+    url: str | URL,
+    config: Config | None = None,
+    refresh: bool = False,
+) -> tuple[SyncRepositoryClient, URL]:
+    """Get an asynchronous client for the given URL."""
+    if not config:
+        config = Config.from_file()
+    connection = SyncConnection()
+    record_url, repository_config = get_repository_from_record_id(
+        connection, str(url), config
+    )
+    return (
+        get_sync_client(
+            repository=record_url,
+            refresh=refresh,
+            config=config,
+        ),
+        URL(record_url),
+    )
 
 
 __all__ = (
@@ -101,4 +130,5 @@ __all__ = (
     "doi",
     "get_repository_from_record_id",
     "RecordStatus",
+    "resolve_record_id",
 )

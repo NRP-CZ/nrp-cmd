@@ -41,6 +41,7 @@ class LocalTransfer(Transfer):
             raise ValueError("The upload does not provide the content link.")
 
         headers = {}
+
         if "md5" in source.supported_checksums():
             md5_checksum = source.checksum("md5")
             headers["Content-MD5"] = md5_checksum

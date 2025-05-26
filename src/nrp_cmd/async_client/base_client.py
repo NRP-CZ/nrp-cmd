@@ -546,3 +546,8 @@ class AsyncRepositoryClient(Protocol):
     def requests(self) -> AsyncRequestsClient:
         """Return the requests session used by the client."""
         ...
+
+    @property
+    def config(self) -> RepositoryConfig:
+        """Return the configuration of the repository."""
+        ...

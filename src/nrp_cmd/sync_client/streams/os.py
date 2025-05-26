@@ -12,9 +12,6 @@ import os
 from pathlib import Path
 from typing import Literal, overload
 
-import aiofiles
-import aiofiles.os
-
 from .base import InputStream, OutputStream
 
 
@@ -22,7 +19,7 @@ class FileInputStream(InputStream):
     def seek(self, offset: int, whence: int = os.SEEK_SET) -> None:
         """Change the stream position."""
         ...
-        
+
 class FileOutputStream(OutputStream):
     def seek(self, offset: int, whence: int = os.SEEK_SET) -> None:
         """Change the stream position."""
@@ -30,7 +27,7 @@ class FileOutputStream(OutputStream):
 
     def truncate(self, size: int) -> None:
         ...
-        
+
 @overload
 def open_file(_fpath: Path, mode: Literal["rb"]) -> FileInputStream:
     ...
@@ -41,13 +38,15 @@ def open_file(_fpath: Path, mode: Literal["wb"] | Literal["r+b"]) -> FileOutputS
 
 def open_file(_fpath: Path, mode: Literal["rb"] | Literal["wb"] | Literal["r+b"]) -> FileInputStream | FileOutputStream:
     """Open a file for reading or writing."""
-    r: FileInputStream | FileOutputStream = aiofiles.open(_fpath, mode=mode)  # noqa # type: ignore
+    r: FileInputStream | FileOutputStream = open(
+        _fpath, mode=mode
+    )  # noqa # type: ignore
     return r
 
 
 def file_stat(_fpath: Path) -> os.stat_result:
     """Get file statistics."""
-    return aiofiles.os.stat(_fpath)
+    return os.stat(_fpath)
 
 def checksum_file(
     file_name: Path, algo: str = "md5", offset: int = 0, count: int | None = None

@@ -45,3 +45,9 @@ def draft_record_with_files(request, local_client) -> Record:
         files_enabled=True,
     )
 
+@pytest.fixture(scope="function", autouse=True)
+def reset_limiter() -> None:
+    from nrp_cmd.sync_client.connection.limiter import current_limiter
+
+    current_limiter.reset()
+

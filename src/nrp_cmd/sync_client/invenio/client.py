@@ -6,7 +6,7 @@
 
 """Invenio asynchronous client."""
 
-from typing import Any, Self, override
+from typing import Self, override
 
 from yarl import URL  # noqa: TCH002    as attrs need to have type info in runtime
 
@@ -52,7 +52,7 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
         # check if the repository is an NRP invenio repository
         well_known_url = url.with_path("/.well-known/repository")
         try:
-            data = connection.get(url=well_known_url, result_class=dict[str, Any])
+            data = connection.get(url=well_known_url, result_class=dict)  # type: ignore
             if "invenio_version" in data:
                 if "api" in data.get("links", {}):
                     return URL(data["links"]["api"])
@@ -165,3 +165,9 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
             self._config.info
         ), "Repository info is not available, can not create requests client."
         return SyncInvenioRequestsClient(self._connection, self._config.info)
+
+    @property
+    @override
+    def config(self) -> RepositoryConfig:
+        """Return the configuration of the repository."""
+        return self._config

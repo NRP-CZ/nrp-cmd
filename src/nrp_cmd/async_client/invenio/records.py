@@ -158,6 +158,9 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
         return await self._connection.get(
             url=record_url,
             result_class=Record,
+            headers={
+                "Accept": self._info.default_content_type,
+            },
         )
 
     @override
@@ -189,6 +192,9 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
             url=search_url,
             params=query,
             result_class=RecordList,
+            headers={
+                "Accept": self._info.default_content_type,
+            },
         )
 
     @override

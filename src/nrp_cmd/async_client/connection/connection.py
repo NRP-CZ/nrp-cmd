@@ -217,6 +217,7 @@ class AsyncConnection:
         async def _head(
             response: ClientResponse,
         ) -> CIMultiDictProxy[str] | MultiDictProxy[MultiDictProxy[str | URL]]:
+            await response.raise_for_invenio_status()
             if get_links:
                 return response.links
             return response.headers
@@ -224,10 +225,10 @@ class AsyncConnection:
         with current_progress.short_task():
             if use_get:
                 return await self._retried(
-                    "GET", url, _head, idempotent=True, headers={"Range": "bytes=0-0"}
+                    "GET", url, _head, idempotent=True, headers={"Range": "bytes=0-0", "Accept-Encoding": "identity"}
                 )
             else:
-                return await self._retried("HEAD", url, _head, idempotent=True)
+                return await self._retried("HEAD", url, _head, idempotent=True, headers={"Accept-Encoding": "identity"})
 
     async def get[T](
         self,
@@ -486,12 +487,13 @@ class AsyncConnection:
             return None
 
         assert result_class is not None
-        if issubclass(result_class, ClientResponse):
-            return cast("T", response)  # mypy can not get it
-        elif issubclass(result_class, str):
-            return cast("T", json_payload.decode("utf-8"))  # mypy can not get it
-        elif issubclass(result_class, dict):
-            return _json.loads(json_payload)
+        if inspect.isclass(result_class):
+            if issubclass(result_class, ClientResponse):
+                return cast("T", response)  # mypy can not get it
+            elif issubclass(result_class, str):
+                return cast("T", json_payload.decode("utf-8"))  # mypy can not get it
+            elif issubclass(result_class, dict):
+                return _json.loads(json_payload)
         etag = remove_quotes(response.headers.get("ETag"))
         return deserialize_rest_response(self, json_payload, result_class, etag)
 

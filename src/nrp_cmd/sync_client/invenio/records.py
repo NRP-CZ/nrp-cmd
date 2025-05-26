@@ -114,7 +114,7 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
             create_url = self._info.models[model].links.records
             has_metadata = self._info.models[model].metadata
 
-        if has_metadata:
+        if has_metadata and "metadata" not in data:
             data = {"metadata": {**data}}
         else:
             data = {**data}
@@ -164,6 +164,9 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
         return self._connection.get(
             url=record_url,
             result_class=Record,
+            headers={
+                "Accept": self._info.default_content_type,
+            },
         )
 
     @override
@@ -195,6 +198,9 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
             url=search_url,
             params=query,
             result_class=RecordList,
+            headers={
+                "Accept": self._info.default_content_type,
+            },
         )
 
     @override
@@ -237,7 +243,7 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
         q: Optional[str] = None,
         model: str | None = None,
         status: RecordStatus | None = None,
-        **facets: str,
+        facets: dict[str, str] | None = None,
     ) -> Generator[Iterator[Record], None]:
         """Scan all the records in the repository.
 
@@ -260,10 +266,10 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
             * searching page by page if the number of records < OPENSEARCH_SCAN_WINDOW
             * scanning by date bisection if the number of records > OPENSEARCH_SCAN_WINDOW
         """
-        
+
         def opensearch_date_serialize(date: datetime) -> str:
             return date.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        
+
         def opensearch_date_interval(start: datetime, end: datetime) -> str:
             return f"[{opensearch_date_serialize(start)} TO {opensearch_date_serialize(end)}{'}'}"
 
@@ -271,7 +277,7 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
             q: str | None,
             model: str | None,
             status: RecordStatus | None,
-            facets: dict[str, str],
+            facets: dict[str, str] | None = None,
         ) -> Iterator[Record]:
             result = self.search(
                 q=q,
@@ -388,7 +394,6 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
         )
         return ret
 
-
     @override
     def delete(
         self,
@@ -441,11 +446,19 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
                 (rt for rt in request_types.hits if rt.type_id == request_type_id), None
             )
             if not request_type:
-                raise ValueError(f"{error_msg} {record.id}")
+                raise ValueError(
+                    f"{error_msg}: Request type {request_type_id} not found "
+                    f"in applicable requests on {record.id}. Run list requests operation "
+                    "to get the list of available requests."
+                )
 
             request = self._requests_client.create(request_type, {}, submit=True)
             if request.status == "accepted":
-                return self.read(request.links.topic)
+                if isinstance(request.links.topic, dict):
+                    topic_link = request.links.topic["self"]
+                else:
+                    topic_link = str(request.links.topic)
+                return self.read(topic_link)
             return request
         else:
             return getattr(self._connection, link_op)(

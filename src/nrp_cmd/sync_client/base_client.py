@@ -155,7 +155,7 @@ class SyncRecordsClient(Protocol):
         q: Optional[str] = None,
         model: str | None = None,
         status: RecordStatus | None = None,
-        facets: dict[str, str],
+        facets: dict[str, str] | None = None,
     ) -> AbstractContextManager[Iterator[Record]]:
         """Scan all the records in the repository.
 
@@ -551,5 +551,10 @@ class SyncRepositoryClient(Protocol):
     @property
     def requests(self) -> SyncRequestsClient:
         """Return the requests session used by the client."""
+        ...
+
+    @property
+    def config(self) -> RepositoryConfig:
+        """Return the configuration of the repository."""
         ...
 

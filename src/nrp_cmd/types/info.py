@@ -35,7 +35,7 @@ class RepositoryInfoLinks(Model):
 
     requests: URL | None = field(default=None)
     """Link to the requests in the repository"""
-    
+
 
 @extend_serialization(allow_extra_data=True)
 @define(kw_only=True)
@@ -56,7 +56,7 @@ class ModelInfoLinks(Model):
 
     model: URL | None = field(default=None)
     """Link to the model definition"""
-    
+
 
 @extend_serialization(allow_extra_data=True)
 @define(kw_only=True)
@@ -80,7 +80,7 @@ class ModelInfoContentType(Model):
     
     can_deposit: bool = False
     """Whether the content-type can be used for importing records (via Content-Type header)"""
-    
+
 
 @extend_serialization(allow_extra_data=True)
 @define(kw_only=True)
@@ -150,3 +150,6 @@ class RepositoryInfo(Model):
 
     features: list[str] = field(factory=list)
     """List of features supported by the repository"""
+
+    default_content_type: str = "application/json"
+    """Default content type for accessing/uploading the records in the repository."""
