@@ -66,8 +66,20 @@ class CurrentLimiterProxy:
 
     @contextlib.contextmanager
     def limit(self, url: URL):
-        with current_limiter_var.get().limit(url):
+        try:
+            limiter = current_limiter_var.get()
+        except LookupError:
+            limiter = None
+        if limiter is None:
+            limiter = Limiter(10)
+            current_limiter_var.set(limiter)
+
+        with limiter.limit(url):
             yield
+
+    def reset(self):
+        """Reset the current limiter."""
+        current_limiter_var.set(None)
 
 
 current_limiter = CurrentLimiterProxy()

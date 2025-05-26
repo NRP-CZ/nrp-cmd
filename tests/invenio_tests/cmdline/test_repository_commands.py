@@ -8,7 +8,7 @@ from nrp_cmd.config import Config
 runner = CliRunner()
 
 
-async def test_add_local_repository(empty_config, token_a):
+def test_add_local_repository(empty_config, token_a):
     assert empty_config.repositories == []
 
     result = runner.invoke(
@@ -39,7 +39,7 @@ async def test_add_local_repository(empty_config, token_a):
     assert not config.repositories[0].verify_tls
 
 
-async def test_repository_listing(nrp_repository_config, run_cmdline_and_check):
+def test_repository_listing(nrp_repository_config, run_cmdline_and_check):
     run_cmdline_and_check(
         ["list", "repositories"],
         """
@@ -49,7 +49,7 @@ async def test_repository_listing(nrp_repository_config, run_cmdline_and_check):
     )
 
 
-async def test_repository_listing_details(nrp_repository_config, run_cmdline_and_check):
+def test_repository_listing_details(nrp_repository_config, run_cmdline_and_check):
     run_cmdline_and_check(
         ["list", "repositories", "--verbose"],
         """
@@ -74,9 +74,7 @@ Repository 'zenodo'
     )
 
 
-async def test_repository_listing_details_json(
-    nrp_repository_config, run_cmdline_and_check
-):
+def test_repository_listing_details_json(nrp_repository_config, run_cmdline_and_check):
     assert nrp_repository_config.repositories[0].info is None
     assert nrp_repository_config.repositories[1].info is None
     run_cmdline_and_check(
@@ -108,9 +106,7 @@ async def test_repository_listing_details_json(
     )
 
 
-async def test_repository_listing_details_yaml(
-    nrp_repository_config, run_cmdline_and_check
-):
+def test_repository_listing_details_yaml(nrp_repository_config, run_cmdline_and_check):
     assert nrp_repository_config.repositories[0].info is None
     assert nrp_repository_config.repositories[1].info is None
 
@@ -136,7 +132,7 @@ async def test_repository_listing_details_yaml(
     )
 
 
-async def test_repository_select(nrp_repository_config):
+def test_repository_select(nrp_repository_config):
     result = runner.invoke(
         app,
         ["select", "repository", "local"],
@@ -162,7 +158,7 @@ async def test_repository_select(nrp_repository_config):
     assert config.default_alias == "zenodo"
 
 
-async def test_repository_enable_disable(nrp_repository_config):
+def test_repository_enable_disable(nrp_repository_config):
     result = runner.invoke(
         app,
         ["enable", "repository", "local"],
@@ -200,7 +196,7 @@ async def test_repository_enable_disable(nrp_repository_config):
     assert for_url is not local_repo
 
 
-async def test_repository_remove(nrp_repository_config):
+def test_repository_remove(nrp_repository_config):
     config = Config.from_file(nrp_repository_config._config_file_path)
     assert len(config.repositories) == 3
     result = runner.invoke(
@@ -220,7 +216,7 @@ async def test_repository_remove(nrp_repository_config):
         config.get_repository("local")
 
 
-async def test_repository_describe_local(nrp_repository_config, run_cmdline_and_check):
+def test_repository_describe_local(nrp_repository_config, run_cmdline_and_check):
     run_cmdline_and_check(
         ["describe", "repository", "--refresh", "local"],
         {"COLUMNS": "200"},
@@ -256,7 +252,7 @@ Model 'simple'
       Can Export          ✓                                                                                    
       Can Deposit         ✓                                                                                    
   Content-Type            application/vnd.inveniordm.v1+json                                                   
-                          application/vnd.inveniordm.v1+json                                                   
+                          Native UI JSON                                                   
                                                                                                                
       Schema              None                                                                                 
       Can Export          ✓                                                                                    
