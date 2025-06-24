@@ -1,6 +1,6 @@
 [project]
 name = "nrp-cmd"
-version = "0.8.1"
+version = "0.8.2"
 description = "Python and commandline client for NRP repositories"
 readme = "README.md"
 requires-python = ">=3.12"
