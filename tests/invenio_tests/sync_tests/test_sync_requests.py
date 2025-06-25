@@ -4,12 +4,11 @@
 #
 
 
-
-
 from yarl import URL
 
 from nrp_cmd.sync_client.invenio import SyncInvenioRepositoryClient
 from nrp_cmd.types.records import Record
+from nrp_cmd.types.requests import RequestPayload
 
 
 def test_publish_request(
@@ -27,7 +26,7 @@ def test_publish_request(
     assert request.status == "created"
 
     print(request.payload)
-    assert request.payload is None
+    assert request.payload == RequestPayload(published_record=None, draft_record=None)
 
     requests = requests_client.created()
     assert any(r.id == request.id for r in requests.hits)
@@ -50,4 +49,3 @@ def test_publish_request(
     assert accepted_request.payload.published_record.links.self_ == URL(
         f'https://127.0.0.1:5000/api/simple/{accepted_request.topic["simple"]}'
     )
-

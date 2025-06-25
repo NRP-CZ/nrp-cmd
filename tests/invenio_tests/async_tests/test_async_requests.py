@@ -11,6 +11,7 @@ from yarl import URL
 
 from nrp_cmd.async_client.invenio import AsyncInvenioRepositoryClient
 from nrp_cmd.types.records import Record
+from nrp_cmd.types.requests import RequestPayload
 
 
 async def test_publish_request(
@@ -28,7 +29,7 @@ async def test_publish_request(
     assert request.status == "created"
 
     print(request.payload)
-    assert request.payload is None
+    assert request.payload == RequestPayload(published_record=None, draft_record=None)
 
     requests = await requests_client.created()
     assert any(r.id == request.id for r in requests.hits)
