@@ -14,7 +14,7 @@
 from collections.abc import Iterator  # noqa TCH003 attrs need to have types in runtime
 from datetime import datetime  # noqa TCH003 attrs need to have types in runtime
 from types import UnionType
-from typing import Any, Optional, Union, get_args, get_origin
+from typing import Any, Union, get_args, get_origin, TypeAliasType
 
 from attrs import define, field
 from yarl import URL  # noqa TCH003 attrs need to have types in runtime
@@ -31,7 +31,7 @@ class RESTObjectLinks(Model):
     self_: URL
     """Link to the object itself (API)"""
 
-    self_html: Optional[URL] = None
+    self_html: URL | None = None
     """Link to the object itself (HTML page if it has any)"""
 
 
@@ -42,10 +42,10 @@ class RESTObject(Model):
 
     links: RESTObjectLinks
     """Links to the object itself"""
-    
-    _etag: Optional[str] = field(default=None, alias='etag', init=False)
-    
-    def get_etag(self) -> Optional[str]:
+
+    _etag: str | None = field(default=None, alias="etag", init=False)
+
+    def get_etag(self) -> str | None:
         """Return the ETag of the object."""
         return self._etag
 
@@ -55,10 +55,10 @@ class RESTObject(Model):
 class RESTPaginationLinks(RESTObjectLinks):
     """Extra links on the pagination response."""
 
-    next: Optional[URL] = None
+    next: URL | None = None
     """Link to the next page"""
 
-    prev: Optional[URL] = None
+    prev: URL | None = None
     """Link to the previous page"""
 
 
@@ -119,6 +119,21 @@ class RESTList[T: RESTObject](RESTObject):
 
 type RecordIdType = str | int
 
+
+def is_record_id(t: Any) -> bool:
+    """Return true if given type is record id."""
+    if isinstance(t, TypeAliasType):
+        t = t.__value__
+    origin = get_origin(t)
+    if origin not in (UnionType, Union):
+        return False
+    base_types = get_args(t)
+    return set(base_types) == {str, int}
+
+
+converter.register_structure_hook_func(is_record_id, lambda v, ty: v)
+converter.register_unstructure_hook_func(is_record_id, lambda v: v)
+
 @extend_serialization(Omit("_etag", from_unstructure=True), allow_extra_data=True)
 @define(kw_only=True)
 class BaseRecord(RESTObject):
@@ -133,18 +148,5 @@ class BaseRecord(RESTObject):
     updated: datetime = field()
     """Timestamp when the record was last updated"""
 
-    revision_id: Optional[int] = None
+    revision_id: int | None = None
     """Internal revision identifier of the record"""
-
-
-def is_record_id(t: Any) -> bool:
-    """Return true if given type is record id."""
-    origin = get_origin(t)
-    if origin not in (UnionType, Union):
-        return False
-    base_types = get_args(t)
-    return set(base_types) == {str, int}
-
-
-converter.register_structure_hook_func(is_record_id, lambda v, ty: v)
-converter.register_unstructure_hook_func(is_record_id, lambda v: v)
