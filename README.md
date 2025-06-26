@@ -11,6 +11,8 @@ source nrp-cmd-venv/bin/activate
 uv pip install nrp-cmd
 ```
 
+Your system needs to have the `libmagic` library installed, check out the [pypi page](https://pypi.org/project/python-magic/) for installation instructions depending on your platform.
+
 ## Usage
 
 ```bash
