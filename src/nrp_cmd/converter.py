@@ -5,11 +5,9 @@ from datetime import datetime
 from functools import partial
 from typing import (
     Any,
-    Optional,
     Protocol,
     Self,
     TypeVar,
-    cast,
     dataclass_transform,
     get_args,
     get_origin,
@@ -317,28 +315,27 @@ converter.register_unstructure_hook(datetime, unstructure_datetime_hook)
 
 log = logging.getLogger("invenio_nrp.client.deserialize")
 
+T = TypeVar("T")
+
 
 def deserialize_rest_response[T](
     connection: Any,
     json_payload: bytes,
     result_class: type[T],
-    etag: Optional[str],
+    etag: str | None,
 ) -> T:
     try:
         if get_origin(result_class) is list:
             arg_type = get_args(result_class)[0]
-            return cast(
-                "result_class",
-                [
-                    converter.structure(
-                        {
-                            **x,
-                        },
-                        arg_type,
-                    )
-                    for x in _json.loads(json_payload)
-                ],
-            )
+            return [  # type: ignore[return-value]
+                converter.structure(
+                    {
+                        **x,
+                    },
+                    arg_type,
+                )
+                for x in _json.loads(json_payload)
+            ]
         ret = converter.structure(
             {
                 **_json.loads(json_payload),
