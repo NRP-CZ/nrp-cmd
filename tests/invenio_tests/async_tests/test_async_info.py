@@ -363,7 +363,7 @@ async def test_info_zenodo(zenodo_repository_config):
         "name": "RDM repository",
         "description": "",
         "version": "RDM",
-        "invenio_version": "RDM 13",
+        "invenio_version": "RDM 14",
         "links": {
             "self": "https://www.zenodo.org/",
             "records": "https://www.zenodo.org/api/records",

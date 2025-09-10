@@ -6,8 +6,8 @@
 
 from yarl import URL
 
-from nrp_cmd.sync_client.invenio import SyncInvenioRepositoryClient
 from nrp_cmd.converter import converter
+from nrp_cmd.sync_client.invenio import SyncInvenioRepositoryClient
 
 
 def test_can_handle_nrp_repository(local_repository_url):
@@ -369,7 +369,7 @@ def test_info_zenodo(zenodo_repository_config):
         "name": "RDM repository",
         "description": "",
         "version": "RDM",
-        "invenio_version": "RDM 13",
+        "invenio_version": "RDM 14",
         "links": {
             "self": "https://www.zenodo.org/",
             "records": "https://www.zenodo.org/api/records",
@@ -712,4 +712,3 @@ def test_info_zenodo(zenodo_repository_config):
         },
         "default_model": "records",
     }
-
