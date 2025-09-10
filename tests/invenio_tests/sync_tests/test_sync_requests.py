@@ -4,6 +4,8 @@
 #
 
 
+
+
 from yarl import URL
 
 from nrp_cmd.sync_client.invenio import SyncInvenioRepositoryClient
@@ -49,3 +51,4 @@ def test_publish_request(
     assert accepted_request.payload.published_record.links.self_ == URL(
         f'https://127.0.0.1:5000/api/simple/{accepted_request.topic["simple"]}'
     )
+

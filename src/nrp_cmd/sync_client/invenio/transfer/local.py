@@ -46,6 +46,8 @@ class LocalTransfer(Transfer):
             md5_checksum = source.checksum("md5")
             headers["Content-MD5"] = md5_checksum
 
+        headers["Content-Length"] = str(source.size())
+
         connection.put_stream(
             url=initialized_upload.links.content,
             source=ProgressSource(source, progress_bar),
