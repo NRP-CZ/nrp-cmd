@@ -19,7 +19,7 @@ from collections.abc import (
     Callable,
 )
 from functools import partial
-from typing import Any, Literal, Optional, cast, overload
+from typing import Any, Literal, cast, overload
 
 from aiohttp import ClientResponse, ClientSession, TCPConnector
 from aiohttp.client_exceptions import ClientConnectorError
@@ -364,6 +364,8 @@ class AsyncConnection:
         """
 
         async def _put(response: ClientResponse) -> ClientResponse:
+            if response.status == 413:
+                raise RepositoryCommunicationError("Request payload too large")
             return response
 
         with current_progress.short_task():
@@ -649,7 +651,7 @@ class AsyncConnection:
                 )
 
 
-def remove_quotes(etag: str | None) -> Optional[str]:
+def remove_quotes(etag: str | None) -> str | None:
     """Remove quotes from an etag.
 
     :param etag:    the etag header

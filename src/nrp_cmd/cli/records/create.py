@@ -9,7 +9,6 @@
 
 from asyncio import Task, TaskGroup
 from functools import partial
-from typing import Optional
 
 import rich_click as click
 from rich.console import Console
@@ -59,10 +58,10 @@ async def create_record(
     *,
     config: Config,
     out: Output,
-    variable: Optional[str] = None,
-    repository: Optional[str] = None,
+    variable: str | None = None,
+    repository: str | None = None,
     metadata: str,
-    files: Optional[list[str]] = None,
+    files: list[str] | None = None,
     model: Model,
     metadata_only: bool = False,
 ) -> None:
@@ -133,7 +132,9 @@ async def create_record(
             async with TaskGroup() as tg:
                 for file_, file_metadata in to_upload:
                     tg.create_task(
-                        upload_files_to_record(client, record, (file_, file_metadata))
+                        upload_files_to_record(
+                            client, record, (file_, file_metadata), transfer_type="M"
+                        )
                     )
 
     with OutputWriter(

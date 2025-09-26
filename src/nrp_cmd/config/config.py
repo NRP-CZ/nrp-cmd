@@ -13,7 +13,7 @@ import contextlib
 import json
 import os
 from pathlib import Path
-from typing import Optional, Self
+from typing import Self
 
 from attrs import define, field
 from cattrs.gen import make_dict_structure_fn, make_dict_unstructure_fn, override
@@ -31,7 +31,7 @@ class Config:
     repositories: list[RepositoryConfig] = field(factory=list)
     """Locally known repositories."""
 
-    default_alias: Optional[str] = None
+    default_alias: str | None = None
     """The alias of the default repository"""
 
     per_directory_variables: bool = True
@@ -40,11 +40,14 @@ class Config:
        located in ~/.nrp/variables.json.
     """
 
-    _config_file_path: Optional[Path] = None
+    datacite_url: str | None = None
+    """The URL of the DataCite service to use for DOI resolution."""
+
+    _config_file_path: Path | None = None
     """The path from which the config file was loaded."""
 
     @classmethod
-    def from_file(cls, config_file_path: Optional[Path] = None) -> Self:
+    def from_file(cls, config_file_path: Path | None = None) -> Self:
         """Load the configuration from a file."""
         if not config_file_path:
             if "NRP_CMD_CONFIG_PATH" in os.environ:
@@ -61,7 +64,7 @@ class Config:
         ret._config_file_path = config_file_path
         return ret
 
-    def save(self, path: Optional[Path] = None) -> None:
+    def save(self, path: Path | None = None) -> None:
         """Save the configuration to a file, creating parent directory if needed."""
         if path:
             self._config_file_path = path
@@ -131,7 +134,6 @@ class Config:
 
     def find_repository(self, repository: URL | str) -> RepositoryConfig:
         """Find a repository configuration by its URL or alias name."""
-
         # try alias first
         if isinstance(repository, str):    
             with contextlib.suppress(KeyError):

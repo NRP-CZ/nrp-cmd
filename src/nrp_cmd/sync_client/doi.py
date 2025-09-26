@@ -8,11 +8,14 @@
 
 from yarl import URL
 
+from ..config import Config
 from .connection import SyncConnection
 
 
-def resolve_doi(connection: SyncConnection, doi: str) -> str:
+def resolve_doi(connection: SyncConnection, doi: str, config: Config) -> str:
     """Resolve a DOI to a record URL."""
-    data = connection.get(url=URL(f"https://api.datacite.org/dois/{doi}"), result_class=dict)
+    datacite_url = config.datacite_url or "https://api.datacite.org"
+    url = URL(f"{datacite_url}/dois/{doi}")
+    data = connection.get(url=url, result_class=dict)
     return data["data"]["attributes"]["url"]
 

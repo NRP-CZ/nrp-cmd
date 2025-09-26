@@ -13,7 +13,7 @@ import json as _json
 import logging
 from collections.abc import Callable, Generator
 from functools import partial
-from typing import Any, Literal, Optional, cast, overload
+from typing import Any, Literal, cast, overload
 
 import requests
 from attrs import define, field
@@ -414,7 +414,7 @@ class SyncConnection:
         def _copy_stream(response: requests.Response) -> None:
             chunk = sink.open_chunk(offset=offset)
             try:
-                for data in response.iter_content(chunk_size=16384):
+                for data in response.iter_content(chunk_size=65536 * 2):
                     chunk.write(data)
             finally:
                 chunk.close()
@@ -610,7 +610,7 @@ class SyncConnection:
             self.get_stream(url=url, sink=ProgressSink(sink, progress_bar), offset=start, size=part_size)
 
 
-def remove_quotes(etag: str | None) -> Optional[str]:
+def remove_quotes(etag: str | None) -> str | None:
     if etag is None:
         return None
     return etag.strip('"')
@@ -630,11 +630,11 @@ class ConnectionMixin:
     _connection: SyncConnection = field(init=False, default=None)
     """Connection is automatically injected"""
 
-    _etag: Optional[str] = field(init=False, default=None)
+    _etag: str | None = field(init=False, default=None)
     """etag is automatically injected if it was returned by the repository"""
 
     def _set_connection_params(
-        self, connection: SyncConnection, etag: Optional[str] = None
+        self, connection: SyncConnection, etag: str | None = None
     ) -> None:
         """Set the connection and etag."""
         self._connection = connection

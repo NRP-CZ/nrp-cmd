@@ -108,12 +108,14 @@ class SyncInvenioFilesClient(SyncFilesClient):
 
         # 1. initialize the upload
         transfer_md: dict[str, Any] = {}
-        transfer_payload = {"key": key, "metadata": metadata, "transfer": transfer_md}
+        transfer_payload: dict[str, Any] = {"key": key, "metadata": metadata, "transfer": transfer_md}
         if transfer_type != TRANSFER_TYPE_LOCAL:
             transfer_md["type"] = transfer_type
 
         if transfer_metadata:
             transfer_md.update(transfer_metadata)
+
+        transfer_payload.setdefault("size", source.size())
 
         from .transfer import transfer_registry
 

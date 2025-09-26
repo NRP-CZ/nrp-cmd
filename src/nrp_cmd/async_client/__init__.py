@@ -77,9 +77,11 @@ async def get_repository_from_record_id(
                           resolve the repository from the record id.
     """
     if record_id.startswith("doi:"):
-        record_id = await resolve_doi(connection, record_id[4:])
+        record_id = await resolve_doi(connection, record_id[4:], config)
     elif record_id.startswith("https://doi.org/"):
-        record_id = await resolve_doi(connection, record_id[len("https://doi.org/") :])
+        record_id = await resolve_doi(
+            connection, record_id[len("https://doi.org/") :], config
+        )
 
     if repository:
         repository_config = config.get_repository(repository)

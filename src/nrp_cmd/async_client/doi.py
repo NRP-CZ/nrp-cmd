@@ -9,10 +9,13 @@
 
 from yarl import URL
 
+from ..config import Config
 from .connection import AsyncConnection
 
 
-async def resolve_doi(connection: AsyncConnection, doi: str) -> str:
+async def resolve_doi(connection: AsyncConnection, doi: str, config: Config) -> str:
     """Resolve a DOI to a record URL."""
-    data = await connection.get(url=URL(f"https://api.datacite.org/dois/{doi}"), result_class=dict)
+    datacite_url = config.datacite_url or "https://api.datacite.org"
+    url = URL(f"{datacite_url}/dois/{doi}")
+    data = await connection.get(url=url, result_class=dict)
     return data["data"]["attributes"]["url"]
