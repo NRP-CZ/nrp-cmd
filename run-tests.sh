@@ -5,6 +5,8 @@ pip install -U setuptools pip wheel
 
 set -e
 set -x
+export
+exit 0
 
 BASEDIR="$(realpath "$(dirname "$0")")"
 cd "$BASEDIR"
