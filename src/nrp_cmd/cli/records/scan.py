@@ -8,7 +8,6 @@
 """Command-line interface for searching records."""
 
 from functools import partial
-from typing import Optional
 
 from rich.console import Console
 
@@ -45,9 +44,9 @@ from .search import prepare_records_api
 async def scan_records(
     *,
     config: Config,
-    repository: Optional[str],
-    query: Optional[str] = None,
-    variable: Optional[str] = None,
+    repository: str | None,
+    query: str | None = None,
+    variable: str | None = None,
     model: Model,
     out: Output,
 ) -> None:

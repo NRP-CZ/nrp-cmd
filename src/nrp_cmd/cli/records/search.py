@@ -8,7 +8,6 @@
 """Command-line interface for searching records."""
 
 from functools import partial
-from typing import Optional
 
 import rich_click as click
 from rich.console import Console
@@ -50,9 +49,9 @@ from .table_formatters import (
 async def search_records(
     *,
     config: Config,
-    repository: Optional[str] = None,
-    query: Optional[str] = None,
-    variable: Optional[str] = None,
+    repository: str | None = None,
+    query: str | None = None,
+    variable: str | None = None,
     model: Model,
     size: int = 10,
     page: int = 1,

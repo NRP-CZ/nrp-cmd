@@ -7,7 +7,6 @@
 #
 """Commandline client for updating metadata of files."""
 
-from typing import Optional
 
 from rich.console import Console
 
@@ -40,7 +39,7 @@ from ..arguments import (
 async def delete_file(
     *,
     config: Config,
-    repository: Optional[str] = None,
+    repository: str | None = None,
     out: Output,
     record_id: str,
     key: str,

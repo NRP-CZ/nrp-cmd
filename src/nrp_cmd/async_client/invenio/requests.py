@@ -70,15 +70,15 @@ class AsyncInvenioRequestsClient(AsyncRequestsClient):
         ...
 
         if len(args) == 2:
-            type_ = cast(RequestType, args[0])
-            payload = cast(dict[str, Any], args[1])
+            type_ = cast("RequestType", args[0])
+            payload = cast("dict[str, Any]", args[1])
             assert isinstance(
                 type_, RequestType
             ), "Invalid argument - expecting a request type"
         elif len(args) == 3:
-            topic = cast(Record | URL, args[0])
-            type_name = cast(str, args[1])
-            payload = cast(dict[str, Any], args[2])
+            topic = cast("Record | URL", args[0])
+            type_name = cast("str", args[1])
+            payload = cast("dict[str, Any]", args[2])
             request_types = await self.applicable_requests(topic)
             type_ = request_types[type_name]
         else:

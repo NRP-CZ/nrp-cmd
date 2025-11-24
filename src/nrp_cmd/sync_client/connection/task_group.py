@@ -23,10 +23,10 @@ class TaskResult[T]:
 class TaskGroup:
     """Synchronous version of TaskGroup."""
 
-    def create_task[_T](  # type: ignore
+    def create_task[T](  # type: ignore
         self,
-        task: Callable[[], _T],
-    ) -> TaskResult[_T]:
+        task: Callable[[], T],
+    ) -> TaskResult[T]:
         return TaskResult(task())
         
     def __enter__(self):

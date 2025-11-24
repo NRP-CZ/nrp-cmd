@@ -19,13 +19,13 @@ class TaskGroup(asyncio.TaskGroup):
     Using factory for coro so that we can have a similar API to the sync version.
     """
 
-    def create_task[_T](  # type: ignore
+    def create_task[T](  # type: ignore
         self,
-        coro: Callable[[], Coroutine[Any, Any, _T]],
+        coro: Callable[[], Coroutine[Any, Any, T]],
         *,
         name: str | None = None,
         context: Context | None = None,
-    ) -> asyncio.Task[_T]:
+    ) -> asyncio.Task[T]:
         return super().create_task(coro(), name=name, context=context)
 
 Task = asyncio.Task

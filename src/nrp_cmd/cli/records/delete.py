@@ -8,7 +8,6 @@
 """Command line interface for getting records."""
 
 import asyncio
-from typing import Optional
 
 from rich.console import Console
 
@@ -43,7 +42,7 @@ from ..arguments import (
 @async_command
 async def delete_record(
     config: Config,
-    repository: Optional[str],
+    repository: str | None,
     out: Output,
     record_ids: list[str],
     model: Model,
@@ -80,7 +79,7 @@ async def delete_single_record(
 ) -> None:
     """Get a single record from the repository and print/save it."""
     connection = AsyncConnection()
-    
+
     final_record_id, repository_config = await get_repository_from_record_id(
         connection, record_id, config, repository
     )

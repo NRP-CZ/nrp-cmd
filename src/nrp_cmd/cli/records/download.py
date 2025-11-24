@@ -9,7 +9,7 @@
 
 from asyncio import Task, TaskGroup
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import rich_click as click
 from rich.console import Console
@@ -47,7 +47,7 @@ from ..arguments import (
 async def download_record(
     *,
     config: Config,
-    repository: Optional[str],
+    repository: str | None,
     record_ids: list[str],
     out: Output,
     model: Model,

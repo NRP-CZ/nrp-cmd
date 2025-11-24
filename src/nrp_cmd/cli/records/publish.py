@@ -10,7 +10,6 @@
 import asyncio
 from functools import partial
 from pathlib import Path
-from typing import Optional
 
 import rich_click as click
 from rich.console import Console
@@ -50,7 +49,7 @@ from .get import read_record
 @async_command
 async def publish_record(
     config: Config,
-    repository: Optional[str],
+    repository: str | None,
     record_ids: list[str],
     model: Model,
     out: Output,

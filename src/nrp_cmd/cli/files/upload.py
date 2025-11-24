@@ -10,7 +10,7 @@
 from asyncio import Task, TaskGroup
 from functools import partial
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import rich_click as click
 from rich.console import Console
@@ -113,13 +113,13 @@ async def upload_files_to_record(
 async def upload_files(
     *,
     config: Config,
-    repository: Optional[str] = None,
+    repository: str | None = None,
     record_id: str,
     file: str,
-    metadata: Optional[str] = None,
-    key: Optional[str] = None,
+    metadata: str | None = None,
+    key: str | None = None,
     model: Model,
-    transfer_type: Optional[str] = None,
+    transfer_type: str | None = None,
     out: Output,
 ) -> None:
     """Upload a file to a record."""

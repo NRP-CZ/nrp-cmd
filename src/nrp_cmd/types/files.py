@@ -11,7 +11,7 @@
 # currently python is unable to resolve type hints for generic types
 # when from __future__ import annotations is used
 
-from typing import Any, Optional
+from typing import Any
 
 from attrs import define, field
 from yarl import URL
@@ -48,13 +48,13 @@ class MultipartUploadLinks(Model):
 class FileLinks(RESTObjectLinks):
     """Links for a single invenio file."""
 
-    content: Optional[URL] = None
+    content: URL | None = None
     """Link to the content of the file."""
 
-    commit: Optional[URL] = None
+    commit: URL | None = None
     """Link to commit (finalize) uploading of the file."""
 
-    parts: Optional[list[MultipartUploadLinks]] = None
+    parts: list[MultipartUploadLinks] | None = None
     """For multipart upload, links where to upload the part to."""
 
 
@@ -77,9 +77,9 @@ class File(RESTObject):
     )
     """File transfer type and metadata."""
 
-    status: Optional[str] = None
+    status: str | None = None
 
-    size: Optional[int] = None
+    size: int | None = None
 
 
 @extend_serialization(Omit("_etag", from_unstructure=True), allow_extra_data=True)

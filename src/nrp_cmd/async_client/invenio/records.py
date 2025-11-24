@@ -4,7 +4,7 @@ import contextlib
 import copy
 from collections.abc import AsyncGenerator, AsyncIterator
 from datetime import UTC, datetime, timedelta
-from typing import Any, Optional, Self, override
+from typing import Any, Self, override
 
 from yarl import URL
 
@@ -167,16 +167,18 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
     async def search(
         self,
         *,
-        q: Optional[str] = None,
-        page: Optional[int] = None,
-        size: Optional[int] = None,
-        sort: Optional[str] = None,
+        q: str | None = None,
+        page: int | None = None,
+        size: int | None = None,
+        sort: str | None = None,
         model: str | None = None,
         status: RecordStatus | None = None,
         facets: dict[str, str] | None = None,
     ) -> RecordList:
         """Search for records in the repository."""
-        search_url, extra_facets = _get_search_params(self._info, model or self._model, status or self._status)
+        search_url, extra_facets = _get_search_params(
+            self._info, model or self._model, status or self._status
+        )
 
         query = {**(facets or {}), **extra_facets}
         if q:
@@ -212,7 +214,7 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
     def _empty_record_list(self):
         return RecordList(
             links=RESTPaginationLinks(
-                self_=None,     # type: ignore
+                self_=None,  # type: ignore
             ),
             hits=RESTHits[Record](total=0, hits=[]),
         )
@@ -234,7 +236,7 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
     async def scan(  # type: ignore
         self,  #  - as we can not find working mypy type tht would work with parent class
         *,
-        q: Optional[str] = None,
+        q: str | None = None,
         model: str | None = None,
         status: RecordStatus | None = None,
         facets: dict[str, str] | None = None,
@@ -405,10 +407,14 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
         """
         if isinstance(record_id_or_record, Record):
             url = record_id_or_record.links.self_
-            etag = record_id_or_record._etag    # type: ignore
+            etag = record_id_or_record._etag  # type: ignore
         else:
-            url = _record_id_to_url(self._info, record_id_or_record, self._model, 
-                                   status=status or self._status)
+            url = _record_id_to_url(
+                self._info,
+                record_id_or_record,
+                self._model,
+                status=status or self._status,
+            )
 
         return await self._connection.delete(url=url, headers=self._etag_headers(etag))
 
@@ -500,6 +506,7 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
             "Can not retract a record",
         )
 
+
 def date_in_between(date1: datetime, date2: datetime):
     return date1 + (date2 - date1) / 2
 
@@ -522,9 +529,10 @@ def _record_id_to_url(
         ret /= "draft"
     return ret
 
+
 def _get_search_params(
     info: RepositoryInfo, model: str | None, status: RecordStatus
-) -> tuple[URL,dict[str, str]]:
+) -> tuple[URL, dict[str, str]]:
     if model is None and info.default_model:
         model = info.default_model
     if model is None or model == "*":

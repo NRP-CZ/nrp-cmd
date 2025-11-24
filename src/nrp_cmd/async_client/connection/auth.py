@@ -7,7 +7,6 @@
 #
 """Bearer authentication support for aiohttp."""
 
-from typing import Optional
 
 from aiohttp import BasicAuth, ClientRequest, hdrs
 
@@ -31,9 +30,7 @@ class Authentication(BasicAuth):
 class AuthenticatedClientRequest(ClientRequest):
     """Implementation of the ClientRequest that handles different types of authentication (not only BasicAuth)."""
 
-    def update_auth(
-        self, auth: Optional[Authentication], trust_env: bool = False
-    ) -> None:
+    def update_auth(self, auth: Authentication | None, trust_env: bool = False) -> None:
         """Override the authentication in the request to allow non-basic auth methods."""
         if not auth or not isinstance(auth, Authentication):
             return super().update_auth(auth, trust_env)

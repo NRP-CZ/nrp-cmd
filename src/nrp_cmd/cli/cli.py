@@ -13,7 +13,7 @@ import dataclasses
 import logging
 import logging.handlers
 from collections.abc import Callable
-from typing import Any, Optional
+from typing import Any
 
 import rich_click as click
 from rich import box
@@ -21,6 +21,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich_click.rich_help_formatter import RichHelpFormatter
 
+from nrp_cmd import __version__
 from nrp_cmd.cli.arguments import Argument, ClickCommand, with_errors
 from nrp_cmd.cli.files import (
     delete_file,
@@ -260,7 +261,7 @@ class CommandTreeNode:
 
     children: dict[str, CommandTreeNode] = dataclasses.field(default_factory=dict)
     """Child nodes of this group."""
-    command: Optional[Callable[..., None]] = None
+    command: Callable[..., None] | None = None
     """Command to execute at this node, if the children are empty."""
 
     def register_commands(self, parent_click_group: click.Group) -> None:
@@ -280,9 +281,11 @@ class CommandTreeNode:
 
     def add_command(
         self,
-        command_decl: tuple[Callable[..., None]]
-        | tuple[str, Callable[..., None]]
-        | tuple[str, str, Callable[..., None]],
+        command_decl: (
+            tuple[Callable[..., None]]
+            | tuple[str, Callable[..., None]]
+            | tuple[str, str, Callable[..., None]]
+        ),
     ) -> None:
         """Add a command to the tree."""
         if len(command_decl) == 1:
@@ -303,6 +306,7 @@ class CommandTreeNode:
 def generate_click_command() -> click.Group:
     """Register all commands into the typer app."""
     app = click.group(name="nrp-cmd")(lambda: None)
+    click.version_option(version=__version__, prog_name="nrp-cmd")(app)
 
     tree_root = CommandTreeNode()
     for cmd in commands:

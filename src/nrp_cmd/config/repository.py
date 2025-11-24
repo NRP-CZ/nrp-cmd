@@ -7,7 +7,6 @@
 #
 """Configuration of the repository and repository access classes."""
 
-from typing import Optional
 
 from attrs import define
 from yarl import URL
@@ -25,7 +24,7 @@ class RepositoryConfig:
     url: URL
     """The api URL of the repository, usually something like https://repository.org/api."""
 
-    token: Optional[str] = None
+    token: str | None = None
     """Bearer token"""
 
     verify_tls: bool = True
