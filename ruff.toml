@@ -16,6 +16,7 @@ ignore = [
     "ANN101",  # Missing type annotation for self in method
     "ANN102",  # Missing type annotation for cls in classmethod
     "ANN204",  # Missing return type annotation in __init__ method
+    "ANN401",  # Any disallowed
     "UP007",   # Imho a: Optional[int] = None is more readable than a: (int | None) = None for kwargs
 
     "D203",    # 1 blank line required before class docstring (we use D211)
