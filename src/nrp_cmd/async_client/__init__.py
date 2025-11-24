@@ -97,6 +97,7 @@ async def get_repository_from_record_id(
     if record_url.path.startswith("/api/"):
         return record_url, repository_config
 
+    connection.verify_tls = repository_config.verify_tls
     # try to head the record to get the id
     api_url = None
     resp = await connection.head(url=record_url, get_links=True)

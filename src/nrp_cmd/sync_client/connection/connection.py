@@ -131,6 +131,36 @@ class SyncConnection:
         ]
         self._auth = BearerAuthentication(_tokens)
 
+    @property
+    def verify_tls(self) -> bool:
+        """Get whether TLS verification is enabled."""
+        return self._verify_tls
+
+    @verify_tls.setter
+    def verify_tls(self, value: bool) -> None:
+        """Set whether TLS verification is enabled."""
+        self._verify_tls = value
+
+    @property
+    def retry_count(self) -> int:
+        """Get the number of retries for idempotent requests."""
+        return self._retry_count
+
+    @retry_count.setter
+    def retry_count(self, value: int) -> None:
+        """Set the number of retries for idempotent requests."""
+        self._retry_count = value
+
+    @property
+    def retry_after_seconds(self) -> int:
+        """Get the base retry interval in seconds."""
+        return self._retry_after_seconds
+
+    @retry_after_seconds.setter
+    def retry_after_seconds(self, value: int) -> None:
+        """Set the base retry interval in seconds."""
+        self._retry_after_seconds = value
+
     @contextlib.contextmanager
     def _client(
         self, idempotent: bool = False
@@ -486,9 +516,7 @@ class SyncConnection:
 
         json_payload = response.content
         if communication_log.isEnabledFor(logging.INFO):
-            communication_log.info(
-                "%s", _json.dumps(_json.loads(json_payload))
-            )
+            communication_log.info("%s", _json.dumps(_json.loads(json_payload)))
         if inspect.isclass(result_class):
             if issubclass(result_class, requests.Response):
                 return cast("T", response)  # mypy can not get it
@@ -497,9 +525,7 @@ class SyncConnection:
             elif issubclass(result_class, dict):
                 return _json.loads(json_payload)
         etag = remove_quotes(response.headers.get("ETag"))
-        return deserialize_rest_response(
-            self, json_payload, result_class, etag
-        )
+        return deserialize_rest_response(self, json_payload, result_class, etag)
 
     def _retried[T](
         self,
@@ -584,11 +610,15 @@ class SyncConnection:
             and size > MINIMAL_DOWNLOAD_PART_SIZE
             and headers.get("Accept-Ranges") == "bytes"
         ):
-            self._download_multipart(location, sink, size, progress_bar, parts, part_size)
+            self._download_multipart(
+                location, sink, size, progress_bar, parts, part_size
+            )
         else:
             self._download_single(location, sink, progress_bar)
 
-    def _download_single(self, url: URL, sink: DataSink, progress_bar: ProgressBar) -> None:
+    def _download_single(
+        self, url: URL, sink: DataSink, progress_bar: ProgressBar
+    ) -> None:
         self.get_stream(url=url, sink=ProgressSink(sink, progress_bar), offset=0)
 
     def _download_multipart(
@@ -607,7 +637,12 @@ class SyncConnection:
         for i in range(adjusted_parts):
             start = i * adjusted_part_size
             part_size = min((i + 1) * adjusted_part_size, size) - start
-            self.get_stream(url=url, sink=ProgressSink(sink, progress_bar), offset=start, size=part_size)
+            self.get_stream(
+                url=url,
+                sink=ProgressSink(sink, progress_bar),
+                offset=start,
+                size=part_size,
+            )
 
 
 def remove_quotes(etag: str | None) -> str | None:
