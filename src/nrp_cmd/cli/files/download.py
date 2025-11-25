@@ -10,7 +10,7 @@
 import sys
 from asyncio import Task, TaskGroup
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import rich_click as click
 from rich.console import Console
@@ -52,10 +52,10 @@ from ..arguments import (
 async def download_files(
     *,
     config: Config,
-    repository: Optional[str] = None,
+    repository: str | None = None,
     record_id: str,
     keys: list[str],
-    output: Optional[Path] = None,
+    output: Path | None = None,
     model: Model,
     out: Output,
 ) -> None:
@@ -143,15 +143,17 @@ async def download_single_record_files(
             if file_output and file_output.parent:
                 file_output.parent.mkdir(parents=True, exist_ok=True)
 
-            tasks.append((
-                key,
-                file_output,
-                tg.create_task(
-                    file_client.download(
-                        file_, FileSink(file_output), progress=file_.key
-                    )
-                ),
-            ))
+            tasks.append(
+                (
+                    key,
+                    file_output,
+                    tg.create_task(
+                        file_client.download(
+                            file_, FileSink(file_output), progress=file_.key
+                        )
+                    ),
+                )
+            )
 
     ok = True
     for key, fname, task in tasks:

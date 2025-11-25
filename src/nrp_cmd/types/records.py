@@ -11,7 +11,7 @@
 # currently python is unable to resolve type hints for generic types
 # when from __future__ import annotations is used
 
-from typing import Any, Optional
+from typing import Any
 
 from attrs import define, field
 from yarl import URL
@@ -29,7 +29,7 @@ RecordId = str | int | URL
 class RecordLinks(RESTObjectLinks):
     """Links of a record."""
 
-    files: Optional[URL] = None
+    files: URL | None = None
 
 
 @define(kw_only=True)
@@ -37,7 +37,7 @@ class FilesEnabled(Model):
     """Files enabled marker."""
 
     enabled: bool = True
-    entries: Optional[dict[str, File]] = None
+    entries: dict[str, File] | None = None
 
 
 @define(kw_only=True)
@@ -52,9 +52,11 @@ class ParentRecord(Model):
 
 
 # extend record serialization to allow extra data and rename files to files_
-@extend_serialization(Rename("files", "files_"), 
-                      Omit("_etag", from_unstructure=True), 
-                      allow_extra_data=True)
+@extend_serialization(
+    Rename("files", "files_"),
+    Omit("_etag", from_unstructure=True),
+    allow_extra_data=True,
+)
 @define(kw_only=True)
 class Record(BaseRecord):
     """Record in the repository."""
@@ -62,16 +64,16 @@ class Record(BaseRecord):
     links: RecordLinks = field()
     """Links of the record."""
 
-    files_: Optional[FilesEnabled] = None
+    files_: FilesEnabled | None = None
     """Files enabled marker."""
 
-    parent: Optional[ParentRecord] = None
+    parent: ParentRecord | None = None
 
     @property
     def metadata(self) -> dict[str, Any]:
         """Return the metadata of the record."""
-        if 'metadata' in self._extra_data:
-            return self._extra_data['metadata']
+        if "metadata" in self._extra_data:
+            return self._extra_data["metadata"]
         return self._extra_data
 
 
@@ -80,9 +82,9 @@ class Record(BaseRecord):
 class RecordList(RESTList[Record]):
     """List of records."""
 
-    sortBy: Optional[str] = None
+    sortBy: str | None = None
     """Sort by field."""
-    aggregations: Optional[Any] = None
+    aggregations: Any | None = None
     """Aggregations."""
 
     def as_dataframe(self, *keys: str):

@@ -9,7 +9,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import rich_click as click
 from rich.console import Console
@@ -56,10 +56,10 @@ if TYPE_CHECKING:
 async def create_request(
     *,
     config: Config,
-    repository: Optional[str] = None,
+    repository: str | None = None,
     request_type_id: str,
     record_id: str,
-    variable: Optional[str] = None,
+    variable: str | None = None,
     out: Output,
     model: Model,
     submit: bool = True,

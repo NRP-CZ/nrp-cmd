@@ -152,6 +152,36 @@ class AsyncConnection:
         ]
         self._auth = BearerAuthentication(_tokens)
 
+    @property
+    def verify_tls(self) -> bool:
+        """Get whether TLS verification is enabled."""
+        return self._verify_tls
+
+    @verify_tls.setter
+    def verify_tls(self, value: bool) -> None:
+        """Set whether TLS verification is enabled."""
+        self._verify_tls = value
+
+    @property
+    def retry_count(self) -> int:
+        """Get the number of retries for idempotent requests."""
+        return self._retry_count
+
+    @retry_count.setter
+    def retry_count(self, value: int) -> None:
+        """Set the number of retries for idempotent requests."""
+        self._retry_count = value
+
+    @property
+    def retry_after_seconds(self) -> int:
+        """Get the base retry interval in seconds."""
+        return self._retry_after_seconds
+
+    @retry_after_seconds.setter
+    def retry_after_seconds(self, value: int) -> None:
+        """Set the base retry interval in seconds."""
+        self._retry_after_seconds = value
+
     @contextlib.asynccontextmanager
     async def _client(
         self, idempotent: bool = False
@@ -225,10 +255,20 @@ class AsyncConnection:
         with current_progress.short_task():
             if use_get:
                 return await self._retried(
-                    "GET", url, _head, idempotent=True, headers={"Range": "bytes=0-0", "Accept-Encoding": "identity"}
+                    "GET",
+                    url,
+                    _head,
+                    idempotent=True,
+                    headers={"Range": "bytes=0-0", "Accept-Encoding": "identity"},
                 )
             else:
-                return await self._retried("HEAD", url, _head, idempotent=True, headers={"Accept-Encoding": "identity"})
+                return await self._retried(
+                    "HEAD",
+                    url,
+                    _head,
+                    idempotent=True,
+                    headers={"Accept-Encoding": "identity"},
+                )
 
     async def get[T](
         self,
@@ -597,7 +637,7 @@ class AsyncConnection:
             headers = await self.head(url=url, use_get=True, get_links=False)
 
         size = 0
-        location = URL(headers.get('Location', url))
+        location = URL(headers.get("Location", url))
 
         if "Content-Range" in headers:
             size = int(headers["Content-Range"].split("/")[-1])

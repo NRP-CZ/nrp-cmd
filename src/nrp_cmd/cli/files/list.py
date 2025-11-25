@@ -10,7 +10,6 @@
 from asyncio import TaskGroup
 from functools import partial
 from pathlib import Path
-from typing import Optional
 
 from rich.console import Console
 
@@ -47,7 +46,7 @@ from ..arguments import (
 async def list_files(
     *,
     config: Config,
-    repository: Optional[str] = None,
+    repository: str | None = None,
     record_ids: list[str],
     out: Output,
     model: Model,
@@ -78,10 +77,10 @@ async def list_single_record(
     record_id: str,
     console: Console,
     config: Config,
-    output: Optional[Path],
-    output_format: Optional[OutputFormat],
-    repository: Optional[str],
-    model: Optional[str],
+    output: Path | None,
+    output_format: OutputFormat | None,
+    repository: str | None,
+    model: str | None,
     published: bool,
     draft: bool,
     verbosity: VerboseLevel,

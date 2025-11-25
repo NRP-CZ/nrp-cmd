@@ -71,8 +71,13 @@ class Config:
         else:
             path = self._config_file_path
         assert path is not None
-        path.parent.mkdir(parents=True, exist_ok=True)
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        # Fix permissions on existing directory if needed
+        if path.parent.exists():
+            path.parent.chmod(0o700)
         path.write_text(json.dumps(converter.unstructure(self), indent=4))
+        # Ensure the file has owner-only permissions
+        path.chmod(0o600)
 
     #
     # Repository management
@@ -135,7 +140,7 @@ class Config:
     def find_repository(self, repository: URL | str) -> RepositoryConfig:
         """Find a repository configuration by its URL or alias name."""
         # try alias first
-        if isinstance(repository, str):    
+        if isinstance(repository, str):
             with contextlib.suppress(KeyError):
                 return self.get_repository(repository)
         # if not successful, use the url to get/configure a repository

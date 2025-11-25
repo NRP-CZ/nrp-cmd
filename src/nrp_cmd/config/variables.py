@@ -10,7 +10,6 @@
 import json
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Optional
 
 from attrs import define, field
 
@@ -24,40 +23,44 @@ class Variables:
     variables: dict[str, list[str]] = field(factory=dict)
     """Internal dictionary of variables."""
 
-    _config_file_path: Optional[Path] = None
+    _config_file_path: Path | None = None
     """Path to the configuration file from which the variables have been loaded."""
 
     class Config:  # noqa
         extra = "forbid"
 
     @classmethod
-    def from_file(cls, config_file_path: Optional[Path] = None) -> "Variables":
+    def from_file(cls, config_file_path: Path | None = None) -> "Variables":
         """Load the configuration from a file."""
         if not config_file_path:
             config_file_path = Path.home() / ".nrp" / "variables.json"
 
         if config_file_path.exists():
             ret = converter.structure(
-                json.loads(config_file_path.read_text(encoding="utf-8")),
-                cls
+                json.loads(config_file_path.read_text(encoding="utf-8")), cls
             )
         else:
             ret = cls()
         ret._config_file_path = config_file_path
         return ret
 
-    def save(self, path: Optional[Path] = None) -> None:
+    def save(self, path: Path | None = None) -> None:
         """Save the configuration to a file, creating parent directory if needed."""
         if path:
             self._config_file_path = path
         else:
             path = self._config_file_path
         assert path, "No path to save the configuration to."
-        path.parent.mkdir(parents=True, exist_ok=True)
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        # Fix permissions on existing directory if needed
+        if path.parent.exists():
+            path.parent.chmod(0o700)
         path.write_text(
             json.dumps(converter.unstructure(self), indent=2, ensure_ascii=False),
             encoding="utf-8",
         )
+        # Ensure the file has owner-only permissions
+        path.chmod(0o600)
 
     def __getitem__(self, key: str) -> list[str]:
         """Get the value of a variable, raising KeyError if the variable has not been found."""

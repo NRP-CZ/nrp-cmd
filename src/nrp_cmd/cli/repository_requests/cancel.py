@@ -9,8 +9,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from rich.console import Console
 
 from nrp_cmd.cli.base import OutputWriter, async_command
@@ -37,7 +35,7 @@ from .utils import resolve_request
 @with_verbosity
 @async_command
 async def cancel_request(
-    *, config: Config, repository: Optional[str] = None, request_id: str, out: Output
+    *, config: Config, repository: str | None = None, request_id: str, out: Output
 ) -> None:
     """Cancel a request."""
     console = Console()

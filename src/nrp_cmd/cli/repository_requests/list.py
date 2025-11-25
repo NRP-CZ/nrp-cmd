@@ -7,7 +7,6 @@
 #
 """Command line interface for getting records."""
 
-from typing import Optional
 
 from rich.console import Console
 
@@ -43,7 +42,7 @@ from .table_formatter import (
 async def list_requests(
     *,
     config: Config,
-    repository: Optional[str] = None,
+    repository: str | None = None,
     record_id: str,
     out: Output,
     model: Model,
@@ -72,11 +71,7 @@ async def list_requests(
         out.output, out.output_format, console, format_request_and_types_table
     ) as printer:
         data = {
-            "requests": [
-                x for x in record.expanded.get("requests", [])
-            ],
-            "request_types": [
-                x for x in record.expanded.get("request_types", [])
-            ],
+            "requests": [x for x in record.expanded.get("requests", [])],
+            "request_types": [x for x in record.expanded.get("request_types", [])],
         }
         printer.output(data)

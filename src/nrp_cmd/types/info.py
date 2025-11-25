@@ -7,7 +7,6 @@
 #
 """Repository info endpoint response types."""
 
-from typing import Optional
 
 from attrs import define, field
 from yarl import URL
@@ -24,17 +23,25 @@ class RepositoryInfoLinks(Model):
     self_: URL = field()
     """Link to the repository itself"""
 
-    records: URL = field()
+    records: URL = field(default=None)
     """Link to the global search endpoint"""
 
     drafts: URL | None = field(default=None)
     """Link to the user's records"""
 
-    models: Optional[URL] = field(default=None)
+    models: URL | None = field(default=None)
     """Link to the models in the repository"""
 
     requests: URL | None = field(default=None)
     """Link to the requests in the repository"""
+
+    def __attrs_post_init__(self):
+        """Post init."""
+        if self.records is None:
+            if hasattr(self, "api"):
+                self.records = self.api / "records"
+            else:
+                self.records = self.self_.origin() / "api" / "records"
 
 
 @extend_serialization(allow_extra_data=True)
@@ -48,10 +55,10 @@ class ModelInfoLinks(Model):
     html: URL | None = field(default=None)
     """Link to the model records' HTML listing page"""
 
-    drafts: Optional[URL] = field(default=None)
+    drafts: URL | None = field(default=None)
     """Link to the user's draft records"""
 
-    deposit: Optional[URL] = field(default=None)
+    deposit: URL | None = field(default=None)
     """Deposition link for the model"""
 
     model: URL | None = field(default=None)
@@ -74,10 +81,10 @@ class ModelInfoContentType(Model):
 
     schema: URL | None = None
     """Machine parseable schema for the content-type"""
-    
+
     can_export: bool = False
     """Whether the content-type can be used for exporting records (via Accept header)"""
-    
+
     can_deposit: bool = False
     """Whether the content-type can be used for importing records (via Content-Type header)"""
 

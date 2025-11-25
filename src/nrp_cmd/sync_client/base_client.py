@@ -13,7 +13,7 @@ from collections.abc import Iterator
 from contextlib import AbstractContextManager
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional, Protocol, Self, overload
+from typing import Any, Protocol, Self, overload
 
 from yarl import URL
 
@@ -130,10 +130,10 @@ class SyncRecordsClient(Protocol):
     def search(
         self,
         *,
-        q: Optional[str] = None,
-        page: Optional[int] = None,
-        size: Optional[int] = None,
-        sort: Optional[str] = None,
+        q: str | None = None,
+        page: int | None = None,
+        size: int | None = None,
+        sort: str | None = None,
         model: str | None = None,
         status: RecordStatus | None = None,
         facets: dict[str, str] | None = None,
@@ -152,7 +152,7 @@ class SyncRecordsClient(Protocol):
     def scan(
         self,
         *,
-        q: Optional[str] = None,
+        q: str | None = None,
         model: str | None = None,
         status: RecordStatus | None = None,
         facets: dict[str, str] | None = None,
@@ -205,6 +205,8 @@ class SyncRecordsClient(Protocol):
         :param record: published record which will be retracted
         """
         pass
+
+
 class SyncFilesClient(Protocol):
     """Client class for accessing files stored with repository records."""
 
@@ -329,6 +331,7 @@ class SyncFilesClient(Protocol):
           - URL of the file
         """
         ...
+
 
 class SyncRequestsClient(Protocol):
     """An abstract client for requests within the NRP repository.
@@ -557,4 +560,3 @@ class SyncRepositoryClient(Protocol):
     def config(self) -> RepositoryConfig:
         """Return the configuration of the repository."""
         ...
-

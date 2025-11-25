@@ -8,7 +8,6 @@
 """Commandline client for updating metadata of files."""
 
 from functools import partial
-from typing import Optional
 
 from rich.console import Console
 
@@ -45,10 +44,10 @@ from ..arguments import (
 async def update_file_metadata(
     *,
     config: Config,
-    repository: Optional[str] = None,
+    repository: str | None = None,
     record_id: str,
     key: str,
-    metadata: Optional[str] = None,
+    metadata: str | None = None,
     model: Model,
     out: Output,
 ) -> None:

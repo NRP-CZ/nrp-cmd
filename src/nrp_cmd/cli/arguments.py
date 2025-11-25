@@ -5,7 +5,7 @@ import logging
 import sys
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Optional, overload
+from typing import Any, overload
 
 import rich_click as click
 import yaml
@@ -50,9 +50,9 @@ class Model:
     draft: bool
     published: bool
 
-    model: Optional[str] = None
-    community: Optional[str] = None
-    workflow: Optional[str] = None
+    model: str | None = None
+    community: str | None = None
+    workflow: str | None = None
 
 
 type ClickCommand = Callable[..., None]
@@ -75,14 +75,15 @@ class Argument(click.Argument):
 
 argument_with_help = functools.partial(click.argument, cls=Argument)
 
+
 @dataclasses.dataclass
 class Output:
     """Common traits for CLI commands."""
 
     verbosity: VerboseLevel = VerboseLevel.NORMAL
     progress: bool = False
-    output: Optional[Path] = None
-    output_format: Optional[OutputFormat] = None
+    output: Path | None = None
+    output_format: OutputFormat | None = None
 
 
 @overload
@@ -157,7 +158,7 @@ def with_setvar(func: ClickCommand) -> ClickCommand:
     )
     @functools.wraps(func)
     def wrapper(
-        variable: Optional[str] = None,
+        variable: str | None = None,
         **kwargs: Any,
     ) -> None:
         if variable and variable.startswith("@"):
@@ -185,8 +186,8 @@ def with_output(func: ClickCommand) -> ClickCommand:
     )
     @functools.wraps(func)
     def wrapper(
-        output: Optional[Path] = None,
-        output_format: Optional[OutputFormat] = None,
+        output: Path | None = None,
+        output_format: OutputFormat | None = None,
         **kwargs: Any,
     ) -> None:
         out = kwargs.pop("out", None) or Output()
@@ -229,7 +230,7 @@ def with_config(func: ClickCommand) -> ClickCommand:
     )
     @functools.wraps(func)
     def wrapper(
-        config_path: Optional[Path] = None,
+        config_path: Path | None = None,
         **kwargs: Any,
     ) -> None:
         _config = Config.from_file(config_path)
@@ -246,7 +247,7 @@ def with_repository(func: ClickCommand) -> ClickCommand:
     )
     @functools.wraps(func)
     def wrapper(
-        repository: Optional[str] = None,
+        repository: str | None = None,
         **kwargs: Any,
     ) -> None:
         func(repository=repository, **kwargs)
@@ -265,7 +266,9 @@ def with_resolved_vars(argument_name: str) -> Callable[[ClickCommand], ClickComm
             **kwargs: Any,
         ) -> Any:
             if argument_name not in kwargs:
-                raise ValueError(f"Argument {argument_name} not found in kwargs {kwargs}")
+                raise ValueError(
+                    f"Argument {argument_name} not found in kwargs {kwargs}"
+                )
             config: Config | None = kwargs.get("config")
             if not config:
                 raise ValueError(f"Config not found in kwargs {kwargs}")
@@ -337,9 +340,9 @@ def with_model(
         @functools.wraps(func)
         def wrapper(
             *,
-            model: Optional[str] = None,
-            community: Optional[str] = None,
-            workflow: Optional[str] = None,
+            model: str | None = None,
+            community: str | None = None,
+            workflow: str | None = None,
             draft: bool = False,
             published: bool = True,
             **kwargs: Any,

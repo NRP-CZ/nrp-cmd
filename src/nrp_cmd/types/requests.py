@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from enum import StrEnum, auto
-from typing import Any, Optional
+from typing import Any
 
 from attrs import define, field
 from cattrs.dispatch import StructureHook
@@ -15,12 +15,13 @@ from .rest import RESTList, RESTObject, RESTObjectLinks
 
 # region request types
 
+
 @extend_serialization(allow_extra_data=True)
 @define(kw_only=True)
 class RequestTypeActionLinks(Model):
     """Links on a request type object."""
 
-    create: Optional[URL] = None
+    create: URL | None = None
     """Link to create a new request of this type."""
 
 
@@ -33,8 +34,7 @@ class RequestTypeLinks(Model):
     """Actions that can be performed on the request type."""
 
 
-@extend_serialization(Omit("_etag", from_unstructure=True), 
-                      allow_extra_data=True)
+@extend_serialization(Omit("_etag", from_unstructure=True), allow_extra_data=True)
 @define(kw_only=True)
 class RequestType(RESTObject):
     """A type of request that the user can apply for.
@@ -90,6 +90,7 @@ class RequestTypeList(RESTList[RequestType]):
             return self[type_id]
         return super().__getattr__(type_id)
 
+
 # endregion
 
 # region requests
@@ -100,10 +101,10 @@ class RequestTypeList(RESTList[RequestType]):
 class RequestActionLinks(Model):
     """Possible actions on a request."""
 
-    submit: Optional[URL] = None
-    cancel: Optional[URL] = None
-    accept: Optional[URL] = None
-    decline: Optional[URL] = None
+    submit: URL | None = None
+    cancel: URL | None = None
+    accept: URL | None = None
+    decline: URL | None = None
 
 
 @extend_serialization(Rename("self", "self_"), allow_extra_data=True)
@@ -143,10 +144,14 @@ class RequestPayloadRecord(Model):
     """Links to the record (self and self_html)"""
 
 
-def restore_hierarchy(data: dict[str, Any], type_: type, previous: StructureHook) -> Any: # noqa: ANN401
+def restore_hierarchy(
+    data: dict[str, Any], type_: type, previous: StructureHook
+) -> Any:  # noqa: ANN401
     """Restore the hierarchy of the request payload."""
 
-    def _parse_colon_hierarchy(obj: dict[str, Any], key: str, value: Any) -> None:   # noqa: ANN401
+    def _parse_colon_hierarchy(
+        obj: dict[str, Any], key: str, value: Any
+    ) -> None:  # noqa: ANN401
         parts = key.split(":")
         for part in parts[:-1]:
             obj = obj.setdefault(part, {})
@@ -154,11 +159,12 @@ def restore_hierarchy(data: dict[str, Any], type_: type, previous: StructureHook
 
     if not data:
         return previous(data, type_)
-    
+
     obj: dict[str, Any] = {}
     for k, v in data.items():
         _parse_colon_hierarchy(obj, k, v)
     return previous(obj, type_)
+
 
 @extend_serialization(WrapStructure(restore_hierarchy), allow_extra_data=True)
 @define(kw_only=True)
@@ -188,7 +194,7 @@ class Request(BaseRecord):
     type: str = field()
     """Request type identifier."""
 
-    title: Optional[str] = None
+    title: str | None = None
     """Title of the request, might be None"""
 
     status: RequestStatus = field()
@@ -200,7 +206,7 @@ class Request(BaseRecord):
     is_open: bool = field()
     """Is the request open?"""
 
-    expires_at: Optional[datetime] = None
+    expires_at: datetime | None = None
     """When the request expires, might be unset"""
 
     is_expired: bool = field()
@@ -218,7 +224,7 @@ class Request(BaseRecord):
     """The topic of the request. It is a dictionary containing a
     reference to the topic (NOT the links at the moment)."""
 
-    payload: Optional[RequestPayload] = None
+    payload: RequestPayload | None = None
     """Payload of the request. It can be of different types, depending on the request type."""
 
     def __attrs_post_init__(self):
@@ -233,12 +239,11 @@ class Request(BaseRecord):
 class RequestList(RESTList[Request]):
     """A list of requests."""
 
-    sortBy: Optional[str] = None
+    sortBy: str | None = None
     """By which property should be the list sorted"""
 
-    aggregations: Optional[Any] = None
+    aggregations: Any | None = None
     """Aggregations of the list"""
-
 
 
 def single_value_expected(value: list[Any] | tuple[Any, ...] | dict[Any, Any]) -> None:

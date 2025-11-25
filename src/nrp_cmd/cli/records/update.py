@@ -9,7 +9,7 @@
 
 from collections.abc import Callable
 from functools import partial
-from typing import Any, Optional, Self, cast
+from typing import Any, Self, cast
 
 import rich_click as click
 from deepmerge import always_merger
@@ -58,11 +58,11 @@ from ..arguments import (
 async def update_record(
     *,
     config: Config,
-    repository: Optional[str],
+    repository: str | None,
     record_id: str,
     metadata: str,
     replace: bool = True,
-    path: Optional[str] = None,
+    path: str | None = None,
     model: Model,
     out: Output,
 ) -> None:
@@ -147,17 +147,17 @@ def merge_metadata_at_path(
     if replace:
         if isinstance(old, dict):
             old.clear()
-            cast(dict[str, Any], old).update(new_metadata)
+            cast("dict[str, Any]", old).update(new_metadata)
         elif isinstance(old, list):
             old.clear()
-            cast(list[Any], old).extend(new_metadata)
+            cast("list[Any]", old).extend(new_metadata)
         else:
             old = new_metadata
     else:
         if isinstance(old, dict):
-            always_merger.merge(cast(dict[str, Any], old), new_metadata)
+            always_merger.merge(cast("dict[str, Any]", old), new_metadata)
         elif isinstance(old, list):
-            cast(list[Any], old).extend(new_metadata)
+            cast("list[Any]", old).extend(new_metadata)
         else:
             old = new_metadata
     setters[-1].value = old

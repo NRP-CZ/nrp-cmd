@@ -10,7 +10,6 @@
 import asyncio
 from functools import partial
 from pathlib import Path
-from typing import Optional
 
 import rich_click as click
 from rich.console import Console
@@ -53,7 +52,7 @@ from ..arguments import (
 @async_command
 async def get_record(
     config: Config,
-    repository: Optional[str],
+    repository: str | None,
     record_ids: list[str],
     out: Output,
     model: Model,
