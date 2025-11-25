@@ -3,7 +3,7 @@ name = "nrp-cmd"
 dynamic = ["version"]
 description = "Python and commandline client for NRP repositories"
 readme = "README.md"
-requires-python = ">=3.13,<3.15"
+requires-python = ">=3.12,<3.15"
 dependencies = [
     "click",
     "rich-click",
