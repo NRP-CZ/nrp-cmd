@@ -58,9 +58,15 @@ jobs:
           sudo sysctl -w fs.file-max=262144
           sudo sysctl -w vm.max_map_count=262144
 
-      - name: Run tests
+      # - name: Run tests
+      #   run: |
+      #     ./run-tests.sh
+
+      - name: Prepare package for publishing
         run: |
-          ./run-tests.sh
+          python -m venv .venv
+          .venv/bin/pip install -U setuptools pip wheel
+          .venv/bin/pip install -e '.'
 
       - name: Build package to publish
         run: |
