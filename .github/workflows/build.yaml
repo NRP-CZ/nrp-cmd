@@ -8,25 +8,19 @@ on:
         required: true
         default: "12"
         type: string
+      python-version:
+        description: Python version
+        required: false
+        default: "3.12"
+        type: string
 
 env:
   OAREPO_VERSION: ${{ inputs.oarepo }}
+  PYTHON_VERSION: ${{ inputs.python-version }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # services:
-    #   postgres:
-    #     image: postgres
-    #     env:
-    #       POSTGRES_PASSWORD: postgres
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-    #     ports:
-    #       - 5432:5432
 
     steps:
       - name: Show oarepo version
@@ -36,7 +30,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: "3.12"
+          python-version: "${{ inputs.python-version }}"
       - name: Install uv
         uses: astral-sh/setup-uv@v5
       - name: Cache pip
@@ -52,7 +46,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '21'
+          node-version: "21"
 
       - name: Install dependencies
         run: |
@@ -66,20 +60,9 @@ jobs:
           sudo sysctl -w fs.file-max=262144
           sudo sysctl -w vm.max_map_count=262144
 
-      # - name: Runs Opensearch
-      #   uses: ankane/setup-opensearch@v1
-      #   with:
-      #     plugins: analysis-icu
-
-      # - name: Start Redis
-      #   uses: supercharge/redis-github-action@1.7.0
-      #   with:
-      #     redis-version: ${{ matrix.redis-version }}
-
       - name: Run tests
         run: |
           ./run-tests.sh
-      
 
       - name: Build package to publish
         run: |

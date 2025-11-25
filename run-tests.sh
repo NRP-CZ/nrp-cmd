@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 python -m venv .venv
 source .venv/bin/activate 
 pip install -U setuptools pip wheel
@@ -30,6 +30,9 @@ install_test_repository() {
   ./nrp-installer.sh repo --no-input --initial-config "$BASEDIR/tests/test-repository/oarepo.yaml" </dev/null
 
   cd repo
+  # replace bitnami/opensearch to bitnamilegacy/opensearch (deprecated, looking for alternatives)
+  cat docker/docker-compose.yml | sed 's/bitnami\/opensearch/bitnamilegacy\/opensearch/g' >docker/docker-compose.tmp.yml
+  mv docker/docker-compose.tmp.yml docker/docker-compose.yml
   docker compose -f docker/docker-compose.yml down || true
   ./nrp check --fix
   ./nrp model create simple --copy-model-config ../simple.yaml

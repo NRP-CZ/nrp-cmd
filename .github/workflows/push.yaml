@@ -11,10 +11,19 @@ jobs:
     uses: ./.github/workflows/build.yaml
     with:
       oarepo: "12"
+      python-version: "3.12"
+
+  build_python314:
+    uses: ./.github/workflows/build.yaml
+    with:
+      oarepo: "12"
+      python-version: "3.14"
 
   publish:
     runs-on: ubuntu-latest
-    needs: build12
+    needs:
+      - build12
+      - build_python314
     steps:
       - name: Use built artifacts
         uses: actions/download-artifact@v4
