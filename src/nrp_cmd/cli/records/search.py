@@ -85,7 +85,6 @@ async def search_records(
         console,
         partial(format_search_table, verbosity=out.verbosity),  # type: ignore # mypy does not understand this
     ) as printer:
-        del record_list.aggregations
         printer.output(record_list)
 
 
