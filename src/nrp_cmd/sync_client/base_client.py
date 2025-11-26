@@ -5,6 +5,7 @@
 
 
 """Sync client for NRP repositories."""
+
 # TODO: can not do from __future__ import annotations here
 # as it is not compatible with attrs trying to resolve the
 # type annotations in runtime
@@ -560,3 +561,4 @@ class SyncRepositoryClient(Protocol):
     def config(self) -> RepositoryConfig:
         """Return the configuration of the repository."""
         ...
+

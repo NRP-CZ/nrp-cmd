@@ -62,7 +62,7 @@ See :class:`nrp_cmd.async_client.base_client.AsyncRepositoryClient` for more det
 from .async_client import get_async_client
 from .sync_client import get_sync_client
 
-__version__ = "0.8.6"
+__version__ = "0.8.7"
 
 __all__ = (
     "get_async_client",

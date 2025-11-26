@@ -19,7 +19,7 @@ from ...types.info import RepositoryInfo
 from ...types.records import Record, RecordId, RecordList
 from ...types.requests import Request, RequestType
 from ...types.rest import RESTHits, RESTPaginationLinks
-from ..base_client import RecordStatus, SyncRecordsClient
+from ..base_client import SyncRecordsClient, RecordStatus
 from ..connection import SyncConnection
 from .requests import SyncInvenioRequestsClient
 
@@ -445,7 +445,9 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
         link_op: str,
         error_msg: str,
     ) -> Record | Request:
-        if record.links["applicable-requests"]:
+        try:
+            # check if a link to the applicable requests is in the record metadata
+            record.links["applicable_requests"]
             request_types = self._requests_client.applicable_requests(record)
 
             request_type: RequestType | None = next(
@@ -466,7 +468,8 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
                     topic_link = str(request.links.topic)
                 return self.read(topic_link)
             return request
-        else:
+        except AttributeError:
+            # no requests that handle this operation, try to call the operation directly
             return getattr(self._connection, link_op)(
                 url=getattr(record.links, link_name),
                 json={},
@@ -560,3 +563,4 @@ def _get_search_params(
             "is_published": "false",
         }
     return info.models[model].links.records, {}
+

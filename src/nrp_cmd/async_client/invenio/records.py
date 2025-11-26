@@ -439,7 +439,9 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
         link_op: str,
         error_msg: str,
     ) -> Record | Request:
-        if record.links["applicable-requests"]:
+        try:
+            # check if a link to the applicable requests is in the record metadata
+            record.links["applicable_requests"]
             request_types = await self._requests_client.applicable_requests(record)
 
             request_type: RequestType | None = next(
@@ -460,7 +462,8 @@ class AsyncInvenioRecordsClient(AsyncRecordsClient):
                     topic_link = str(request.links.topic)
                 return await self.read(topic_link)
             return request
-        else:
+        except AttributeError:
+            # no requests that handle this operation, try to call the operation directly
             return await getattr(self._connection, link_op)(
                 url=getattr(record.links, link_name),
                 json={},
