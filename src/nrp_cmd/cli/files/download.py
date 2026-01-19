@@ -12,7 +12,6 @@ from asyncio import Task, TaskGroup
 from pathlib import Path
 from typing import Any
 
-import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client.streams import FileSink
@@ -47,7 +46,6 @@ from ..arguments import (
 @with_model
 @argument_with_help("record_id", type=str, help="Record ID")
 @argument_with_help("keys", type=str, nargs=-1, help="File key")
-@click.option("-o", "--output", type=click.Path(), help="Output path")
 @async_command
 async def download_files(
     *,

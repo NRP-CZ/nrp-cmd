@@ -16,6 +16,7 @@ from rich.console import Console
 
 from nrp_cmd.async_client.connection import limit_connections
 from nrp_cmd.cli.base import OutputFormat, OutputWriter, async_command
+from nrp_cmd.cli.base import set_variable as setvar
 from nrp_cmd.cli.records.record_file_name import create_output_file_name
 from nrp_cmd.cli.records.table_formatters import format_record_table
 from nrp_cmd.config import Config
@@ -33,6 +34,7 @@ from ..arguments import (
     with_record_ids,
     with_repository,
     with_resolved_vars,
+    with_setvar,
     with_verbosity,
 )
 from ..repository_requests.table_formatter import format_request_table
@@ -46,6 +48,7 @@ from .get import read_record
 @with_record_ids
 @with_output
 @with_verbosity
+@with_setvar
 @async_command
 async def publish_record(
     config: Config,
@@ -53,6 +56,7 @@ async def publish_record(
     record_ids: list[str],
     model: Model,
     out: Output,
+    variable: str | None = None,
 ) -> None:
     """Publish a record."""
     console = Console()
@@ -79,6 +83,24 @@ async def publish_record(
         for r in results:
             if r is None:
                 raise click.Abort()
+
+    if variable:
+        ids = [str(r.links.self_) for r in results if r is not None]
+        setvar(config, variable, ids)
+    if out.output_format == OutputFormat.TABLE:
+        if len(results) == 1:
+            if results[0] is not None:
+                console.print(
+                    f"Published record: [link={results[0].links.self_html}]{results[0].links.self_html}[/link]"
+                )
+        else:
+            console.print("Published records:")
+            for rec in results:
+                if rec is None:
+                    continue
+                console.print(
+                    f"- [link={rec.links.self_html}]{rec.links.self_html}[/link]"
+                )
 
 
 async def publish_single_record(

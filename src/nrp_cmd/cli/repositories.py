@@ -307,9 +307,9 @@ def dump_repo_configuration(
         "verify_tls": repo.verify_tls,
         "retry_count": repo.retry_count,
         "retry_after_seconds": repo.retry_after_seconds,
-        "info": converter.unstructure(repo.info, keep_nulls=True)
-        if repo.info
-        else None,
+        "info": (
+            converter.unstructure(repo.info, keep_nulls=True) if repo.info else None
+        ),
         "default": repo.alias == default_alias,
     }
 
@@ -390,7 +390,7 @@ def output_repository_info_table(
                 model_info["content_types"], key=lambda x: x["content_type"]
             ):
                 table.add_row("Content-Type", ct["content_type"])
-                table.add_row("", ct["name"] + "\n" + ct["description"])
+                table.add_row("", f'{ct["name"]}\n{ct["description"]}')
                 table.add_row("    Schema", str(ct["schema"]))
                 table.add_row("    Can Export", "✓" if ct["can_export"] else "")
                 table.add_row("    Can Deposit", "✓" if ct["can_deposit"] else "")

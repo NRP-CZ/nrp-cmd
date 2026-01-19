@@ -44,6 +44,13 @@ class MemorySink(DataSink):
         """Return the state of the sink."""
         return self._state
 
+    @property
+    def data(self) -> bytes:
+        """Return the data written to the sink."""
+        if self._buffer is None:
+            raise RuntimeError("Sink not allocated")
+        return bytes(self._buffer)
+
 
 class MemorySource(DataSource):
     """A data source that reads data from memory."""
@@ -59,16 +66,14 @@ class MemorySource(DataSource):
         self._data = data
         self._content_type = content_type
 
-    async def open(
-        self, offset: int = 0, count: int | None = None
-    ) -> InputStream:
+    async def open(self, offset: int = 0, count: int | None = None) -> InputStream:
         """Open the data source for reading."""
         if count is not None:
             return MemoryReader(self._data[offset : offset + count])
         else:
             return MemoryReader(self._data[offset:])
 
-    async def size(self) -> int: 
+    async def size(self) -> int:
         """Return the size of the data."""
         return len(self._data)
 
@@ -141,7 +146,7 @@ class MemoryReader(InputStream):
         """
         if self._data is None:
             return b""
-        
+
         if size < 0:
             return await anext(self)
 
@@ -149,10 +154,11 @@ class MemoryReader(InputStream):
         ret = self._data[:size]
         self._data = self._data[size:]
         return ret
-    
+
     async def close(self) -> None:
         """Close the reader."""
         pass
+
 
 class MemoryWriter(OutputStream):
     """Implementation of a writer that writes data to memory."""

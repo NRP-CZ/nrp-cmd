@@ -34,26 +34,23 @@ from ..arguments import (
     with_model,
     with_output,
     with_repository,
-    with_resolved_vars,
     with_verbosity,
 )
 
 
 @with_config
 @with_repository
-@with_resolved_vars("record_id")
 @with_output
 @with_verbosity
-@with_model
+@with_model(draft=True, published=True, community=False, workflow=False)
 @argument_with_help("record_id", type=str, help="Record ID")
-@argument_with_help("metadata", type=str, help="Metadata")
+@argument_with_help(
+    "metadata",
+    type=str,
+    help="Metadata. Use ./path/to/file.json to read from file (start with dot or slash).",
+)
 @click.option("--replace/--merge", default=True, help="Replace or merge the metadata")
 @click.option("--path", "-p", type=str, help="Path within the metadata")
-@click.option("--model", type=str, help="Model name")
-@click.option(
-    "--published/--no-published", default=False, help="Include only published records"
-)
-@click.option("--draft/--no-draft", default=False, help="Include only drafts")
 @async_command
 async def update_record(
     *,
@@ -71,60 +68,58 @@ async def update_record(
 
     if record_id.startswith("@"):
         record_id = record_id[1:]
-        loaded_record_ids = config.load_variables()[record_id]
-        if len(loaded_record_ids) != 1:
-            raise ValueError(
-                f"Variable {record_id} is not a single record ID: {loaded_record_ids}"
-            )
-        record_id = loaded_record_ids[0]
+        record_ids = config.load_variables()[record_id]
+    else:
+        record_ids = [record_id]
 
-    metadata_json = read_metadata(metadata)
-    record_url, repository_config = await get_repository_from_record_id(
-        AsyncConnection(), record_id, config, repository
-    )
+    for record_id in record_ids:
+        metadata_json = read_metadata(metadata)
+        record_url, repository_config = await get_repository_from_record_id(
+            AsyncConnection(), record_id, config, repository
+        )
 
-    published = model.published
-    draft = model.draft
+        published = model.published
+        draft = model.draft
 
-    client = await get_async_client(repository, config=config)
+        client = await get_async_client(repository, config=config)
 
-    records_api: AsyncRecordsClient = client.records.draft_records
-    if model.model is not None:
-        # normally we use draft records, as most of the use cases are for draft records
-        records_api = records_api.with_model(model.model)
-    if model.model and not model.published and not model.draft:
-        # make sure we have models information
-        await client.get_repository_info()
-        assert repository_config.info, "Repository info is missing"
-        assert model.model, "Need to specify a model"
-        repository_model = repository_config.info.models[model.model]
-        if "drafts" in repository_model.features:
-            draft = True
-        else:
-            published = True
+        records_api: AsyncRecordsClient = client.records.draft_records
+        if model.model is not None:
+            # normally we use draft records, as most of the use cases are for draft records
+            records_api = records_api.with_model(model.model)
+        if model.model and not model.published and not model.draft:
+            # make sure we have models information
+            await client.get_repository_info()
+            assert repository_config.info, "Repository info is missing"
+            assert model.model, "Need to specify a model"
+            repository_model = repository_config.info.models[model.model]
+            if "drafts" in repository_model.features:
+                draft = True
+            else:
+                published = True
 
-    if published:
-        records_api = client.records.published_records
-    elif draft:
-        records_api = client.records.draft_records
+        if published:
+            records_api = client.records.published_records
+        elif draft:
+            records_api = client.records.draft_records
 
-    record = await records_api.read(record_url)
-    merge_metadata_at_path(
-        record.metadata,
-        metadata_json,
-        replace,
-        path,
-    )
+        record = await records_api.read(record_url)
+        merge_metadata_at_path(
+            record.metadata,
+            metadata_json,
+            replace,
+            path,
+        )
 
-    record = await records_api.update(record)
+        record = await records_api.update(record)
 
-    with OutputWriter(
-        out.output,
-        out.output_format,
-        console,
-        partial(format_record_table, verbosity=out.verbosity),  # type: ignore # mypy does not understand this
-    ) as printer:
-        printer.output(record)
+        with OutputWriter(
+            out.output,
+            out.output_format,
+            console,
+            partial(format_record_table, verbosity=out.verbosity),  # type: ignore # mypy does not understand this
+        ) as printer:
+            printer.output(record)
 
 
 def merge_metadata_at_path(
@@ -229,7 +224,6 @@ class InPathMDSetter:
             self.parent._set_key_in_parent(self.parent_key, self.metadata)
 
     def _set_key_in_parent(self, key: str | int, value: Any) -> None:  # noqa: ANN401
-        assert self.parent_key is not None
         if isinstance(self.metadata, dict):
             assert isinstance(key, str)
             self.metadata[key] = value
@@ -238,5 +232,9 @@ class InPathMDSetter:
                 self.metadata[int(key)] = value
             else:
                 self.metadata.append(value)
-        if self.parent:
+        if self.parent and self.parent_key is not None:
             self.parent._set_key_in_parent(self.parent_key, self.metadata)
+
+    def __repr__(self) -> str:
+        """Get a string representation of the InPathMDSetter object."""
+        return f"InPathMDSetter(parent={self.parent}, parent_key='{self.parent_key}', metadata={self.metadata})"

@@ -549,6 +549,10 @@ def _get_search_params(
         else:
             return info.links.records, {}
 
+    if model not in info.models:
+        raise KeyError(
+            f"Model {model} not found in repository models. Available models: {', '.join(info.models.keys())}"
+        )
     if status == RecordStatus.DRAFT:
         draft_url = info.models[model].links.drafts
         if draft_url is None:

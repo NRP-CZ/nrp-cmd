@@ -192,7 +192,25 @@ def with_output(func: ClickCommand) -> ClickCommand:
     ) -> None:
         out = kwargs.pop("out", None) or Output()
         out.output = Path(output) if output else None
-        out.output_format = OutputFormat(output_format) if output_format else None
+        # if output_format is None, try to guess it from the output file extension
+        # and fallback to TABLE if output is not specified. Fallback to json if
+        # output file extension is not recognized.
+        if output_format is None:
+            if out.output is not None:
+                ext = out.output.suffix.lower()
+                match ext:
+                    case ".json":
+                        out.output_format = OutputFormat.JSON
+                    case ".jsonl":
+                        out.output_format = OutputFormat.JSON_LINES
+                    case ".yaml" | ".yml":
+                        out.output_format = OutputFormat.YAML
+                    case _:
+                        out.output_format = OutputFormat.JSON
+            else:
+                out.output_format = OutputFormat.TABLE
+        else:
+            out.output_format = OutputFormat(output_format)
         func(out=out, **kwargs)
 
     wrapper.__name__ += "_with_output"

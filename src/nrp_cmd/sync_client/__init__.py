@@ -20,7 +20,7 @@ def sync_client_classes() -> list[type[SyncRepositoryClient]]:
 
 
 def get_sync_client(
-    repository: str | URL | RepositoryConfig,
+    repository: str | URL | None | RepositoryConfig,
     refresh: bool = False,
     config: Config | None = None,
 ) -> SyncRepositoryClient:
@@ -37,6 +37,10 @@ def get_sync_client(
         config = Config()
     if not config:
         config = Config.from_file()
+    if repository is None:
+        repository = config.default_alias
+    if repository is None:
+        raise ValueError("No repository specified and no default repository set")
 
     if isinstance(repository, RepositoryConfig):
         config.add_repository(repository)

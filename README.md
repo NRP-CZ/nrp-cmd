@@ -22,3 +22,5 @@ nrp-cmd list records "metadata.title:abc"
 nrp-cmd get record @r
 nrp-cmd delete record @r
 ```
+
+For more details, check out the [User guide](https://nrp-cz.github.io/docs/userguide).
