@@ -30,7 +30,11 @@ def read_metadata(metadata: str) -> dict[str, Any] | list[dict[str, Any]]:
         metadata = sys.stdin.read()
 
     metadata = metadata.strip()
-    if not (metadata.startswith("{") or metadata.startswith("[")):
+    if (
+        metadata.startswith("/")
+        or metadata.startswith("./")
+        or metadata.startswith("../")
+    ):
         pth = Path(metadata)
         if pth.exists():
             # metadata is path on filesystem

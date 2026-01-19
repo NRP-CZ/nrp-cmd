@@ -39,7 +39,12 @@ from ..arguments import (
 @with_model
 @argument_with_help("record_id", type=str, help="Record ID")
 @argument_with_help("key", type=str, help="Key for the file")
-@argument_with_help("metadata", type=str, required=False, help="Metadata for the file")
+@argument_with_help(
+    "metadata",
+    type=str,
+    required=False,
+    help="Metadata for the file. Use ./path/to/file.json to read from file (start with dot or slash).",
+)
 @async_command
 async def update_file_metadata(
     *,

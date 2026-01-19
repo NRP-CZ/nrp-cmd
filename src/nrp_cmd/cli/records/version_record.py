@@ -16,6 +16,7 @@ from rich.console import Console
 
 from nrp_cmd.async_client.connection import limit_connections
 from nrp_cmd.cli.base import OutputFormat, OutputWriter, async_command
+from nrp_cmd.cli.base import set_variable as setvar
 from nrp_cmd.cli.records.record_file_name import create_output_file_name
 from nrp_cmd.cli.records.table_formatters import format_record_table
 from nrp_cmd.config import Config
@@ -32,6 +33,7 @@ from ..arguments import (
     with_output,
     with_record_ids,
     with_repository,
+    with_setvar,
     with_verbosity,
 )
 from ..repository_requests.table_formatter import format_request_table
@@ -41,6 +43,7 @@ from .get import read_record
 @with_config
 @with_repository
 @with_record_ids
+@with_setvar
 @with_output
 @with_verbosity
 @with_model(draft=False, published=False)
@@ -52,6 +55,7 @@ async def version_record(
     record_ids: list[str],
     model: Model,
     out: Output,
+    variable: str | None = None,
 ) -> None:
     """Create a new version of a record."""
     console = Console()
@@ -78,6 +82,8 @@ async def version_record(
         for r in results:
             if r is None:
                 raise click.Abort()
+    if variable:
+        setvar(config, variable, [str(r.links.self_) for r in results if r is not None])
 
 
 async def create_new_version_single_record(

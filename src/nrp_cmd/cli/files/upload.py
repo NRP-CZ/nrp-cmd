@@ -106,7 +106,12 @@ async def upload_files_to_record(
 @with_progress
 @argument_with_help("record_id", type=str, help="Record ID")
 @argument_with_help("file", type=str, help="File to upload")
-@argument_with_help("metadata", type=str, required=False, help="Metadata for the file")
+@argument_with_help(
+    "metadata",
+    type=str,
+    required=False,
+    help="Metadata for the file. Use ./path/to/file.json to read from file (start with dot or slash).",
+)
 @click.option("--key", type=str, help="Key for the file")
 @click.option("--transfer-type", type=str, help="Transfer type")
 @async_command

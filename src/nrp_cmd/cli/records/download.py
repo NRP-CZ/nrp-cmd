@@ -131,6 +131,8 @@ async def download_single_record(
         return False
 
     output_dir = output.parent if output and output.parent else Path.cwd()
+    output_dir = output_dir / "files"
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     assert repository_client
     file_client = repository_client.files

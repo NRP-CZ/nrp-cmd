@@ -14,6 +14,7 @@ import rich_click as click
 from rich.console import Console
 
 from nrp_cmd.async_client import AsyncRecordsClient, get_async_client
+from nrp_cmd.cli.arguments import OutputFormat
 from nrp_cmd.cli.base import OutputWriter, async_command
 from nrp_cmd.cli.base import set_variable as setvar
 from nrp_cmd.cli.records.metadata import read_metadata
@@ -36,11 +37,12 @@ from ..arguments import (
 )
 
 
-@argument_with_help("metadata", type=str, help="Metadata")
+@argument_with_help(
+    "metadata",
+    type=str,
+    help="Metadata. Use ./path/to/file.json to read from file (start with dot or slash).",
+)
 @argument_with_help("files", type=str, nargs=-1, help="List of files to upload")
-@click.option("--model", type=str, help="Model name")
-@click.option("--community", type=str, help="Community name")
-@click.option("--workflow", type=str, help="Workflow name")
 @click.option(
     "--metadata-only/--no-metadata-only",
     default=False,
@@ -69,13 +71,13 @@ async def create_record(
 
     Example:
     ```
-    nrp-cmd create record '{"title": "My record"}' --set-variable var
+    nrp-cmd create record '{"title": "My record"}' --set var
         creates the record and stores its id in the variable var
 
     nrp-cmd create record '{"title": "My record"}' file1.txt '{"title": "File 1"}' file2.txt '{"title": "File 2"}'
         creates the record and uploads two files to it
 
-    nrp-cmd create record '[{...},{...},{...}]' --set-variable var
+    nrp-cmd create record '[{...},{...},{...}]' --set var
         create multiple records and store their ids in the variable var
     ```
 
@@ -149,3 +151,15 @@ async def create_record(
             printer.multiple()
             for rec in records:
                 printer.output(rec)
+
+    if out.output_format == OutputFormat.TABLE:
+        if len(records) == 1:
+            console.print(
+                f"Created record: [link={records[0].links.self_html}]{records[0].links.self_html}[/link]"
+            )
+        else:
+            console.print("Created records:")
+            for rec in records:
+                console.print(
+                    f"- [link={rec.links.self_html}]{rec.links.self_html}[/link]"
+                )
