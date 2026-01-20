@@ -6,7 +6,7 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
-from nrp_cmd.async_client import get_async_client
+from nrp_cmd.async_client import get_async_client, limit_connections
 from nrp_cmd.async_client.base_client import AsyncRepositoryClient
 from nrp_cmd.async_client.streams import FileSink, MemorySink, MemorySource
 from nrp_cmd.config import Config
@@ -53,6 +53,7 @@ async def main() -> None:
         files = await list_files_from_draft(client, record)
         await read_file_from_draft(client, record, files)
         await download_files_from_draft(client, record, files)
+        await download_files_from_draft_in_parallel(client, record, files)
         await update_file_in_draft(client, record, files)
         await delete_file_from_draft(client, record, files)
 
@@ -422,6 +423,32 @@ async def download_files_from_draft(
     except Exception as e:
         print(f"✗ Memory download failed: {e}")
         raise
+
+
+async def download_files_from_draft_in_parallel(
+    client: AsyncRepositoryClient, record: Record, files: list[File]
+) -> None:
+    """Demonstrate parallel file download operations from draft record."""
+    print_section("10. FILES API - DOWNLOADING FILES IN PARALLEL")
+
+    if not files:
+        print("Skipping - no files available")
+        return
+
+    TMPDATA_DIR.mkdir(exist_ok=True)
+
+    print_subsection("Downloading files in parallel")
+
+    # Limit to 5 concurrent downloads
+    with limit_connections(5):
+        tasks = [
+            client.files.download(file_, FileSink(f"{TMPDATA_DIR}/{file_.key}"))
+            for file_ in files
+        ]
+        results = await asyncio.gather(*tasks)
+
+    for result in results:
+        print(f"✓ Downloaded file to: {result}")
 
 
 async def update_file_in_draft(
