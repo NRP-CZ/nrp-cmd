@@ -8,7 +8,7 @@ dependencies = [
     "click",
     "rich-click",
     "aiohttp[speedups]~=3.10.3",
-    "aiofiles>=24.1.0",
+    "aiofile~=3.9.0",
     "pyyaml~=6.0.2",
     "python-magic~=0.4.27",
     "humanize",

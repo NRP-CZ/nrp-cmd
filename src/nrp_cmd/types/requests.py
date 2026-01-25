@@ -149,9 +149,7 @@ def restore_hierarchy(
 ) -> Any:  # noqa: ANN401
     """Restore the hierarchy of the request payload."""
 
-    def _parse_colon_hierarchy(
-        obj: dict[str, Any], key: str, value: Any
-    ) -> None:  # noqa: ANN401
+    def _parse_colon_hierarchy(obj: dict[str, Any], key: str, value: Any) -> None:  # noqa: ANN401
         parts = key.split(":")
         for part in parts[:-1]:
             obj = obj.setdefault(part, {})

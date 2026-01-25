@@ -12,52 +12,68 @@ import base64
 import hashlib
 import os
 from pathlib import Path
-from typing import Literal, overload
+from typing import Literal, cast, overload
 
-import aiofiles
-import aiofiles.os
+import aiofile
 
 from .base import InputStream, OutputStream
 
 
 class FileInputStream(InputStream):
-    async def seek(self, offset: int, whence: int = os.SEEK_SET) -> None:
+    def seek(self, offset: int, whence: int = os.SEEK_SET) -> None:
         """Change the stream position."""
         ...
-        
+
+
 class FileOutputStream(OutputStream):
-    async def seek(self, offset: int, whence: int = os.SEEK_SET) -> None:
+    def seek(self, offset: int, whence: int = os.SEEK_SET) -> None:
         """Change the stream position."""
         ...
 
-    async def truncate(self, size: int) -> None:
-        ...
-        
-@overload
-async def open_file(_fpath: Path, mode: Literal["rb"]) -> FileInputStream:
-    ...
+    def truncate(self, size: int) -> None: ...
+
 
 @overload
-async def open_file(_fpath: Path, mode: Literal["wb"] | Literal["r+b"]) -> FileOutputStream:
-    ...
+async def open_file(_fpath: Path, mode: Literal["rb"]) -> FileInputStream: ...
 
-async def open_file(_fpath: Path, mode: Literal["rb"] | Literal["wb"] | Literal["r+b"]) -> FileInputStream | FileOutputStream:
+
+@overload
+async def open_file(
+    _fpath: Path, mode: Literal["wb"] | Literal["r+b"]
+) -> FileOutputStream: ...
+
+
+async def open_file(
+    _fpath: Path, mode: Literal["rb"] | Literal["wb"] | Literal["r+b"]
+) -> FileInputStream | FileOutputStream:
     """Open a file for reading or writing."""
-    r: FileInputStream | FileOutputStream = await aiofiles.open(_fpath, mode=mode)  # noqa # type: ignore
+    r: FileInputStream | FileOutputStream = cast(
+        "FileInputStream | FileOutputStream",
+        await aiofile.async_open(_fpath, mode=mode),
+    )
     return r
 
 
 async def file_stat(_fpath: Path) -> os.stat_result:
     """Get file statistics."""
-    return await aiofiles.os.stat(_fpath)
+    # aiofile does not provide async stat, so we run a synchronous one
+    return os.stat(_fpath)
+
+
+# limit checksum calculations to avoid CPU overload
+# using number of CPUs - 1
+checksum_limiter = asyncio.Semaphore(min(1, (os.cpu_count() or 1) - 1))
 
 
 async def checksum_file(
     file_name: Path, algo: str = "md5", offset: int = 0, count: int | None = None
 ) -> str:
     """Calculate the checksum of the file."""
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, _checksum, file_name, algo, offset, count)
+    async with checksum_limiter:
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(
+            None, _checksum, file_name, algo, offset, count
+        )
 
 
 def _checksum(file_name: Path, algo: str, offset: int, count: int | None) -> str:

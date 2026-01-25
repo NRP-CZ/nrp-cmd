@@ -20,4 +20,3 @@ class BearerTokenForHost:
         if not isinstance(self.host_url, URL):
             self.host_url = URL(self.host_url)
         assert self.token is not None, "Token must be provided"
-

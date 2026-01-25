@@ -62,8 +62,10 @@ class RepositoryClientError(RepositoryJSONError):
     This is usually not found, unauthorized, malformed request and similar.
     """
 
+
 class DoesNotExistError(RepositoryClientError):
     pass
+
 
 class RepositoryRetryError(Exception):
     def __init__(self, after_seconds: float | None = None):
@@ -80,7 +82,7 @@ class StructureError(Exception):
 
 def is_instance_of_exceptions(
     exception: Any, exceptions: tuple[type[Exception], ...] | type[Exception]
-) -> bool:  
+) -> bool:
     # Check if the current exception is an instance of T
     if isinstance(exception, exceptions):
         return True

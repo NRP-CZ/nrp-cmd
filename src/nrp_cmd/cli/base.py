@@ -181,9 +181,9 @@ class OutputWriter:
         and printed as a table. Otherwise, the data will be formatted according to the output_format
         and printed.
         """
-        assert (
-            self._stream is not None
-        ), "Output stream is not initialized, please use the context manager."
+        assert self._stream is not None, (
+            "Output stream is not initialized, please use the context manager."
+        )
 
         if self._multiple and self._output_encountered:
             match self.output_format:
@@ -223,16 +223,16 @@ class OutputWriter:
         """Set the output to be multiple records."""
         self._multiple = True
         if self.output_format == OutputFormat.JSON:
-            assert (
-                self._stream is not None
-            ), "Output stream is not initialized, please use the context manager."
+            assert self._stream is not None, (
+                "Output stream is not initialized, please use the context manager."
+            )
             self._print("[")
 
     def _print(self, data: Any = None, end: str = "\n") -> None:  # noqa: ANN401
         """Print the data to the output stream."""
-        assert (
-            self._stream is not None
-        ), "Output stream is not initialized, please use the context manager."
+        assert self._stream is not None, (
+            "Output stream is not initialized, please use the context manager."
+        )
         if hasattr(self._stream, "print"):
             self._stream.print(data, end=end)
         else:

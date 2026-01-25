@@ -68,9 +68,8 @@ class RESTHits[T: RESTObject](Model):
 
     hits: list[T]
     """List of records"""
-    
-    total: int    
 
+    total: int
 
     def __len__(self) -> int:
         """Return the number of records on the current page."""
@@ -79,10 +78,11 @@ class RESTHits[T: RESTObject](Model):
     def __iter__(self) -> Iterator[T]:
         """Iterate over the records on the current page."""
         return iter(self.hits)
-    
+
     def __getitem__(self, index: int) -> T:
         """Return the record at the given index."""
         return self.hits[index]
+
 
 # Note: extending classes need to add this to their decorator
 # @extend_serialization(Omit("_etag", from_unstructure=True), allow_extra_data=True)
@@ -93,7 +93,7 @@ class RESTList[T: RESTObject](RESTObject):
     links: RESTPaginationLinks = field()
     """Links to the current page, next and previous pages"""
 
-    hits: RESTHits[T] = field(alias='hits')
+    hits: RESTHits[T] = field(alias="hits")
     """List of records on the current page"""
 
     @property
@@ -117,6 +117,7 @@ class RESTList[T: RESTObject](RESTObject):
         """Check if there is a previous page."""
         return bool(self.links.prev)
 
+
 type RecordIdType = str | int
 
 
@@ -133,6 +134,7 @@ def is_record_id(t: Any) -> bool:
 
 converter.register_structure_hook_func(is_record_id, lambda v, ty: v)
 converter.register_unstructure_hook_func(is_record_id, lambda v: v)
+
 
 @extend_serialization(Omit("_etag", from_unstructure=True), allow_extra_data=True)
 @define(kw_only=True)

@@ -321,9 +321,9 @@ class SyncConnection:
         :raises RepositoryServerError: if the request fails due to server error (HTTP 5xx)
         :raises RepositoryCommunicationError: if the request fails due to network
         """
-        assert (
-            json is not None or data is not None
-        ), "Either json or data must be provided"
+        assert json is not None or data is not None, (
+            "Either json or data must be provided"
+        )
 
         if result_class:
             return self._retried(
@@ -371,9 +371,9 @@ class SyncConnection:
         :raises RepositoryServerError: if the request fails due to server error (HTTP 5xx)
         :raises RepositoryCommunicationError: if the request fails due to network
         """
-        assert (
-            json is not None or data is not None
-        ), "Either json or data must be provided"
+        assert json is not None or data is not None, (
+            "Either json or data must be provided"
+        )
 
         return self._retried(
             "PUT",

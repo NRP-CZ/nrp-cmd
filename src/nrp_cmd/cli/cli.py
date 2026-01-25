@@ -196,7 +196,9 @@ click.rich_click.OPTION_GROUPS = {
 
 class CommandWithAttributeHelp(click.RichCommand):
     def format_help(
-        self, ctx: click.RichContext, formatter: RichHelpFormatter  # type: ignore[override]
+        self,
+        ctx: click.RichContext,
+        formatter: RichHelpFormatter,  # type: ignore[override]
     ) -> None:
         self.format_usage(ctx, formatter)
         self.format_help_text(ctx, formatter)

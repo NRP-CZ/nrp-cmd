@@ -135,7 +135,7 @@ class ProgressSink(DataSink):
     @property
     def state(self) -> SinkState:
         return self._sink.state
-    
+
     def update_progress(self, count: int) -> None:
         """Update the progress bar."""
         self._input_progress += count
@@ -144,13 +144,13 @@ class ProgressSink(DataSink):
 
 class ProgressOutputStream(OutputStream):
     """Output stream reporting progress."""
-    
+
     def __init__(self, stream: OutputStream, sink: ProgressSink) -> None:
         """Initialize the output stream."""
         super().__init__()
         self._stream = stream
         self._sink = sink
-    
+
     @override
     def write(self, data: bytes) -> int:
         ret = self._stream.write(data)

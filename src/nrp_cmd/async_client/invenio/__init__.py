@@ -1,3 +1,3 @@
 from .client import AsyncInvenioRepositoryClient
 
-__all__ = ("AsyncInvenioRepositoryClient", )
+__all__ = ("AsyncInvenioRepositoryClient",)

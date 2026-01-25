@@ -51,7 +51,6 @@ communication_log_response = logging.getLogger("nrp_cmd.communication.response")
 
 
 class try_until_success:
-
     def __init__(
         self,
         attempts: int,
@@ -325,9 +324,9 @@ class AsyncConnection:
         :raises RepositoryServerError: if the request fails due to server error (HTTP 5xx)
         :raises RepositoryCommunicationError: if the request fails due to network
         """
-        assert (
-            json is not None or data is not None
-        ), "Either json or data must be provided"
+        assert json is not None or data is not None, (
+            "Either json or data must be provided"
+        )
 
         with current_progress.short_task():
             return await self._retried(
@@ -365,9 +364,9 @@ class AsyncConnection:
         :raises RepositoryServerError: if the request fails due to server error (HTTP 5xx)
         :raises RepositoryCommunicationError: if the request fails due to network
         """
-        assert (
-            json is not None or data is not None
-        ), "Either json or data must be provided"
+        assert json is not None or data is not None, (
+            "Either json or data must be provided"
+        )
 
         with current_progress.short_task():
             return await self._retried(
@@ -676,7 +675,6 @@ class AsyncConnection:
         adjusted_part_size, adjusted_parts = adjust_download_multipart_params(
             size, parts, part_size
         )
-
         async with asyncio.TaskGroup() as tg:
             for i in range(adjusted_parts):
                 start = i * adjusted_part_size

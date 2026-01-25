@@ -18,7 +18,7 @@ class InputStream(Protocol):
     def read(self, n: int = -1) -> bytes:
         """Read up to n bytes from the stream."""
         ...
-        
+
     def __iter__(self) -> Iterator[bytes]:
         """Return an async iterator returning chunks of the stream."""
         ...
@@ -36,11 +36,9 @@ class InputStream(Protocol):
 class OutputStream(Protocol):
     """Protocol for data writers."""
 
-    def write(self, data: bytes) -> int:
-        ...
+    def write(self, data: bytes) -> int: ...
 
-    def close(self) -> None:
-        ...
+    def close(self) -> None: ...
 
 
 class SinkState(StrEnum):

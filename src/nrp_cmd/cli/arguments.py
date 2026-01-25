@@ -105,7 +105,6 @@ def with_verbosity(
     default_level = arg if isinstance(arg, VerboseLevel) else VerboseLevel.NORMAL
 
     def decorator(func: ClickCommand) -> ClickCommand:
-
         @click.option("--verbose", "-v", count=True, help="Increase verbosity")
         @click.option("--quiet", "-q", count=True, help="Decrease verbosity")
         @click.option("--log-url", is_flag=True, help="Log urls")
@@ -278,7 +277,6 @@ def with_resolved_vars(argument_name: str) -> Callable[[ClickCommand], ClickComm
     """Resolve variables in the command arguments."""
 
     def decorator(func: ClickCommand) -> ClickCommand:
-
         @functools.wraps(func)
         def wrapper(
             **kwargs: Any,
@@ -354,7 +352,6 @@ def with_model(
     """Add model options to a command."""
 
     def decorator(func: ClickCommand) -> ClickCommand:
-
         @functools.wraps(func)
         def wrapper(
             *,
@@ -419,7 +416,6 @@ def _print_error(e: Exception) -> None:
         for e in e.exceptions:
             _print_error(e)
     elif isinstance(e, RepositoryJSONError):
-
         if "message" in e.json:
             click.secho(
                 f"Client error: {e.json['message']} ({e.json.get('status', 'unknown status')})",

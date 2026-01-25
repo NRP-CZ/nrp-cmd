@@ -151,7 +151,7 @@ async def upload_files(
         assert isinstance(metadata_json, dict), "Metadata must be a dictionary."
         if key:
             metadata_json["key"] = key
-        with show_progress(total=1, quiet=not out.progress):
+        with show_progress(total=1, quiet=not out.progress, unit="bytes"):
             if not transfer_type:
                 assert repository_config.info, (
                     "Do not have info for this repository to get transfer type, "

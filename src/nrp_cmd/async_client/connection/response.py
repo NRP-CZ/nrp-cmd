@@ -50,13 +50,13 @@ class RepositoryResponse(ClientResponse):
                 if retry_after:
                     try:
                         after_seconds = float(retry_after)
-                    except:
+                    except Exception:
                         try:
                             after_datetime = parsedate_to_datetime(retry_after)
                             after_seconds = (
                                 datetime.now() - after_datetime
                             ).total_seconds()
-                        except:
+                        except Exception:
                             pass
                 raise RepositoryRetryError(after_seconds)
 

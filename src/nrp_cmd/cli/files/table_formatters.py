@@ -28,7 +28,11 @@ def format_files_table(
         yield "\n".join(sorted([file.key for file in data]))
     elif verbosity == VerboseLevel.VERBOSE:
         for file in sorted(data, key=lambda f: f.key):
-            table = Table(f"File {file.key} @ record {record.links.self}", box=box.SIMPLE, title_justify="left")
+            table = Table(
+                f"File {file.key} @ record {record.links.self}",
+                box=box.SIMPLE,
+                title_justify="left",
+            )
             table.add_row("Key", file.key)
             table.add_row("Status", file.status)
             table.add_row("Mimetype", file.mimetype)

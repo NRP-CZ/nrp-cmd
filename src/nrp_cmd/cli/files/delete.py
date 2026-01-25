@@ -7,7 +7,6 @@
 #
 """Commandline client for updating metadata of files."""
 
-
 from rich.console import Console
 
 from nrp_cmd.async_client import limit_connections

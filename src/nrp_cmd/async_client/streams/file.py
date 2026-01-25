@@ -35,7 +35,8 @@ class FileSink(DataSink):
     async def allocate(self, size: int) -> None:
         """Allocate space for the sink."""
         self._file = await open_file(self._fpath, mode="wb")
-        await self._file.truncate(size)
+        # need to get to the AIOFile to truncate, as the wrapper does not provide it
+        self._file.file.truncate(size)
         self._state = SinkState.ALLOCATED
 
     @override
@@ -45,7 +46,7 @@ class FileSink(DataSink):
             raise RuntimeError("Sink not allocated")
 
         chunk = await open_file(self._fpath, mode="r+b")
-        await chunk.seek(offset)
+        chunk.seek(offset)
         return chunk
 
     @override
@@ -87,7 +88,7 @@ class FileSource(DataSource):
     async def open(self, offset: int = 0, count: int | None = None) -> InputStream:  # type: ignore
         """Open the file for reading."""
         ret = await open_file(self._file_name, mode="rb")
-        await ret.seek(offset)
+        ret.seek(offset)
         if not count:
             return BoundedStream(ret, await self.size())
         else:

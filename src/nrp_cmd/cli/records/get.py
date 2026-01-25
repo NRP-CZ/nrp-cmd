@@ -165,9 +165,7 @@ async def read_record(
     final_record_id, repository_config = await get_repository_from_record_id(
         connection, record_id, config, repository
     )
-    # set it temporarily to the config
-    config.add_repository(repository_config)
-    client = await get_async_client(repository, config=config)
+    client = await get_async_client(repository_config, config=config)
     records_api: AsyncRecordsClient = client.records
     if model is not None:
         records_api = records_api.with_model(model)

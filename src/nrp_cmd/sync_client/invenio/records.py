@@ -125,9 +125,9 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
             )
             data["parent"] = parent
             if community:
-                assert (
-                    "community" not in parent
-                ), f"Community already in parent: {parent}"
+                assert "community" not in parent, (
+                    f"Community already in parent: {parent}"
+                )
                 parent["communities"] = {"default": community}
             if workflow:
                 assert "workflow" not in parent, f"Workflow already in data: {parent}"
@@ -555,6 +555,10 @@ def _get_search_params(
         else:
             return info.links.records, {}
 
+    if model not in info.models:
+        raise KeyError(
+            f"Model {model} not found in repository models. Available models: {', '.join(info.models.keys())}"
+        )
     if status == RecordStatus.DRAFT:
         draft_url = info.models[model].links.drafts
         if draft_url is None:

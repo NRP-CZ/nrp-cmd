@@ -102,7 +102,6 @@ class FilesList(RESTObject):
 
 
 class FilesAPIList(list):
-
     def as_dataframe(self, *keys: str):
         """Convert the list of files to a pandas DataFrame."""
         import pandas as pd

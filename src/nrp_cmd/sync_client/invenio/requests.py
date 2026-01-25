@@ -78,9 +78,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         if len(args) == 2:
             type_ = cast("RequestType", args[0])
             payload = cast("dict[str, Any]", args[1])
-            assert isinstance(
-                type_, RequestType
-            ), "Invalid argument - expecting a request type"
+            assert isinstance(type_, RequestType), (
+                "Invalid argument - expecting a request type"
+            )
         elif len(args) == 3:
             topic = cast("Record | URL", args[0])
             type_name = cast("str", args[1])

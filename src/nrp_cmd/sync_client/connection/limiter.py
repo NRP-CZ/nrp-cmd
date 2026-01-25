@@ -49,9 +49,11 @@ class Limiter(Semaphore):
         with self:
             yield
 
+
 current_limiter_var = contextvars.ContextVar[Limiter](
     "current_limiter", default=Limiter(10)
 )
+
 
 class CurrentLimiterProxy:
     """A class to manage the current limiter."""
@@ -83,6 +85,7 @@ class CurrentLimiterProxy:
 
 
 current_limiter = CurrentLimiterProxy()
+
 
 @contextlib.contextmanager
 def limit_connections(
