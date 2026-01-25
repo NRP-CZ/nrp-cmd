@@ -6,6 +6,7 @@
 # details.
 #
 """Commandline client for downloading files."""
+
 # TODO: test !!!!
 import sys
 from asyncio import Task, TaskGroup
@@ -61,7 +62,7 @@ async def download_files(
     output = output or Path.cwd()
     console = Console()
 
-    with show_progress(total=1, quiet=not out.progress):
+    with show_progress(total=1, quiet=not out.progress, unit="bytes"):
         await download_single_record_files(
             console,
             record_id,
