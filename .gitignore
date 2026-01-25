@@ -74,3 +74,5 @@ docker/.env
 
 /.nrp
 /tests/test-repository/nrp-installer.sh
+
+uv.lock
