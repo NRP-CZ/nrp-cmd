@@ -7,7 +7,6 @@
 #
 """Bearer authentication support for aiohttp."""
 
-
 from aiohttp import BasicAuth, ClientRequest, hdrs
 
 from ...types.auth import BearerTokenForHost

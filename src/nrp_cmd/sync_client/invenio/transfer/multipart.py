@@ -52,7 +52,7 @@ class MultipartTransfer(Transfer):
         )
         transfer_md["parts"] = parts
         transfer_md["part_size"] = part_size
-        
+
     def upload(
         self,
         connection: SyncConnection,
@@ -93,4 +93,3 @@ class MultipartTransfer(Transfer):
     def get_commit_payload(self, initialized_upload: File) -> dict:
         """Get payload for finalization of the successful upload."""
         return {}
-

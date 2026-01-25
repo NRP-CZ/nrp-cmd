@@ -18,6 +18,16 @@ from .records import (
 )
 
 __all__ = (
-    "Model", "RepositoryInfo", "RepositoryInfoLinks", "ModelInfo", "ModelInfoContentType", "ModelInfoLinks",
-    "Record", "RecordLinks", "FilesEnabled", "ParentRecord", "RecordList", "RecordId"
+    "Model",
+    "RepositoryInfo",
+    "RepositoryInfoLinks",
+    "ModelInfo",
+    "ModelInfoContentType",
+    "ModelInfoLinks",
+    "Record",
+    "RecordLinks",
+    "FilesEnabled",
+    "ParentRecord",
+    "RecordList",
+    "RecordId",
 )

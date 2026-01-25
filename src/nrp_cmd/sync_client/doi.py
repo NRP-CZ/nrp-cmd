@@ -18,4 +18,3 @@ def resolve_doi(connection: SyncConnection, doi: str, config: Config) -> str:
     url = URL(f"{datacite_url}/dois/{doi}")
     data = connection.get(url=url, result_class=dict)
     return data["data"]["attributes"]["url"]
-

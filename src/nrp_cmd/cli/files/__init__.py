@@ -13,5 +13,10 @@ from .list import list_files
 from .update import update_file_metadata
 from .upload import upload_files
 
-__all__ = ("list_files", "download_files", "upload_files", "update_file_metadata",
-           "delete_file")
+__all__ = (
+    "list_files",
+    "download_files",
+    "upload_files",
+    "update_file_metadata",
+    "delete_file",
+)

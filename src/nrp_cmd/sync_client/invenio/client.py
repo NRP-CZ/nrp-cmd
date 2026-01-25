@@ -127,9 +127,7 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
                 result_class=list[ModelInfo],
             )
 
-            info.models = {
-                model.type: model for model in models
-            }
+            info.models = {model.type: model for model in models}
 
         except* (RepositoryClientError, RepositoryCommunicationError) as exc:
             if is_instance_of_exceptions(exc, StructureError):
@@ -145,7 +143,9 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
     @override
     def records(self) -> SyncInvenioRecordsClient:
         """Return client for accessing records."""
-        assert self._config.info, "Repository info is not available, can not create records client."
+        assert self._config.info, (
+            "Repository info is not available, can not create records client."
+        )
         return SyncInvenioRecordsClient(
             self._connection, self._config.info, self.requests
         )
@@ -154,16 +154,18 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
     @override
     def files(self) -> SyncInvenioFilesClient:
         """Return client for accessing records."""
-        assert self._config.info, "Repository info is not available, can not create records client."
+        assert self._config.info, (
+            "Repository info is not available, can not create records client."
+        )
         return SyncInvenioFilesClient(self._connection, self._config.info)
 
     @property
     @override
     def requests(self) -> SyncInvenioRequestsClient:
         """Return client for accessing requests."""
-        assert (
-            self._config.info
-        ), "Repository info is not available, can not create requests client."
+        assert self._config.info, (
+            "Repository info is not available, can not create requests client."
+        )
         return SyncInvenioRequestsClient(self._connection, self._config.info)
 
     @property
@@ -171,4 +173,3 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
     def config(self) -> RepositoryConfig:
         """Return the configuration of the repository."""
         return self._config
-

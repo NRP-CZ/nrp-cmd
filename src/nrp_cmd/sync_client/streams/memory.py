@@ -6,7 +6,6 @@
 
 """Memory sink and source."""
 
-
 import base64
 import hashlib
 

@@ -10,4 +10,3 @@ from .base import Transfer
 from .registry import transfer_registry
 
 __all__ = ("Transfer", "transfer_registry")
-

@@ -60,6 +60,7 @@ class NullRemovingConverter(Converter):
         except Exception as e:
             raise StructureError(str(e)) from e
 
+
 converter = NullRemovingConverter()
 
 
@@ -348,6 +349,7 @@ def deserialize_rest_response[T](
         return ret
     except Exception as e:
         import traceback
+
         traceback.print_exc()
         log.error("Error validating %s with %s", json_payload, result_class)
         raise e

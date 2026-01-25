@@ -7,7 +7,6 @@
 #
 """Commandline clients for working with variables."""
 
-
 from typing import Any
 
 from rich import box

@@ -343,7 +343,7 @@ def output_repository_info_table(
     """Output the information about a repository formatted as a table."""
     repo = data
     table = Table(
-        title=f"Repository '{repo["alias"]}'",
+        title=f"Repository '{repo['alias']}'",
         box=box.SIMPLE,
         show_header=False,
         title_justify="left",
@@ -390,7 +390,7 @@ def output_repository_info_table(
                 model_info["content_types"], key=lambda x: x["content_type"]
             ):
                 table.add_row("Content-Type", ct["content_type"])
-                table.add_row("", f'{ct["name"]}\n{ct["description"]}')
+                table.add_row("", f"{ct['name']}\n{ct['description']}")
                 table.add_row("    Schema", str(ct["schema"]))
                 table.add_row("    Can Export", "✓" if ct["can_export"] else "")
                 table.add_row("    Can Deposit", "✓" if ct["can_deposit"] else "")

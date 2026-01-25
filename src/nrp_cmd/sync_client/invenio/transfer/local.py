@@ -5,6 +5,7 @@
 
 
 """Local transfer."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -67,4 +68,3 @@ class LocalTransfer(Transfer):
     def get_commit_payload(self, initialized_upload: File) -> dict:
         """Get payload for finalization of the successful upload."""
         return {}
-

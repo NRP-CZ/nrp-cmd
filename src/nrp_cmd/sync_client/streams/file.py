@@ -122,4 +122,3 @@ class FileSource(DataSource):
     def supported_checksums(self) -> list[str]:
         """Return a list of supported checksum algorithms."""
         return list(hashlib.algorithms_available)
-

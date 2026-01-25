@@ -561,4 +561,3 @@ class SyncRepositoryClient(Protocol):
     def config(self) -> RepositoryConfig:
         """Return the configuration of the repository."""
         ...
-

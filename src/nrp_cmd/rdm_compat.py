@@ -39,7 +39,7 @@ def _generate_rdm_vocabulary(
                 can_deposit=False,
             )
         ],
-        metadata=False
+        metadata=False,
     )
 
 

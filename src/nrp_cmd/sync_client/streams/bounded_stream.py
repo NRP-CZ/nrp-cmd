@@ -44,14 +44,12 @@ class BoundedStream(InputStream):
     def __getattr__(self, name: str) -> Any:
         """Delegate all other calls to the underlying stream."""
         return getattr(self._stream, name)
-    
+
     def __iter__(self):
-         return self
-    
+        return self
+
     def __next__(self) -> bytes:
         ret = self.read(16384)
         if not ret:
             raise StopIteration()
         return ret
-    
-    

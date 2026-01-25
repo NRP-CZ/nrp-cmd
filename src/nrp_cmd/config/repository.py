@@ -7,7 +7,6 @@
 #
 """Configuration of the repository and repository access classes."""
 
-
 from attrs import define
 from yarl import URL
 

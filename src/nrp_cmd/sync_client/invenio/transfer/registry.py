@@ -5,6 +5,7 @@
 
 
 """Registry of known transfer types."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -13,7 +14,6 @@ from ....types.files import TRANSFER_TYPE_LOCAL, TRANSFER_TYPE_MULTIPART
 
 if TYPE_CHECKING:
     from .base import Transfer
-
 
 
 class TransferRegistry:
@@ -51,4 +51,3 @@ from .multipart import MultipartTransfer  # noqa
 
 transfer_registry.register(TRANSFER_TYPE_LOCAL, LocalTransfer)
 transfer_registry.register(TRANSFER_TYPE_MULTIPART, MultipartTransfer)
-

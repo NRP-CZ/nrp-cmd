@@ -7,7 +7,6 @@
 #
 """Memory sink and source."""
 
-
 import asyncio
 import base64
 import hashlib

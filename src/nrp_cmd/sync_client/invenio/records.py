@@ -125,9 +125,9 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
             )
             data["parent"] = parent
             if community:
-                assert (
-                    "community" not in parent
-                ), f"Community already in parent: {parent}"
+                assert "community" not in parent, (
+                    f"Community already in parent: {parent}"
+                )
                 parent["communities"] = {"default": community}
             if workflow:
                 assert "workflow" not in parent, f"Workflow already in data: {parent}"
@@ -563,4 +563,3 @@ def _get_search_params(
             "is_published": "false",
         }
     return info.models[model].links.records, {}
-

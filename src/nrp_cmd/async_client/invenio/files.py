@@ -51,13 +51,13 @@ class AsyncInvenioFilesClient(AsyncFilesClient):
             assert isinstance(args[0], URL), "Invalid argument - expecting a file URL"
             file_url: URL = args[0]
         elif len(args) == 2:
-            assert isinstance(
-                args[0], Record
-            ), "Invalid argument - expecting a record as the first argument"
+            assert isinstance(args[0], Record), (
+                "Invalid argument - expecting a record as the first argument"
+            )
             record_or_url: Record | URL = args[0]
-            assert isinstance(
-                args[1], str
-            ), "Invalid argument - expecting a string key as the second argument"
+            assert isinstance(args[1], str), (
+                "Invalid argument - expecting a string key as the second argument"
+            )
             key: str = args[1]
 
             files_url = self._get_files_url(record_or_url)
@@ -102,7 +102,11 @@ class AsyncInvenioFilesClient(AsyncFilesClient):
 
         # 1. initialize the upload
         transfer_md: dict[str, Any] = {}
-        transfer_payload: dict[str, Any] = {"key": key, "metadata": metadata, "transfer": transfer_md}
+        transfer_payload: dict[str, Any] = {
+            "key": key,
+            "metadata": metadata,
+            "transfer": transfer_md,
+        }
         if transfer_type != TRANSFER_TYPE_LOCAL:
             transfer_md["type"] = transfer_type
 
@@ -197,26 +201,26 @@ class AsyncInvenioFilesClient(AsyncFilesClient):
         """
         sink: DataSink
         if len(args) == 2:
-            assert isinstance(
-                args[0], (File, URL)
-            ), "Invalid arguments - expecting a File or URL as the first argument"
+            assert isinstance(args[0], (File, URL)), (
+                "Invalid arguments - expecting a File or URL as the first argument"
+            )
             file_or_url: File | URL = args[0]
-            assert isinstance(
-                args[1], DataSink
-            ), "Invalid arguments - expecting a DataSink as the second argument"
+            assert isinstance(args[1], DataSink), (
+                "Invalid arguments - expecting a DataSink as the second argument"
+            )
             sink = args[1]
         elif len(args) == 3:
-            assert isinstance(
-                args[0], Record
-            ), "Invalid arguments - expecting a Record as the first argument when passing file key"
+            assert isinstance(args[0], Record), (
+                "Invalid arguments - expecting a Record as the first argument when passing file key"
+            )
             record: Record = args[0]
-            assert isinstance(
-                args[1], str
-            ), "Invalid arguments - expecting a string key as the second argument"
+            assert isinstance(args[1], str), (
+                "Invalid arguments - expecting a string key as the second argument"
+            )
             key: str = args[1]
-            assert isinstance(
-                args[2], DataSink
-            ), "Invalid arguments - expecting a DataSink as the third argument"
+            assert isinstance(args[2], DataSink), (
+                "Invalid arguments - expecting a DataSink as the third argument"
+            )
             sink = args[2]
             file_or_url = await self.read(record, key)
         else:
@@ -244,7 +248,9 @@ class AsyncInvenioFilesClient(AsyncFilesClient):
         """Get the files url from the record or url."""
         if isinstance(record_or_url, Record):
             if not record_or_url.links.files:
-                raise ValueError("The record does not have a files link, probably files are not enabled on it")
+                raise ValueError(
+                    "The record does not have a files link, probably files are not enabled on it"
+                )
             return record_or_url.links.files
         return record_or_url
 

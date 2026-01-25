@@ -86,7 +86,7 @@ async def update_file_metadata(
 
         if not file:
             raise ValueError(
-                f"File with key {key} not found in record {record_id}: {", ".join([f.key for f in files])}"
+                f"File with key {key} not found in record {record_id}: {', '.join([f.key for f in files])}"
             )
 
         file.metadata = metadata_json

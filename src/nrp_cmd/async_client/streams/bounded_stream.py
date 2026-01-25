@@ -45,14 +45,12 @@ class BoundedStream(InputStream):
     def __getattr__(self, name: str) -> Any:
         """Delegate all other calls to the underlying stream."""
         return getattr(self._stream, name)
-    
+
     def __aiter__(self):
-         return self
-    
+        return self
+
     async def __anext__(self) -> bytes:
         ret = await self.read(16384)
         if not ret:
             raise StopAsyncIteration()
         return ret
-    
-    

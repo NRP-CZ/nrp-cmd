@@ -7,7 +7,6 @@
 #
 """Command line interface for getting records."""
 
-
 from rich.console import Console
 
 from nrp_cmd.async_client.connection import limit_connections

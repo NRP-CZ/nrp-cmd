@@ -7,7 +7,6 @@
 #
 """Repository info endpoint response types."""
 
-
 from attrs import define, field
 from yarl import URL
 

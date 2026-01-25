@@ -5,6 +5,7 @@
 
 
 """Transfer protocols."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol
@@ -61,4 +62,3 @@ class Transfer(Protocol):
         :return:                        metadata of the upload as returned from the repository
         """
         ...
-

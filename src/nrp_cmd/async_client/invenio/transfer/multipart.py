@@ -55,7 +55,7 @@ class MultipartTransfer(Transfer):
         )
         transfer_md["parts"] = parts
         transfer_md["part_size"] = part_size
-        
+
     async def upload(
         self,
         connection: AsyncConnection,

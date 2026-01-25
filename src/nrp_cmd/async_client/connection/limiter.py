@@ -72,7 +72,9 @@ class CurrentLimiterProxy:
         """Reset the current limiter."""
         current_limiter_var.set(None)
 
+
 current_limiter = CurrentLimiterProxy()
+
 
 @contextlib.contextmanager
 def limit_connections(

@@ -20,9 +20,7 @@ from nrp_cmd.types.requests import Request, RequestType
 
 def format_request_table(data: Request, **kwargs: Any) -> Generator[Table, None, None]:
     """Format request table both for requests and request types."""
-    table = Table(
-        title=f"Request {data.id}", box=box.SIMPLE, title_justify="left"
-    )
+    table = Table(title=f"Request {data.id}", box=box.SIMPLE, title_justify="left")
     write_table_row(table, "status", data.status)
     write_table_row(table, "type", data.type)
     write_table_row(table, "created", data.created)
@@ -32,11 +30,21 @@ def format_request_table(data: Request, **kwargs: Any) -> Generator[Table, None,
     write_table_row(table, "sender", data.created_by)
     if data.payload:
         if data.payload.draft_record:
-            write_table_row(table, "draft record", data.payload.draft_record.links.self_)
-            write_table_row(table, "draft record html", data.payload.draft_record.links.self_html)
+            write_table_row(
+                table, "draft record", data.payload.draft_record.links.self_
+            )
+            write_table_row(
+                table, "draft record html", data.payload.draft_record.links.self_html
+            )
         if data.payload.published_record:
-            write_table_row(table, "published record", data.payload.published_record.links.self_)
-            write_table_row(table, "published record html", data.payload.published_record.links.self_html)
+            write_table_row(
+                table, "published record", data.payload.published_record.links.self_
+            )
+            write_table_row(
+                table,
+                "published record html",
+                data.payload.published_record.links.self_html,
+            )
         if len(data.payload._extra_data or {}) > 0:
             write_table_row(table, "payload", data.payload._extra_data)
     write_table_row(table, "links", "")
