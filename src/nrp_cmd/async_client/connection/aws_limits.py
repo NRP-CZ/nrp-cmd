@@ -1,18 +1,20 @@
 import math
 
 # Constants
-MAX_UPLOAD_OBJECT_SIZE = 5 * 1024**4           # 5 TiB
+MAX_UPLOAD_OBJECT_SIZE = 5 * 1024**4  # 5 TiB
 MAX_UPLOAD_PARTS = 10_000
 MIN_UPLOAD_PART_SIZE = 50 * 1024 * 1024  # 50 MiB
-MAX_UPLOAD_PART_SIZE = 5 * 1024**3            # 5 GiB
+MAX_UPLOAD_PART_SIZE = 5 * 1024**3  # 5 GiB
 
-MINIMAL_DOWNLOAD_PART_SIZE = 1024 * 1024  # 1 MiB
+MINIMAL_DOWNLOAD_PART_SIZE = 50 * 1024 * 1024  # 50 MiB
 MAXIMAL_DOWNLOAD_PARTS = 10_000
 
 
-def adjust_upload_multipart_params(size: int, parts: int | None =None, part_size: int | None=None) -> tuple[int, int]:
+def adjust_upload_multipart_params(
+    size: int, parts: int | None = None, part_size: int | None = None
+) -> tuple[int, int]:
     """Get multipart params consistent with AWS multipart upload constraints.
-    
+
     Given the total 'size' of an S3 object (in bytes), and optionally
     the desired 'parts' (number of parts) and/or 'part_size' (bytes),
     return a tuple (parts, part_size) that satisfy AWS multipart
@@ -31,7 +33,9 @@ def adjust_upload_multipart_params(size: int, parts: int | None =None, part_size
         return (1, 0)  # 0-byte part is valid in practice for a zero-byte file
 
     if size > MAX_UPLOAD_OBJECT_SIZE:
-        raise ValueError(f"Size exceeds maximum S3 object size of {MAX_UPLOAD_OBJECT_SIZE} bytes (5 TiB).")
+        raise ValueError(
+            f"Size exceeds maximum S3 object size of {MAX_UPLOAD_OBJECT_SIZE} bytes (5 TiB)."
+        )
 
     # Helper to clamp a part_size within valid range
     def clamp_part_size(ps: int) -> int:
@@ -128,7 +132,9 @@ def adjust_upload_multipart_params(size: int, parts: int | None =None, part_size
             # 5 MiB parts would create too many parts (>10,000).
             # We must increase part_size enough to reduce the count to 10,000 or fewer.
             chosen_part_size = math.ceil(size / MAX_UPLOAD_PARTS)
-            chosen_part_size = clamp_part_size(chosen_part_size)  # still enforce [5MiB..5GiB]
+            chosen_part_size = clamp_part_size(
+                chosen_part_size
+            )  # still enforce [5MiB..5GiB]
 
             final_parts = math.ceil(size / chosen_part_size)
             if final_parts > MAX_UPLOAD_PARTS:
@@ -141,9 +147,7 @@ def adjust_upload_multipart_params(size: int, parts: int | None =None, part_size
 
 
 def adjust_download_multipart_params(
-    size: int,
-    parts: int | None = None,
-    part_size: int | None = None
+    size: int, parts: int | None = None, part_size: int | None = None
 ) -> tuple[int, int]:
     """Adjust download multipart parameters to fit within constraints.
 
@@ -175,19 +179,19 @@ def adjust_download_multipart_params(
             needed_parts = math.ceil(size / psize)
         return psize, needed_parts
 
-    # CASE 1: If BOTH part_size and parts are None => 
+    # CASE 1: If BOTH part_size and parts are None =>
     #         start from the minimal part size (=> maximum number of parts),
     #         and adjust if that exceeds MAXIMAL_PARTS.
     if part_size is None and parts is None:
         return compute_with_part_size(MINIMAL_DOWNLOAD_PART_SIZE)
 
-    # CASE 2: If part_size is given but parts is None => 
+    # CASE 2: If part_size is given but parts is None =>
     #         rely on that part_size, adjust if we exceed constraints.
     if part_size is not None and parts is None:
         return compute_with_part_size(part_size)
 
-    # CASE 3: If part_size is None but parts is given => 
-    #         we pick the part_size that roughly matches the desired parts, 
+    # CASE 3: If part_size is None but parts is given =>
+    #         we pick the part_size that roughly matches the desired parts,
     #         then adjust to constraints.
     if part_size is None and parts is not None:
         # The part size that (ideally) yields exactly 'parts'
@@ -197,8 +201,8 @@ def adjust_download_multipart_params(
             candidate_size = 1
         return compute_with_part_size(candidate_size)
 
-    # CASE 4: If BOTH are given => the question doesn't define a perfect tie-break. 
-    #         We'll treat 'part_size' as the stronger hint (since it directly 
+    # CASE 4: If BOTH are given => the question doesn't define a perfect tie-break.
+    #         We'll treat 'part_size' as the stronger hint (since it directly
     #         influences how big each chunk is). Then we adjust if needed.
     #         'parts' is effectively ignored except in commentary or debugging.
     return compute_with_part_size(part_size or MINIMAL_DOWNLOAD_PART_SIZE)
@@ -218,9 +222,13 @@ if __name__ == "__main__":
     print("Only parts=2:", p, ps)
 
     # Only part_size specified
-    p, ps = adjust_upload_multipart_params(total_size, part_size=5 * 1024 * 1024)  # 5 MB
+    p, ps = adjust_upload_multipart_params(
+        total_size, part_size=5 * 1024 * 1024
+    )  # 5 MB
     print("Only part_size=5MB:", p, ps)
 
     # Both parts and part_size specified
-    p, ps = adjust_upload_multipart_params(total_size, parts=3, part_size=6 * 1024 * 1024)
+    p, ps = adjust_upload_multipart_params(
+        total_size, parts=3, part_size=6 * 1024 * 1024
+    )
     print("parts=3, part_size=6MB:", p, ps)
