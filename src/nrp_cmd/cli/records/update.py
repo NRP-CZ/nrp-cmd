@@ -81,7 +81,7 @@ async def update_record(
         published = model.published
         draft = model.draft
 
-        client = await get_async_client(repository, config=config)
+        client = await get_async_client(repository_config, config=config)
 
         records_api: AsyncRecordsClient = client.records.draft_records
         if model.model is not None:
@@ -189,7 +189,6 @@ class InPathMDSetter:
             return None
 
         for key_idx, key in enumerate(path_parts):
-
             empty_factory = _empty_factory
 
             if key_idx < len(path_parts) - 1:

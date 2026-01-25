@@ -14,15 +14,13 @@ from nrp_cmd.config import Config
 async def resolve_request(
     request_id: str, config: Config, repository: str | None = None
 ) -> tuple[AsyncRequestsClient, URL]:
-
     connection = AsyncConnection()
 
     final_request_id, repository_config = await get_repository_from_record_id(
         connection, request_id, config, repository
     )
 
-    config.add_repository(repository_config)
-    repository_client = await get_async_client(repository, config=config)
+    repository_client = await get_async_client(repository_config, config=config)
 
     request_url: URL
     if isinstance(final_request_id, str):
