@@ -51,3 +51,4 @@ from .multipart import MultipartTransfer  # noqa
 
 transfer_registry.register(TRANSFER_TYPE_LOCAL, LocalTransfer)
 transfer_registry.register(TRANSFER_TYPE_MULTIPART, MultipartTransfer)
+

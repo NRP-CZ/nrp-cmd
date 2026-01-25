@@ -294,3 +294,4 @@ class SyncInvenioFilesClient(SyncFilesClient):
             file_url = arg
 
         self._connection.delete(url=file_url)
+

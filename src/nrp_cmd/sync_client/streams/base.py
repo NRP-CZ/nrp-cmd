@@ -123,3 +123,4 @@ class DataSource(Protocol):
     def close(self) -> None:
         """Close the data source."""
         ...
+

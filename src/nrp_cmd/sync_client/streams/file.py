@@ -34,7 +34,8 @@ class FileSink(DataSink):
     def allocate(self, size: int) -> None:
         """Allocate space for the sink."""
         self._file = open_file(self._fpath, mode="wb")
-        self._file.truncate(size)
+        # need to get to the AIOFile to truncate, as the wrapper does not provide it
+        self._file.file.truncate(size)
         self._state = SinkState.ALLOCATED
 
     @override
@@ -122,3 +123,4 @@ class FileSource(DataSource):
     def supported_checksums(self) -> list[str]:
         """Return a list of supported checksum algorithms."""
         return list(hashlib.algorithms_available)
+

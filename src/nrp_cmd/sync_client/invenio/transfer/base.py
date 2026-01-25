@@ -62,3 +62,4 @@ class Transfer(Protocol):
         :return:                        metadata of the upload as returned from the repository
         """
         ...
+

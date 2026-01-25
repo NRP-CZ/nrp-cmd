@@ -160,3 +160,4 @@ class ProgressOutputStream(OutputStream):
     @override
     def close(self) -> None:
         self._stream.close()
+

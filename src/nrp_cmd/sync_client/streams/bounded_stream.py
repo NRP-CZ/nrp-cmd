@@ -53,3 +53,4 @@ class BoundedStream(InputStream):
         if not ret:
             raise StopIteration()
         return ret
+

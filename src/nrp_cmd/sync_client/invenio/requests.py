@@ -139,7 +139,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         :param topic:  if given, filter the requests by the topic
         :param params: Additional parameters to pass to the search query, see repository docs for possible values
         """
-        return self.all(topic=topic, params={**(params or {}), "status": "created"})
+        return self.all(
+            topic=topic, params={**(params or {}), "status": "created"}
+        )
 
     @override
     def submitted(
@@ -150,7 +152,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         :param topic:  if given, filter the requests by the topic
         :param params: Additional parameters to pass to the search query, see repository docs for possible values
         """
-        return self.all(topic=topic, params={**(params or {}), "status": "submitted"})
+        return self.all(
+            topic=topic, params={**(params or {}), "status": "submitted"}
+        )
 
     @override
     def accepted(
@@ -161,7 +165,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         :param topic:  if given, filter the requests by the topic
         :param params: Additional parameters to pass to the search query, see repository docs for possible values
         """
-        return self.all(topic=topic, params={**(params or {}), "status": "accepted"})
+        return self.all(
+            topic=topic, params={**(params or {}), "status": "accepted"}
+        )
 
     @override
     def declined(
@@ -172,7 +178,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         :param topic:  if given, filter the requests by the topic
         :param params: Additional parameters to pass to the search query, see repository docs for possible values
         """
-        return self.all(topic=topic, params={**(params or {}), "status": "declined"})
+        return self.all(
+            topic=topic, params={**(params or {}), "status": "declined"}
+        )
 
     @override
     def expired(
@@ -183,7 +191,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         :param topic:  if given, filter the requests by the topic
         :param params: Additional parameters to pass to the search query, see repository docs for possible values
         """
-        return self.all(topic=topic, params={**(params or {}), "status": "expired"})
+        return self.all(
+            topic=topic, params={**(params or {}), "status": "expired"}
+        )
 
     @override
     def cancelled(
@@ -194,7 +204,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         :param topic:  if given, filter the requests by the topic
         :param params: Additional parameters to pass to the search query, see repository docs for possible values
         """
-        return self.all(topic=topic, params={**(params or {}), "status": "cancelled"})
+        return self.all(
+            topic=topic, params={**(params or {}), "status": "cancelled"}
+        )
 
     @override
     def read_request(self, request_id: str) -> Request:
@@ -212,7 +224,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         )
 
     @override
-    def submit(self, request: Request | URL, payload: dict | None = None) -> Request:
+    def submit(
+        self, request: Request | URL, payload: dict | None = None
+    ) -> Request:
         """Submit the request.
 
         The request will be either passed to receivers, or auto-approved
@@ -226,7 +240,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         )
 
     @override
-    def accept(self, request: Request | URL, payload: dict | None = None) -> Request:
+    def accept(
+        self, request: Request | URL, payload: dict | None = None
+    ) -> Request:
         """Accept the submitted request."""
         return self._push_request(
             request=request,
@@ -236,7 +252,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         )
 
     @override
-    def decline(self, request: Request | URL, payload: dict | None = None) -> Request:
+    def decline(
+        self, request: Request | URL, payload: dict | None = None
+    ) -> Request:
         """Decline the submitted request."""
         return self._push_request(
             request=request,
@@ -246,7 +264,9 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         )
 
     @override
-    def cancel(self, request: Request | URL, payload: dict | None = None) -> Request:
+    def cancel(
+        self, request: Request | URL, payload: dict | None = None
+    ) -> Request:
         """Cancel the request."""
         return self._push_request(
             request=request,
@@ -283,3 +303,4 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         return self._connection.post(
             url=action_link, json=payload or {}, result_class=Request
         )
+

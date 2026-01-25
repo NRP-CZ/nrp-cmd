@@ -7,3 +7,4 @@
 from .client import SyncInvenioRepositoryClient
 
 __all__ = ("SyncInvenioRepositoryClient",)
+

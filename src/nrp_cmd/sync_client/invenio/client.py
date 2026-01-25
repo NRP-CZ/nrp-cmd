@@ -63,7 +63,9 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
 
         # check if the repository is a plain Invenio RDM repository, such as zenodo
         try:
-            root_page_data = connection.get(url=url.with_path("/"), result_class=str)
+            root_page_data = connection.get(
+                url=url.with_path("/"), result_class=str
+            )
             if '<meta name="generator" content="InvenioRDM' in root_page_data:
                 return url.with_path("/api")
         except Exception:
@@ -173,3 +175,4 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
     def config(self) -> RepositoryConfig:
         """Return the configuration of the repository."""
         return self._config
+

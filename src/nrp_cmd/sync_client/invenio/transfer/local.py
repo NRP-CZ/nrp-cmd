@@ -68,3 +68,4 @@ class LocalTransfer(Transfer):
     def get_commit_payload(self, initialized_upload: File) -> dict:
         """Get payload for finalization of the successful upload."""
         return {}
+
