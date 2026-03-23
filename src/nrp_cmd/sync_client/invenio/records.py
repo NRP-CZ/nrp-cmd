@@ -19,7 +19,7 @@ from ...types.info import RepositoryInfo
 from ...types.records import Record, RecordId, RecordList
 from ...types.requests import Request, RequestType
 from ...types.rest import RESTHits, RESTPaginationLinks
-from ..base_client import SyncRecordsClient, RecordStatus
+from ..base_client import RecordStatus, SyncRecordsClient
 from ..connection import SyncConnection
 from .requests import SyncInvenioRequestsClient
 
@@ -182,13 +182,17 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
         facets: dict[str, str] | None = None,
     ) -> RecordList:
         """Search for records in the repository."""
-        search_url, extra_facets = _get_search_params(
+        search_url, extra_facets, extra_query = _get_search_params(
             self._info, model or self._model, status or self._status
         )
 
         query = {**(facets or {}), **extra_facets}
+        if q and extra_query:
+            q = f"({q}) AND {extra_query}"
         if q:
             query["q"] = q
+        if extra_query and not q:
+            query["q"] = extra_query
         if page is not None:
             query["page"] = str(page)
         if size is not None:
@@ -541,7 +545,7 @@ def _record_id_to_url(
 
 def _get_search_params(
     info: RepositoryInfo, model: str | None, status: RecordStatus
-) -> tuple[URL, dict[str, str]]:
+) -> tuple[URL, dict[str, str], str | None]:
     if model is None and info.default_model:
         model = info.default_model
     if model is None or model == "*":
@@ -549,11 +553,9 @@ def _get_search_params(
             draft_url = info.links.drafts
             if draft_url is None:
                 raise ValueError("Repository does not support drafts on a generic url")
-            return draft_url, {
-                "is_published": "false",
-            }
+            return draft_url, {}, "is_published:false"
         else:
-            return info.links.records, {}
+            return info.links.records, {}, None
 
     if model not in info.models:
         raise KeyError(
@@ -563,8 +565,5 @@ def _get_search_params(
         draft_url = info.models[model].links.drafts
         if draft_url is None:
             raise ValueError(f"Model {model} does not support drafts")
-        return draft_url, {
-            "is_published": "false",
-        }
-    return info.models[model].links.records, {}
-
+        return draft_url, {}, "is_published:false"
+    return info.models[model].links.records, {}, None
