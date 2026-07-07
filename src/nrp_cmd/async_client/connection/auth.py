@@ -5,9 +5,12 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 #
-"""Bearer authentication support for aiohttp."""
+"""Bearer and Kerberos authentication support for aiohttp."""
+
+from typing import Self
 
 from aiohttp import BasicAuth, ClientRequest, hdrs
+from requests_kerberos import HTTPKerberosAuth
 
 from ...types.auth import BearerTokenForHost
 
@@ -60,3 +63,21 @@ class BearerAuthentication(Authentication):
             ):
                 request.headers[hdrs.AUTHORIZATION] = f"Bearer {token.token}"
                 break
+
+
+class KerberosAuthentication(Authentication):
+    """Kerberos (SPNEGO/Negotiate) authentication that adds a preemptive Authorization header."""
+
+    def __new__(cls) -> Self:
+        """Create the instance without the inherited BasicAuth login/password fields."""
+        return super().__new__(cls, "")
+
+    def apply(self, request: ClientRequest) -> None:
+        """Apply preemptive Kerberos Negotiate authentication to the request.
+
+        :param request: aiohttp request where the authentication should be applied
+        """
+        auth = HTTPKerberosAuth()
+        request.headers[hdrs.AUTHORIZATION] = auth.generate_request_header(
+            None, request.url.host, is_preemptive=True
+        )

@@ -99,6 +99,7 @@ class AsyncInvenioRepositoryClient(AsyncRepositoryClient):
         self._connection = AsyncConnection(
             tokens=tokens,
             verify_tls=config.verify_tls,
+            auth_method=config.auth_method,
             retry_count=config.retry_count,
             retry_after_seconds=config.retry_after_seconds,
         )

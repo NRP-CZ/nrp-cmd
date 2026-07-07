@@ -6,12 +6,17 @@
 # details.
 #
 """Configuration of the repository and repository access classes."""
+from enum import Enum
 
 from attrs import define
 from yarl import URL
 
 from ..types.info import RepositoryInfo
 
+class AuthMethod(Enum):
+    """Authentication method."""
+    BEARER = "Bearer"
+    KERBEROS = "Kerberos"
 
 @define(kw_only=True)
 class RepositoryConfig:
@@ -25,6 +30,9 @@ class RepositoryConfig:
 
     token: str | None = None
     """Bearer token"""
+
+    auth_method: AuthMethod = AuthMethod.BEARER
+    """Authentication method"""
 
     verify_tls: bool = True
     """Verify the TLS certificate in https"""

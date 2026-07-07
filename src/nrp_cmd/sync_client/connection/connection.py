@@ -20,9 +20,11 @@ from attrs import define, field
 from cattrs.dispatch import UnstructureHook
 from requests import adapters
 from requests.structures import CaseInsensitiveDict
+from requests_kerberos import HTTPKerberosAuth, REQUIRED
 from urllib3.util import Retry
 from yarl import URL
 
+from ...config.repository import AuthMethod
 from ...converter import deserialize_rest_response
 from ...errors import (
     RepositoryClientError,
@@ -116,6 +118,7 @@ class SyncConnection:
         self,
         tokens: dict[URL, str] | None = None,
         verify_tls: bool = True,
+        auth_method: AuthMethod = AuthMethod.BEARER,
         retry_count: int = 5,
         retry_after_seconds: int = 1,
     ):
@@ -124,12 +127,15 @@ class SyncConnection:
         self._retry_count = retry_count
         self._retry_after_seconds = retry_after_seconds
 
-        _tokens: list[BearerTokenForHost] = [
-            BearerTokenForHost(host_url=url, token=token)
-            for url, token in (tokens or {}).items()
-            if token
-        ]
-        self._auth = BearerAuthentication(_tokens)
+        if auth_method == AuthMethod.BEARER:
+            _tokens: list[BearerTokenForHost] = [
+                BearerTokenForHost(host_url=url, token=token)
+                for url, token in (tokens or {}).items()
+                if token
+            ]
+            self._auth = BearerAuthentication(_tokens)
+        if auth_method == AuthMethod.KERBEROS:
+            self._auth = HTTPKerberosAuth(mutual_authentication=REQUIRED, force_preemptive=True)
 
     @property
     def verify_tls(self) -> bool:

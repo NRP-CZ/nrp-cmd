@@ -20,7 +20,8 @@ dependencies = [
     "attrs",
     "cattrs",
     "tqdm",
-    "uvloop"
+    "uvloop",
+    "requests-kerberos",
 ]
 
 [project.optional-dependencies]

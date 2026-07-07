@@ -243,7 +243,7 @@ def with_config(func: ClickCommand) -> ClickCommand:
     @click.option(
         "--config-path",
         help="Path to the configuration file",
-        type=click.Path(dir_okay=False, exists=True),
+        type=click.Path(dir_okay=False, exists=True, path_type=Path),
     )
     @functools.wraps(func)
     def wrapper(
