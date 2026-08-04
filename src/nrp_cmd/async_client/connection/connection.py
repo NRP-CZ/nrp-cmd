@@ -42,6 +42,7 @@ from ..streams.base import DataSink, DataSource
 from ..streams.progress import ProgressSink
 from .auth import (
     AuthenticatedClientRequest,
+    Authentication,
     BearerAuthentication,
     BearerTokenForHost,
     KerberosAuthentication,
@@ -143,6 +144,7 @@ class AsyncConnection:
         tokens: dict[URL, str] | None = None,
         verify_tls: bool = True,
         auth_method: AuthMethod = AuthMethod.BEARER,
+        auth_hosts: list[URL] | None = None,
         retry_count: int = 5,
         retry_after_seconds: int = 1,
     ):
@@ -158,8 +160,10 @@ class AsyncConnection:
                 if token
             ]
             self._auth = BearerAuthentication(_tokens)
-        if auth_method == AuthMethod.KERBEROS:
-            self._auth = KerberosAuthentication()
+        elif auth_method == AuthMethod.KERBEROS:
+            self._auth = KerberosAuthentication(auth_hosts or [])
+        else:
+            raise ValueError("Invalid authentication method.")
 
     @property
     def verify_tls(self) -> bool:

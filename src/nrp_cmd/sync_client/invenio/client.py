@@ -11,6 +11,7 @@ from typing import Any, Self, override
 from yarl import URL  # noqa: TCH002    as attrs need to have type info in runtime
 
 from ...config import RepositoryConfig
+from ...config.repository import AuthMethod
 from ...errors import (
     RepositoryClientError,
     RepositoryCommunicationError,
@@ -100,12 +101,13 @@ class SyncInvenioRepositoryClient(SyncRepositoryClient):
         tokens: dict[URL, str] = {}
         if extra_tokens:
             tokens.update(extra_tokens)
-        if config.token:
+        if config.auth_method == AuthMethod.BEARER and config.token:
             tokens[config.url] = config.token
         self._connection = SyncConnection(
             tokens=tokens,
             verify_tls=config.verify_tls,
             auth_method=config.auth_method,
+            auth_hosts=[config.url],
             retry_count=config.retry_count,
             retry_after_seconds=config.retry_after_seconds,
         )

@@ -20,7 +20,6 @@ from attrs import define, field
 from cattrs.dispatch import UnstructureHook
 from requests import adapters
 from requests.structures import CaseInsensitiveDict
-from requests_kerberos import HTTPKerberosAuth, REQUIRED
 from urllib3.util import Retry
 from yarl import URL
 
@@ -36,7 +35,7 @@ from ...progress import DummyProgressBar, ProgressBar
 from ...types.auth import BearerTokenForHost
 from ..streams.base import DataSink, DataSource
 from ..streams.progress import ProgressSink
-from .auth import BearerAuthentication
+from .auth import BearerAuthentication, KerberosAuthentication
 from .aws_limits import MINIMAL_DOWNLOAD_PART_SIZE, adjust_download_multipart_params
 from .limiter import current_limiter
 
@@ -119,6 +118,7 @@ class SyncConnection:
         tokens: dict[URL, str] | None = None,
         verify_tls: bool = True,
         auth_method: AuthMethod = AuthMethod.BEARER,
+        auth_hosts: list[URL] | None = None,
         retry_count: int = 5,
         retry_after_seconds: int = 1,
     ):
@@ -134,9 +134,10 @@ class SyncConnection:
                 if token
             ]
             self._auth = BearerAuthentication(_tokens)
-        if auth_method == AuthMethod.KERBEROS:
-            self._auth = HTTPKerberosAuth(mutual_authentication=REQUIRED, force_preemptive=True)
-
+        elif auth_method == AuthMethod.KERBEROS:
+            self._auth = KerberosAuthentication(auth_hosts or [])
+        else:
+            raise ValueError("Invalid authentication method.")
     @property
     def verify_tls(self) -> bool:
         """Get whether TLS verification is enabled."""
