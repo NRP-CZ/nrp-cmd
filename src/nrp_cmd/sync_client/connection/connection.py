@@ -23,6 +23,7 @@ from requests.structures import CaseInsensitiveDict
 from urllib3.util import Retry
 from yarl import URL
 
+from ...config.repository import AuthMethod
 from ...converter import deserialize_rest_response
 from ...errors import (
     RepositoryClientError,
@@ -34,7 +35,7 @@ from ...progress import DummyProgressBar, ProgressBar
 from ...types.auth import BearerTokenForHost
 from ..streams.base import DataSink, DataSource
 from ..streams.progress import ProgressSink
-from .auth import BearerAuthentication
+from .auth import BearerAuthentication, KerberosAuthentication
 from .aws_limits import MINIMAL_DOWNLOAD_PART_SIZE, adjust_download_multipart_params
 from .limiter import current_limiter
 
@@ -116,6 +117,8 @@ class SyncConnection:
         self,
         tokens: dict[URL, str] | None = None,
         verify_tls: bool = True,
+        auth_method: AuthMethod = AuthMethod.BEARER,
+        auth_hosts: list[URL] | None = None,
         retry_count: int = 5,
         retry_after_seconds: int = 1,
     ):
@@ -124,13 +127,17 @@ class SyncConnection:
         self._retry_count = retry_count
         self._retry_after_seconds = retry_after_seconds
 
-        _tokens: list[BearerTokenForHost] = [
-            BearerTokenForHost(host_url=url, token=token)
-            for url, token in (tokens or {}).items()
-            if token
-        ]
-        self._auth = BearerAuthentication(_tokens)
-
+        if auth_method == AuthMethod.BEARER:
+            _tokens: list[BearerTokenForHost] = [
+                BearerTokenForHost(host_url=url, token=token)
+                for url, token in (tokens or {}).items()
+                if token
+            ]
+            self._auth = BearerAuthentication(_tokens)
+        elif auth_method == AuthMethod.KERBEROS:
+            self._auth = KerberosAuthentication(auth_hosts or [])
+        else:
+            raise ValueError("Invalid authentication method.")
     @property
     def verify_tls(self) -> bool:
         """Get whether TLS verification is enabled."""
