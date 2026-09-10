@@ -5,6 +5,7 @@
 
 
 from __future__ import annotations
+from contextlib import suppress
 
 import contextlib
 import copy
@@ -119,27 +120,41 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
         else:
             data = {**data}
 
-        if community or workflow:
+        if workflow:
             parent: dict[str, Any] = (
                 copy.deepcopy(data.pop("parent")) if "parent" in data else {}
             )
             data["parent"] = parent
-            if community:
-                assert "community" not in parent, (
-                    f"Community already in parent: {parent}"
-                )
-                parent["communities"] = {"default": community}
             if workflow:
                 assert "workflow" not in parent, f"Workflow already in data: {parent}"
                 parent["workflow"] = workflow
         data["files"] = {"enabled": files_enabled}
 
-        return self._connection.post(
+        ret = self._connection.post(
             url=create_url,
             json=data,
+            params={
+                "expand": "1",
+            },
             idempotent=idempotent,
             result_class=Record,
         )
+        if community:
+            # get id of the community
+            community_rec = self._connection.get(
+                url=self._info.links.communities / community,
+                result_class=Record
+            )
+            # call review on the record
+            self._connection.put(
+                url=ret.links["review"],
+                json={
+                    "receiver": {"community": community_rec.id},
+                    "type": "community-submission",
+                },
+                result_class=Request
+            )
+        return ret
 
     @override
     def read(
@@ -167,6 +182,9 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
             headers={
                 "Accept": self._info.default_content_type,
             },
+            params={
+                "expand": "1"
+            }
         )
 
     @override
@@ -429,6 +447,21 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
 
         :param record: record to publish
         """
+        for req in record.expanded.get("requests", []):
+            # invenio rdm review process
+            if req["type"] == "community-submission":
+                request = self._request_op(
+                    record,
+                    "community-submission",
+                    "publish",
+                    "post",
+                    "Can not publish a record",
+                )
+                if request.status != "accepted":
+                    return request
+                topic = request.topic["record"]
+                return self.published_records.read(topic)
+
         return self._request_op(
             record,
             "publish_draft",
@@ -445,36 +478,54 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
         link_op: str,
         error_msg: str,
     ) -> Record | Request:
-        try:
-            # check if a link to the applicable requests is in the record metadata
-            record.links["applicable_requests"]
-            request_types = self._requests_client.applicable_requests(record)
+        # 1. try to see if the record.expanded["requests"] already contains the applicable request
+        record_request = next(
+            (r for r in record.expanded["requests"] if r["type"] == request_type_id and r["status"] in ["created", "submitted"]),
+            None,
+        )
+        if record_request is not None:
+            request = self._requests_client.read_request(record_request["id"])
+        else:
+            try:
+                # check if a link to the applicable requests is in the record metadata
+                record.links["applicable_requests"]
+                request_types = self._requests_client.applicable_requests(record)
 
-            request_type: RequestType | None = next(
-                (rt for rt in request_types.hits if rt.type_id == request_type_id), None
-            )
-            if not request_type:
-                raise ValueError(
-                    f"{error_msg}: Request type {request_type_id} not found "
-                    f"in applicable requests on {record.id}. Run list requests operation "
-                    "to get the list of available requests."
+                request_type: RequestType | None = next(
+                    (rt for rt in request_types.hits if rt.type_id == request_type_id), None
+                )
+                if not request_type:
+                    raise ValueError(
+                        f"{error_msg}: Request type {request_type_id} not found "
+                        f"in applicable requests on {record.id}. Run list requests operation "
+                        "to get the list of available requests."
+                    )
+
+                request = self._requests_client.create(request_type, {}, submit=True)
+            except AttributeError:
+                # no requests that handle this operation, try to call the operation directly
+                return getattr(self._connection, link_op)(
+                    url=getattr(record.links, link_name),
+                    json={},
+                    result_class=Record,
                 )
 
-            request = self._requests_client.create(request_type, {}, submit=True)
-            if request.status == "accepted":
+        if request.status == "created":
+            # we need to submit the request
+            request = self._requests_client.submit(request)
+
+        if request.links.actions.accept:
+            request = self._requests_client.accept(request)
+
+        if request.status == "accepted":
+            # oarepo requests return the topic link, invenio rdm requests do not
+            with suppress(AttributeError):
                 if isinstance(request.links.topic, dict):
                     topic_link = request.links.topic["self"]
                 else:
                     topic_link = str(request.links.topic)
                 return self.read(topic_link)
-            return request
-        except AttributeError:
-            # no requests that handle this operation, try to call the operation directly
-            return getattr(self._connection, link_op)(
-                url=getattr(record.links, link_name),
-                json={},
-                result_class=Record,
-            )
+        return request
 
     def edit_metadata(self, record: Record) -> Record | Request:
         """Edit metadata of a published record.

@@ -215,6 +215,7 @@ class AsyncInvenioRequestsClient(AsyncRequestsClient):
         return await self._connection.get(
             url=self._info.links.requests / request_id,
             result_class=Request,
+            params={"expand": "1"},
         )
 
     @override
@@ -295,5 +296,5 @@ class AsyncInvenioRequestsClient(AsyncRequestsClient):
             raise ValueError(f"You have no permission to {action} this request")
 
         return await self._connection.post(
-            url=action_link, json=payload or {}, result_class=Request
+            url=action_link, json=payload or {}, result_class=Request, params={"expand": "1"}
         )

@@ -221,6 +221,7 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
         return self._connection.get(
             url=self._info.links.requests / request_id,
             result_class=Request,
+            params={"expand": "1"},
         )
 
     @override
@@ -301,6 +302,6 @@ class SyncInvenioRequestsClient(SyncRequestsClient):
             raise ValueError(f"You have no permission to {action} this request")
 
         return self._connection.post(
-            url=action_link, json=payload or {}, result_class=Request
+            url=action_link, json=payload or {}, result_class=Request, params={"expand": "1"}
         )
 

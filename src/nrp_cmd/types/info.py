@@ -34,6 +34,9 @@ class RepositoryInfoLinks(Model):
     requests: URL | None = field(default=None)
     """Link to the requests in the repository"""
 
+    communities: URL = field(default=None)
+    """Link to the global search endpoint"""
+
     def __attrs_post_init__(self):
         """Post init."""
         if self.records is None:
@@ -42,6 +45,11 @@ class RepositoryInfoLinks(Model):
             else:
                 self.records = self.self_.origin() / "api" / "records"
 
+        if self.communities is None:
+            if hasattr(self, "api"):
+                self.communities = self.api / "communities"
+            else:
+                self.communities = self.self_.origin() / "api" / "communities"
 
 @extend_serialization(allow_extra_data=True)
 @define(kw_only=True)
@@ -151,7 +159,7 @@ class RepositoryInfo(Model):
     """Information about the models in the repository"""
 
     default_model: str | None = field(default=None)
-    """The default model for the repository. 
+    """The default model for the repository.
     If set, it is used whenever the model is not specified."""
 
     features: list[str] = field(factory=list)
