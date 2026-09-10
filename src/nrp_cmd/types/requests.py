@@ -211,11 +211,11 @@ class Request(BaseRecord):
     """Is the request expired?"""
 
     created_by: dict[str, str] = field()
-    """Who created the request. It is a dictionary containing a 
+    """Who created the request. It is a dictionary containing a
     reference to the creator (NOT the links at the moment)."""
 
     receiver: dict[str, str] = field()
-    """Who is the receiver of the request. It is a dictionary containing a 
+    """Who is the receiver of the request. It is a dictionary containing a
     reference to the receiver (NOT the links at the moment)."""
 
     topic: dict[str, str] = field()

@@ -76,6 +76,12 @@ class Record(BaseRecord):
             return self._extra_data["metadata"]
         return self._extra_data
 
+    @property
+    def expanded(self) -> dict[str, Any]:
+        """Return the expanded section of the record."""
+        if "expanded" in self._extra_data:
+            return self._extra_data["expanded"] or {}
+        return {}
 
 @extend_serialization(Omit("_etag", from_unstructure=True), allow_extra_data=True)
 @define(kw_only=True)
