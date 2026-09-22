@@ -82,12 +82,14 @@ class MultipartTransfer(Transfer):
                 headers["Content-MD5"] = await source.checksum(
                     "md5", offset=start, count=count
                 )
-            return await connection.put_stream(
+            ret = await connection.put_stream(
                 url=links[pt].url,
                 source=ProgressSource(source, progress_bar),
                 open_kwargs={"offset": start, "count": count},
                 headers=headers,
             )
+            ret.raise_for_status()
+            return ret
 
         async with TaskGroup() as tg:
             for pt in range(number_of_parts):
