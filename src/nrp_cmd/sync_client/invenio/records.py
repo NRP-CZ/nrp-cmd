@@ -514,7 +514,7 @@ class SyncInvenioRecordsClient(SyncRecordsClient):
             # we need to submit the request
             request = self._requests_client.submit(request)
 
-        if request.links.actions.accept:
+        if request.status == "submitted":
             request = self._requests_client.accept(request)
 
         if request.status == "accepted":

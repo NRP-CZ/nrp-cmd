@@ -83,12 +83,14 @@ class MultipartTransfer(Transfer):
                     "md5", offset=start, count=count
                 )
 
-            connection.put_stream(
+            result = connection.put_stream(
                 url=links[pt].url,
                 source=source,
                 open_kwargs={"offset": start, "count": count},
                 headers=headers,
             )
+            result.raise_for_status()
+
 
     def get_commit_payload(self, initialized_upload: File) -> dict:
         """Get payload for finalization of the successful upload."""
