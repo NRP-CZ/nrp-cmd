@@ -23,7 +23,7 @@ from yarl import URL
 from nrp_cmd.async_client import AsyncRepositoryClient, get_async_client
 from nrp_cmd.cli.base import OutputWriter, async_command
 from nrp_cmd.config import Config
-from nrp_cmd.config.repository import RepositoryConfig
+from nrp_cmd.config.repository import RepositoryConfig, AuthMethod
 from nrp_cmd.converter import converter
 
 from .arguments import (
@@ -62,6 +62,11 @@ from .base import OutputWriter
     default=True,
     help="Open the browser to create a token",
 )
+@click.option(
+    "--use-kerberos",
+    default=False,
+    help="Use Kerberos authentication",
+)
 @with_config
 @with_verbosity
 @async_command
@@ -78,6 +83,7 @@ async def add_repository(
     anonymous: bool,
     default: bool,
     launch_browser: bool,
+    use_kerberos: bool,
 ) -> None:
     """Add a new repository to the configuration."""
     console = Console()
@@ -127,6 +133,7 @@ async def add_repository(
         token = click.prompt("\nPaste the token here").strip()
 
     console.print("Creating repository with token ...")
+    auth_method = AuthMethod.KERBEROS if use_kerberos else AuthMethod.BEARER
     config.add_repository(
         RepositoryConfig(
             alias=alias,
@@ -135,6 +142,7 @@ async def add_repository(
             verify_tls=verify_tls,
             retry_count=retry_count,
             retry_after_seconds=retry_after_seconds,
+            auth_method=auth_method,
         )
     )
     if default or len(config.repositories) == 1:
